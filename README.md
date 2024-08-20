@@ -1,1 +1,115 @@
-# Nostalgio
+![1_iGdFJTHMIG79N2HChWaooQ](https://github.com/acm-projects/Advisabot/assets/98787282/4cf90921-a07d-4933-b549-ec732a79b249)
+# <h1 align="center">Nostalgio</h1>
+
+<p align="center">
+Have you ever asked your advisor a question only to wait weeks for a response? Many times, advisors get flooded with questions that have simple answers or problems that are easy to resolve. SAGE is an advisor chatbot that can answer your questions quickly and efficiently, so you don’t have to worry about it. On top of this, SAGE can view your profile to help you make decisions about future classes and even generate personalized degree plans. Take the stress out of the logistics and just ask SAGE for help with your inquiries and classes!
+</p>
+
+## MVP (Minimum Viable Product)
+
+
+* User account with user authentication
+* Memory saving (Allows users to save a list of songs attributed to a location)
+* Memory map visualization (A map that depicts locations traveled and its associated memories & songs over time)
+* Spotify integration to create playlists from these memories
+* Music suggestion based off of previous travel and listening habits
+* Track and display songs listened to by friends on map. (Can comment/react)
+  
+
+
+
+## Stretch Goals
+
+* Audio recognition: recognizes songs in the area and adds it to your memories for that location.
+* Augmented Reality (AR) integration (AR trails that guide users through a city or location with music suggestions popping up at different spots. As users walk along the trail, they can experience the music history associated with each landmark.)
+
+
+
+## Milestones
+
+Week 1: Assign Roles & Set Up
+Week 2: Wireframing & Research
+Week 3: Start Implementation
+Frontend: start coding front end pages/routing in React Native
+Backend: Database set up & API integration
+Week 4: Implementing Memory Features/Logic
+Frontend: code memory input components & map features with Mapbox
+Backend: code backend logic for saving & retrieving memories
+Week 5: Map Visualization & Enhancements
+Frontend: implement markers for user journeys, connect lines, enhance map details, ability to comment/react on other user’s updates
+Backend: implement real-time updates of listening history 
+What other users have listened to at certain locations & ability to comment/react to it
+Week 6: Music Suggestions & Popular Songs
+Frontend: display popular song choices (could be top 5 songs, top 5 genres, up to participants → some kind of public listening data)
+Backend: Music suggesting algorithm based off of what the user has been listening to
+Week 7/8: Continue progress on Music Suggesting & UI Enhancements & User Auth, Presentation prep, Final Touches
+Week 9/10: Presentation Clean up & Final Touches
+
+
+## Tech Stack
+* Wireframing: Figma
+* IDE: VSC
+* Frontend: [React Native]([url](https://reactnative.dev/)) with [MapBox Gl](https://docs.mapbox.com/help/glossary/maps-sdk-for-react-native/)
+  * React Native is a cross compatible framework that paired with expo allows you to bring your apps to life while in development phases
+  * MapBox is a community-maintained React Native library that provides reusable JavaScript components for integrating Mapbox maps into iOS and Android apps.
+* Backend: [AWS Lambda]((https://www.serverless.com/aws-lambda)), [DynamoDB]([url](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Introduction.html))/[S3]([url](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html)) Or [Firebase/Firestore]([url](https://firebase.google.com/docs/firestore))
+  * AWS Lambda is a compute service that runs your code in response to events and automatically manages the compute resources
+  * DynamoDB and S3 continue with the fully AWS approach however Firebase/Firestore work great as needed
+* User Authentication: [Firebase / React Native Authentication]([url](https://rnfirebase.io/auth/usage)) or [Auth0]([url](https://auth0.com/docs))
+
+## Software to Install
+  - [Visual Studio Code](https://code.visualstudio.com/)
+  - [Figma](https://www.figma.com/downloads/)
+  - [React Native](https://reactnative.dev/docs/environment-setup)
+  - [Firebase](https://firebase.google.com/docs/web/setup)
+  - [DynamoDB](https://aws.amazon.com/dynamodb/)
+  - [Node](https://nodejs.org/en/)
+  - [Express](https://expressjs.com/)
+  - [Git](https://git-scm.com/downloads)
+
+## Tutorials and Resources  
+  **General**
+  - [Success in ACM Projects](https://docs.google.com/document/d/18Zi3DrKG5e6g5Bojr8iqxIu6VIGl86YBSFlsnJnlM88/edit#heading=h.ky82xv3vtbpi)
+  - [API Crash Course w/ timestamps](https://www.youtube.com/watch?v=GZvSYJDk-us)
+  - [GitHub Cheat Sheet #1](https://education.github.com/git-cheat-sheet-education.pdf)
+  - [GitHub Cheat Sheet #2](https://drive.google.com/file/d/1OddwoSvNJ3dQuEBw3RERieMXmOicif9_/view)
+  
+  **Front-end**
+  - [Introduction to Wireframing in Figma](https://www.youtube.com/watch?v=6t_dYhXyYjI)
+  - [React Nativve Crash Course (playlist!)](https://www.youtube.com/watch?v=w7ejDZ8SWv8)
+  - [27 Best UI/UX Practices](https://729solutions.com/ux-ui-best-practices/)
+  
+  **Back-end**
+  - [Node.js Crash Course](https://www.youtube.com/watch?v=zb3Qk8SG5Ms&list=PL4cUxeGkcC9jsz4LDYc6kv3ymONOKxwBU)
+  - [Kendra and React](https://docs.aws.amazon.com/kendra/latest/dg/deploying.html)
+  - [Lex and Kendra](https://aws.amazon.com/blogs/machine-learning/integrate-amazon-kendra-and-amazon-lex-using-a-search-intent/)
+  - [DynamoDB and React](https://yentln.medium.com/connect-your-app-to-amazon-dynamodb-d062a0cec468)
+  - [Textract and React](https://mkayfour.medium.com/using-aws-textract-with-reactjs-6ca1e1bb478a)
+  - [Expo & Firebase](https://docs.expo.dev/guides/using-firebase/)
+  - [Kendra and Lex](https://www.youtube.com/watch?v=PFauv-8lG5E)
+
+## Git Commands
+
+| Command                       | What it does                        |
+| ----------------------------- | ----------------------------------- |
+| git branch                    | lists all the branches              |
+| git branch "branch name"      | makes a new branch                  |
+| git checkout "branch name"    | switches to speicified branch       |
+| git checkout -b "branch name" | combines the previous 2 commands    |
+| git add .                     | finds all changed files             |
+| git commit -m "Testing123"    | commit with a message               |
+| git push origin "branch"      | push to branch                      |
+| git pull origin "branch"      | pull updates from a specific branch |
+  
+  ## Meet the Team
+
+ * Frontend
+   * 
+   * 
+
+* Backend
+  * 
+      
+* Project Manager: Shraddha Subash
+  
+* Industry Mentor: Erik Rodriguez
