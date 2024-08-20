@@ -51,7 +51,7 @@ Nostalgio is an app that captures your listening and travel habits to make your 
 * Frontend: [React Native](https://reactnative.dev/) with [MapBox Gl](https://docs.mapbox.com/help/glossary/maps-sdk-for-react-native/)
   * React Native is a cross compatible framework that paired with expo allows you to bring your apps to life while in development phases
   * MapBox is a community-maintained React Native library that provides reusable JavaScript components for integrating Mapbox maps into iOS and Android apps.
-* Backend: [AWS Lambda](https://www.serverless.com/aws-lambda), [DynamoDB](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Introduction.html)/[S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html) Or [Firebase/Firestore](https://firebase.google.com/docs/firestore)
+* Backend: [AWS Lambda](https://www.serverless.com/aws-lambda), [DynamoDB](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Introduction.html)/[S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html) Or [Firebase/Firestore](https://firebase.google.com/docs/firestore), [Spotify API](https://developer.spotify.com/documentation/web-api), [MapBox API](https://docs.mapbox.com/api/overview/)
   * AWS Lambda is a compute service that runs your code in response to events and automatically manages the compute resources
   * DynamoDB and S3 continue with the fully AWS approach however Firebase/Firestore work great as needed
 * User Authentication: [Firebase / React Native Authentication](https://rnfirebase.io/auth/usage) or [Auth0](https://auth0.com/docs)
@@ -75,17 +75,18 @@ Nostalgio is an app that captures your listening and travel habits to make your 
   
   **Front-end**
   - [Introduction to Wireframing in Figma](https://www.youtube.com/watch?v=6t_dYhXyYjI)
-  - [React Nativve Crash Course (playlist!)](https://www.youtube.com/watch?v=w7ejDZ8SWv8)
+  - [React Native Crash Course](https://www.youtube.com/watch?v=w7ejDZ8SWv8)
   - [27 Best UI/UX Practices](https://729solutions.com/ux-ui-best-practices/)
+  - [MapBox Tutorial](https://www.youtube.com/watch?v=JJatzkPcmoI)
+  - [Building Maps in React Native](https://medium.com/@mshuecodev/building-maps-in-react-native-with-mapbox-a-step-by-step-tutorial-6491f2190db9)
   
   **Back-end**
   - [Node.js Crash Course](https://www.youtube.com/watch?v=zb3Qk8SG5Ms&list=PL4cUxeGkcC9jsz4LDYc6kv3ymONOKxwBU)
-  - [Kendra and React](https://docs.aws.amazon.com/kendra/latest/dg/deploying.html)
-  - [Lex and Kendra](https://aws.amazon.com/blogs/machine-learning/integrate-amazon-kendra-and-amazon-lex-using-a-search-intent/)
-  - [DynamoDB and React](https://yentln.medium.com/connect-your-app-to-amazon-dynamodb-d062a0cec468)
-  - [Textract and React](https://mkayfour.medium.com/using-aws-textract-with-reactjs-6ca1e1bb478a)
-  - [Expo & Firebase](https://docs.expo.dev/guides/using-firebase/)
-  - [Kendra and Lex](https://www.youtube.com/watch?v=PFauv-8lG5E)
+  - [Express & Node Intro](https://youtu.be/jivyItmsu18?si=YbLWhSxKg1C44Qht)
+  - [DynamoDB & React Native](https://docs.aws.amazon.com/prescriptive-guidance/latest/patterns/build-a-serverless-react-native-mobile-app-by-using-aws-amplify.html)
+  - [AWS Lambda & React Native](https://docs.aws.amazon.com/prescriptive-guidance/latest/patterns/build-a-serverless-react-native-mobile-app-by-using-aws-amplify.html)
+  - [AWS S3 & React Native](https://jaka-tertinek.medium.com/upload-files-from-react-native-app-to-aws-s3-3d3cb85e9d4)
+  - [Firebase / React Native Authentication Tutorial](https://www.youtube.com/watch?v=ONAVmsGW6-M)
 
 ## Git Commands
 
@@ -103,7 +104,6 @@ Nostalgio is an app that captures your listening and travel habits to make your 
   ## Meet the Team
 
  * Frontend
-   * 
    * 
 
 * Backend
