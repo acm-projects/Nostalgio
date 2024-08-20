@@ -1,8 +1,8 @@
-![1_iGdFJTHMIG79N2HChWaooQ](https://github.com/acm-projects/Advisabot/assets/98787282/4cf90921-a07d-4933-b549-ec732a79b249)
+
 # <h1 align="center">Nostalgio</h1>
 
 <p align="center">
-Have you ever asked your advisor a question only to wait weeks for a response? Many times, advisors get flooded with questions that have simple answers or problems that are easy to resolve. SAGE is an advisor chatbot that can answer your questions quickly and efficiently, so you don’t have to worry about it. On top of this, SAGE can view your profile to help you make decisions about future classes and even generate personalized degree plans. Take the stress out of the logistics and just ask SAGE for help with your inquiries and classes!
+Nostalgio is an app that captures your listening and travel habits to make your travel and music experiences memorable. By linking to your Spotify account, it uses your listening patterns and data on what others have listened to at the same location to predict and recommend music you might enjoy. Nostalgio enhances your daily life and travel experiences by creating a musical map of your journeys, turning ordinary moments into memorable ones with personalized, location-specific music.
 </p>
 
 ## MVP (Minimum Viable Product)
@@ -49,13 +49,13 @@ Week 9/10: Presentation Clean up & Final Touches
 ## Tech Stack
 * Wireframing: Figma
 * IDE: VSC
-* Frontend: [React Native]([url](https://reactnative.dev/)) with [MapBox Gl](https://docs.mapbox.com/help/glossary/maps-sdk-for-react-native/)
+* Frontend: [React Native](https://reactnative.dev/) with [MapBox Gl](https://docs.mapbox.com/help/glossary/maps-sdk-for-react-native/)
   * React Native is a cross compatible framework that paired with expo allows you to bring your apps to life while in development phases
   * MapBox is a community-maintained React Native library that provides reusable JavaScript components for integrating Mapbox maps into iOS and Android apps.
-* Backend: [AWS Lambda]((https://www.serverless.com/aws-lambda)), [DynamoDB]([url](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Introduction.html))/[S3]([url](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html)) Or [Firebase/Firestore]([url](https://firebase.google.com/docs/firestore))
+* Backend: [AWS Lambda](https://www.serverless.com/aws-lambda), [DynamoDB](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Introduction.html)/[S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html) Or [Firebase/Firestore](https://firebase.google.com/docs/firestore)
   * AWS Lambda is a compute service that runs your code in response to events and automatically manages the compute resources
   * DynamoDB and S3 continue with the fully AWS approach however Firebase/Firestore work great as needed
-* User Authentication: [Firebase / React Native Authentication]([url](https://rnfirebase.io/auth/usage)) or [Auth0]([url](https://auth0.com/docs))
+* User Authentication: [Firebase / React Native Authentication](https://rnfirebase.io/auth/usage) or [Auth0](https://auth0.com/docs)
 
 ## Software to Install
   - [Visual Studio Code](https://code.visualstudio.com/)
