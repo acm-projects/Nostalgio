@@ -1,6 +1,6 @@
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/f8d01aaf-9331-4053-9566-cbb3b495574d" alt="animated" />
+  <img src="https://github.com/user-attachments/assets/f8d01aaf-9331-4053-9566-cbb3b495574d.gif"/>
 </p>
 
 # <h1 align="center">Nostalgio</h1>
