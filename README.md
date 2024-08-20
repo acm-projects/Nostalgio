@@ -1,4 +1,5 @@
-<img align="center" width="100" height="100" src="[http://www.fillmurray.com/100/100](https://www.google.com/url?sa=i&url=https%3A%2F%2Ftenor.com%2Fsearch%2Fmusic-gifs&psig=AOvVaw1yDhrNX2VPR6Gj5G0SyKJY&ust=1724272334068000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCNC9jZ-1hIgDFQAAAAAdAAAAABAE)">
+![image](https://github.com/user-attachments/assets/f8d01aaf-9331-4053-9566-cbb3b495574d)
+
 # <h1 align="center">Nostalgio</h1>
 
 <p align="center">
