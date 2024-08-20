@@ -27,23 +27,22 @@ Nostalgio is an app that captures your listening and travel habits to make your 
 
 ## Milestones
 
-Week 1: Assign Roles & Set Up
-Week 2: Wireframing & Research
-Week 3: Start Implementation
-Frontend: start coding front end pages/routing in React Native
-Backend: Database set up & API integration
-Week 4: Implementing Memory Features/Logic
-Frontend: code memory input components & map features with Mapbox
-Backend: code backend logic for saving & retrieving memories
-Week 5: Map Visualization & Enhancements
-Frontend: implement markers for user journeys, connect lines, enhance map details, ability to comment/react on other user’s updates
-Backend: implement real-time updates of listening history 
-What other users have listened to at certain locations & ability to comment/react to it
-Week 6: Music Suggestions & Popular Songs
-Frontend: display popular song choices (could be top 5 songs, top 5 genres, up to participants → some kind of public listening data)
-Backend: Music suggesting algorithm based off of what the user has been listening to
-Week 7/8: Continue progress on Music Suggesting & UI Enhancements & User Auth, Presentation prep, Final Touches
-Week 9/10: Presentation Clean up & Final Touches
+- Week 1: Assign Roles & Set Up
+- Week 2: Wireframing & Research
+- Week 3: Start Implementation
+  - Frontend: start coding front end pages/routing in React Native
+  - Backend: Database set up & API integration
+- Week 4: Implementing Memory Features/Logic
+  - Frontend: code memory input components & map features with Mapbox
+  - Backend: code backend logic for saving & retrieving memories
+- Week 5: Map Visualization & Enhancements
+  - Frontend: implement markers for user journeys, connect lines, enhance map details, ability to comment/react on other user’s updates
+  - Backend: implement real-time updates of listening history What other users have listened to at certain locations & ability to comment/react to it
+- Week 6: Music Suggestions & Popular Songs
+  - Frontend: display popular song choices (could be top 5 songs, top 5 genres, up to participants → some kind of public listening data)
+  - Backend: Music suggesting algorithm based off of what the user has been listening to
+- Week 7/8: Continue progress on Music Suggesting & UI Enhancements & User Auth, Presentation prep, Final Touches
+- Week 9/10: Presentation Clean up & Final Touches
 
 
 ## Tech Stack
