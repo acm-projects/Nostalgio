@@ -34,17 +34,14 @@ Nostalgio is an app that captures your listening and travel habits to make your 
 - Week 1: Assign Roles & Set Up
 - Week 2: Wireframing & Research
 - Week 3: Start Implementation
-  - Frontend: start coding front end pages/routing in React Native
+  - Frontend: start coding basic template of front-end pages/routing in React Native
   - Backend: Database set up & API integration
 - Week 4: Implementing Memory Features/Logic
   - Frontend: code memory input components & map features with Mapbox
   - Backend: code backend logic for saving & retrieving memories
-- Week 5: Map Visualization & Enhancements
-  - Frontend: implement markers for user journeys, connect lines, enhance map details, ability to comment/react on other user’s updates
-  - Backend: implement real-time updates of listening history What other users have listened to at certain locations & ability to comment/react to it
-- Week 6: Music Suggestions & Popular Songs
-  - Frontend: display popular song choices (could be top 5 songs, top 5 genres, up to participants → some kind of public listening data)
-  - Backend: Music suggesting algorithm based off of what the user has been listening to
+- Week 5/6: Map Visualization & Enhancements | Music Suggestions & Popular Songs 
+  - Frontend: implement markers for user journeys/enhance map details, ability to comment/react on other user’s updates, display popular song choices (could be top 5 songs, top 5 genres, up      to participants → some kind of public listening data)
+  - Backend: implement real-time updates of listening history of what other users have listened to at certain locations & ability to comment/react to it, Music suggesting algorithm based off     of what the user has been listening to
 - Week 7/8: Continue progress on Music Suggesting & UI Enhancements & User Auth, Presentation prep, Final Touches
 - Week 9/10: Presentation Clean up & Final Touches
 
@@ -57,7 +54,7 @@ Nostalgio is an app that captures your listening and travel habits to make your 
   * MapBox is a community-maintained React Native library that provides reusable JavaScript components for integrating Mapbox maps into iOS and Android apps.
 * Backend: [AWS Lambda](https://www.serverless.com/aws-lambda), [DynamoDB](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Introduction.html)/[S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html) Or [Firebase/Firestore](https://firebase.google.com/docs/firestore), [Spotify API](https://developer.spotify.com/documentation/web-api), [MapBox API](https://docs.mapbox.com/api/overview/)
   * AWS Lambda is a compute service that runs your code in response to events and automatically manages the compute resources
-  * DynamoDB and S3 continue with the fully AWS approach however Firebase/Firestore work great as needed
+  * DynamoDB and S3 continue with the fully AWS approach however, Firebase/Firestore work great as needed
 * User Authentication: [Firebase / React Native Authentication](https://rnfirebase.io/auth/usage) or [Auth0](https://auth0.com/docs)
 
 ## Software to Install
