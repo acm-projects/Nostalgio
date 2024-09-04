@@ -30,7 +30,7 @@ Nostalgio is an app that captures your listening and travel habits to make your 
 
 
 
-
+## Milestones
 
 - Week 1: Assign Roles & Set Up
 - Week 2: Wireframing & Research
