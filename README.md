@@ -1,6 +1,4 @@
-<div align="center">
-  <img src="https://github.com/acm-projects/Nostalgio/blob/main/listening-to-music-spongebob.gif" alt="Listening to Music GIF">
-<div/>
+![](https://github.com/acm-projects/Nostalgio/blob/main/listening-to-music-spongebob.gif)
 <p align="center">
   <img src="https://github.com/user-attachments/assets/f8d01aaf-9331-4053-9566-cbb3b495574d.gif"/>
 </p>
@@ -11,56 +9,55 @@
 Nostalgio is an app that captures your listening and travel habits to make your travel and music experiences memorable. By linking to your Spotify account, it uses your listening patterns and data on what others have listened to at the same location to predict and recommend music you might enjoy. Nostalgio enhances your daily life and travel experiences by creating a musical map of your journeys, turning ordinary moments into memorable ones with personalized, location-specific music.
 </p>
 
-<!-- Left-align the following content -->
-<div style="text-align: left;">
-  <p>
-  Nostalgio is an app that captures your listening and travel habits to make your travel and music experiences memorable. By linking to your Spotify account, it uses your listening patterns and data on what others have listened to at the same location to predict and recommend music you might enjoy. Nostalgio enhances your daily life and travel experiences by creating a musical map of your journeys, turning ordinary moments into memorable ones with personalized, location-specific music.
-  </p>
+## MVP (Minimum Viable Product)
 
-  ## MVP (Minimum Viable Product)
-  
-  * User account with user authentication
-  * Memory saving (Allows users to save a list of songs attributed to a location)
-  * Memory map visualization (A map that depicts locations traveled and its associated memories & songs over time)
-  * Spotify integration to create playlists from these memories
-  * Music suggestion based off of previous travel and listening habits
-  * Track and display songs listened to by friends on map. (Can comment/react)
-  
-  ## Stretch Goals
-  
-  * Audio recognition: recognizes songs in the area and adds it to your memories for that location.
-  * Augmented Reality (AR) integration (AR trails that guide users through a city or location with music suggestions popping up at different spots. As users walk along the trail, they can experience the music history associated with each landmark.)
-  
-  ## Milestones
-  
-  - Week 1: Assign Roles & Set Up
-  - Week 2: Wireframing & Research
-  - Week 3: Start Implementation
-    - Frontend: start coding basic template of front-end pages/routing in React Native
-    - Backend: Database set up & API integration
-  - Week 4: Implementing Memory Features/Logic
-    - Frontend: code memory input components & map features with Mapbox
-    - Backend: code backend logic for saving & retrieving memories
-  - Week 5/6: Map Visualization & Enhancements | Music Suggestions & Popular Songs 
-    - Frontend: implement markers for user journeys/enhance map details, ability to comment/react on other user’s updates, display popular song choices (could be top 5 songs, top 5 genres, up to participants → some kind of public listening data)
-    - Backend: implement real-time updates of listening history of what other users have listened to at certain locations & ability to comment/react to it, Music suggesting algorithm based off of what the user has been listening to
-  - Week 7/8: Continue progress on Music Suggesting & UI Enhancements & User Auth, Presentation prep, Final Touches
-  - Week 9/10: Presentation Clean up & Final Touches
-  
-  ## Tech Stack
-  
-  * Wireframing: Figma
-  * IDE: VSC
-  * Frontend: [React Native](https://reactnative.dev/) with [MapBox Gl](https://docs.mapbox.com/help/glossary/maps-sdk-for-react-native/)
-    * React Native is a cross compatible framework that paired with expo allows you to bring your apps to life while in development phases
-    * MapBox is a community-maintained React Native library that provides reusable JavaScript components for integrating Mapbox maps into iOS and Android apps.
-  * Backend: [AWS Lambda](https://www.serverless.com/aws-lambda), [DynamoDB](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Introduction.html)/[S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html) Or [Firebase/Firestore](https://firebase.google.com/docs/firestore), [Spotify API](https://developer.spotify.com/documentation/web-api), [MapBox API](https://docs.mapbox.com/api/overview/)
-    * AWS Lambda is a compute service that runs your code in response to events and automatically manages the compute resources
-    * DynamoDB and S3 continue with the fully AWS approach however, Firebase/Firestore work great as needed
-  * User Authentication: [Firebase / React Native Authentication](https://rnfirebase.io/auth/usage) or [Auth0](https://auth0.com/docs)
 
-  ## Software to Install
+* User account with user authentication
+* Memory saving (Allows users to save a list of songs attributed to a location)
+* Memory map visualization (A map that depicts locations traveled and its associated memories & songs over time)
+* Spotify integration to create playlists from these memories
+* Music suggestion based off of previous travel and listening habits
+* Track and display songs listened to by friends on map. (Can comment/react)
   
+
+
+
+## Stretch Goals
+
+* Audio recognition: recognizes songs in the area and adds it to your memories for that location.
+* Augmented Reality (AR) integration (AR trails that guide users through a city or location with music suggestions popping up at different spots. As users walk along the trail, they can experience the music history associated with each landmark.)
+
+
+
+## Milestones
+
+- Week 1: Assign Roles & Set Up
+- Week 2: Wireframing & Research
+- Week 3: Start Implementation
+  - Frontend: start coding basic template of front-end pages/routing in React Native
+  - Backend: Database set up & API integration
+- Week 4: Implementing Memory Features/Logic
+  - Frontend: code memory input components & map features with Mapbox
+  - Backend: code backend logic for saving & retrieving memories
+- Week 5/6: Map Visualization & Enhancements | Music Suggestions & Popular Songs 
+  - Frontend: implement markers for user journeys/enhance map details, ability to comment/react on other user’s updates, display popular song choices (could be top 5 songs, top 5 genres, up      to participants → some kind of public listening data)
+  - Backend: implement real-time updates of listening history of what other users have listened to at certain locations & ability to comment/react to it, Music suggesting algorithm based off     of what the user has been listening to
+- Week 7/8: Continue progress on Music Suggesting & UI Enhancements & User Auth, Presentation prep, Final Touches
+- Week 9/10: Presentation Clean up & Final Touches
+
+
+## Tech Stack
+* Wireframing: Figma
+* IDE: VSC
+* Frontend: [React Native](https://reactnative.dev/) with [MapBox Gl](https://docs.mapbox.com/help/glossary/maps-sdk-for-react-native/)
+  * React Native is a cross compatible framework that paired with expo allows you to bring your apps to life while in development phases
+  * MapBox is a community-maintained React Native library that provides reusable JavaScript components for integrating Mapbox maps into iOS and Android apps.
+* Backend: [AWS Lambda](https://www.serverless.com/aws-lambda), [DynamoDB](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Introduction.html)/[S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html) Or [Firebase/Firestore](https://firebase.google.com/docs/firestore), [Spotify API](https://developer.spotify.com/documentation/web-api), [MapBox API](https://docs.mapbox.com/api/overview/)
+  * AWS Lambda is a compute service that runs your code in response to events and automatically manages the compute resources
+  * DynamoDB and S3 continue with the fully AWS approach however, Firebase/Firestore work great as needed
+* User Authentication: [Firebase / React Native Authentication](https://rnfirebase.io/auth/usage) or [Auth0](https://auth0.com/docs)
+
+## Software to Install
   - [Visual Studio Code](https://code.visualstudio.com/)
   - [Figma](https://www.figma.com/downloads/)
   - [React Native](https://reactnative.dev/docs/environment-setup)
@@ -70,7 +67,7 @@ Nostalgio is an app that captures your listening and travel habits to make your 
   - [Express](https://expressjs.com/)
   - [Git](https://git-scm.com/downloads)
 
-  ## Tutorials and Resources  
+## Tutorials and Resources  
   **General**
   - [Success in ACM Projects](https://docs.google.com/document/d/18Zi3DrKG5e6g5Bojr8iqxIu6VIGl86YBSFlsnJnlM88/edit#heading=h.ky82xv3vtbpi)
   - [API Crash Course w/ timestamps](https://www.youtube.com/watch?v=GZvSYJDk-us)
@@ -91,7 +88,20 @@ Nostalgio is an app that captures your listening and travel habits to make your 
   - [AWS Lambda & React Native](https://docs.aws.amazon.com/prescriptive-guidance/latest/patterns/build-a-serverless-react-native-mobile-app-by-using-aws-amplify.html)
   - [AWS S3 & React Native](https://jaka-tertinek.medium.com/upload-files-from-react-native-app-to-aws-s3-3d3cb85e9d4)
   - [Firebase / React Native Authentication Tutorial](https://www.youtube.com/watch?v=ONAVmsGW6-M)
-</div>
+
+## Git Commands
+
+| Command                       | What it does                        |
+| ----------------------------- | ----------------------------------- |
+| git branch                    | lists all the branches              |
+| git branch "branch name"      | makes a new branch                  |
+| git checkout "branch name"    | switches to speicified branch       |
+| git checkout -b "branch name" | combines the previous 2 commands    |
+| git add .                     | finds all changed files             |
+| git commit -m "Testing123"    | commit with a message               |
+| git push origin "branch"      | push to branch                      |
+| git pull origin "branch"      | pull updates from a specific branch |
+  
   ## Meet the Team
 
  * Frontend
