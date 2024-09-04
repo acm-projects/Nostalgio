@@ -29,7 +29,8 @@ Nostalgio is an app that captures your listening and travel habits to make your 
 
 
 
-## Milestones
+<details>
+  
 **<summary>Week 1: Set Up :rocket:</summary>**
 
 #### General:
@@ -41,7 +42,9 @@ Nostalgio is an app that captures your listening and travel habits to make your 
 
 #### Backend:
 - Start looking into AWS and frameworks
-- Look into AWS kendra for AI
+
+<br>
+</details>
 
 - Week 1: Assign Roles & Set Up
 - Week 2: Wireframing & Research
