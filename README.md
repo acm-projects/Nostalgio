@@ -11,6 +11,7 @@
 Nostalgio is an app that captures your listening and travel habits to make your travel and music experiences memorable. By linking to your Spotify account, it uses your listening patterns and data on what others have listened to at the same location to predict and recommend music you might enjoy. Nostalgio enhances your daily life and travel experiences by creating a musical map of your journeys, turning ordinary moments into memorable ones with personalized, location-specific music.
 </p>
 
+<div style="text-align: left;">
 ## MVP (Minimum Viable Product)
 
 
@@ -115,3 +116,5 @@ Nostalgio is an app that captures your listening and travel habits to make your 
 * Project Manager: Shraddha Subash
   
 * Industry Mentor: Erik Rodriguez
+
+</div>
