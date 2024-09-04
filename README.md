@@ -37,14 +37,31 @@ Nostalgio is an app that captures your listening and travel habits to make your 
 - Discuss with the team who’s frontend/backend and the overall project/tech stack
 - Set up communication, environments, and WhenToMeet(Link available in doc) 📆
 - Go over GitHub basics
-- Create a Figma account and start working on UI designs (For Everyone) 🎨
-  - Start with Low Fidelity and then build up to High Fidelity
+- Low Fidelity with everyone
 
 #### Backend:
 - Start looking into AWS and frameworks
+#### Frontend:
+- Create a Figma account and start working on UI designs 🎨
 
 <br>
 </details>
+
+**<summary>Week 2: Starting Out ⭐</summary>**
+
+#### Frontend:
+  - Learn React Native
+  - Finish up the Figma Design by the end of this week
+
+#### Backend:
+- Start setting up the User Authentication and the Database. Have a working prototype by the end of the 2nd week
+- Keep doing research with the AWS Tech Stack
+- Start looking at the recommendation algorithm
+
+<br>
+</details>
+
+
 
 - Week 1: Assign Roles & Set Up
 - Week 2: Wireframing & Research
