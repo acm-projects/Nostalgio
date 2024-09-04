@@ -1,4 +1,4 @@
-![](https://github.com/acm-projects/Nostalgio/blob/main/listening-to-music-spongebob.gif)
+
 <p align="center">
   <img src="https://github.com/acm-projects/Nostalgio/blob/main/listening-to-music-spongebob.gif"/>
 </p>
