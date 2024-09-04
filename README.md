@@ -1,5 +1,5 @@
 <div align="center">
-  ![](https://github.com/acm-projects/Nostalgio/blob/main/listening-to-music-spongebob.gif)
+  <img src="https://github.com/acm-projects/Nostalgio/blob/main/listening-to-music-spongebob.gif" alt="Listening to Music GIF">
 <div/>
 <p align="center">
   <img src="https://github.com/user-attachments/assets/f8d01aaf-9331-4053-9566-cbb3b495574d.gif"/>
