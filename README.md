@@ -30,6 +30,18 @@ Nostalgio is an app that captures your listening and travel habits to make your 
 
 
 ## Milestones
+**<summary>Week 1: Set Up :rocket:</summary>**
+
+#### General:
+- Discuss with the team who’s frontend/backend and the overall project/tech stack
+- Set up communication, environments, and WhenToMeet(Link available in doc) 📆
+- Go over GitHub basics
+- Create a Figma account and start working on UI designs (For Everyone) 🎨
+  - Start with Low Fidelity and then build up to High Fidelity
+
+#### Backend:
+- Start looking into AWS and frameworks
+- Look into AWS kendra for AI
 
 - Week 1: Assign Roles & Set Up
 - Week 2: Wireframing & Research
