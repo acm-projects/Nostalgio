@@ -29,7 +29,6 @@ Nostalgio is an app that captures your listening and travel habits to make your 
 
 
 
-
 ## Milestones
 
 - Week 1: Assign Roles & Set Up
@@ -62,8 +61,7 @@ Nostalgio is an app that captures your listening and travel habits to make your 
   - [Visual Studio Code](https://code.visualstudio.com/)
   - [Figma](https://www.figma.com/downloads/)
   - [React Native](https://reactnative.dev/docs/environment-setup)
-  - [Firebase](https://firebase.google.com/docs/web/setup)
-  - [DynamoDB](https://aws.amazon.com/dynamodb/)
+  - [DynamoDB](https://aws.amazon.com/dynamodb/) / [Firebase](https://firebase.google.com/docs/web/setup)
   - [Node](https://nodejs.org/en/)
   - [Express](https://expressjs.com/)
   - [Git](https://git-scm.com/downloads)
@@ -102,8 +100,20 @@ Nostalgio is an app that captures your listening and travel habits to make your 
 | git commit -m "Testing123"    | commit with a message               |
 | git push origin "branch"      | push to branch                      |
 | git pull origin "branch"      | pull updates from a specific branch |
+
+## Competition
+* Spotify - even though they have recommended playlists, they not location based and don't have a feature to save these memories onto a map
+* Shazam - Shazam identifies songs based on audio samples and offers a way to discover new music. It also has some location-based features that show popular songs in specific areas. But it 
+  does not have the memory map 
   
-  ## Meet the Team
+## Meet the Team
+
+Developers: 
+* Sai Chauhan
+* Izma	Khurram
+* Andres Garcia Sanchez
+* Shivansh Vaidhyanathan
+* Sanjita Medishetty
 
  * Frontend
    * 
