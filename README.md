@@ -114,13 +114,6 @@ Developers:
 * Andres Garcia Sanchez
 * Shivansh Vaidhyanathan
 * Sanjita Medishetty
-
- * Frontend
-   * 
-
-* Backend
-  * 
       
-* Project Manager: Shraddha Subash
-  
-* Industry Mentor: Erik Rodriguez
+Project Manager: Shraddha Subash
+Industry Mentor: Erik Rodriguez
