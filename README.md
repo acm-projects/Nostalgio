@@ -116,4 +116,5 @@ Developers:
 * Sanjita Medishetty
       
 Project Manager: Shraddha Subash
+
 Industry Mentor: Erik Rodriguez
