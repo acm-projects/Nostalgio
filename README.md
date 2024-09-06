@@ -102,13 +102,13 @@ Nostalgio is an app that captures your listening and travel habits to make your 
 
 - General:
   - Presentation Prep: Start preparing the presentation and demo, focusing on the key features and how they work together.
+  - Work on stretch goals if possible
 - Frontend:
   - UI Enhancements: Polish the UI and ensure smooth navigation between different pages.
   - Integration Testing: Begin testing the integration between frontend and backend, especially for features like memory saving, map visualization, and music suggestions.
 - Backend:
   - Final Integration: Complete the integration of all APIs (Spotify, Mapbox) and ensure the backend is fully functional.
   - User Authentication: Finalize the user authentication flow and connect it with the database.
-  - Music Suggestion Algorithm: Start developing the core algorithm for music suggestions based on user data and location.
 
 </details>
 
@@ -123,20 +123,6 @@ Nostalgio is an app that captures your listening and travel habits to make your 
 
 </details>
 
-
-- Week 1: Assign Roles & Set Up
-- Week 2: Wireframing & Research
-- Week 3: Start Implementation
-  - Frontend: start coding basic template of front-end pages/routing in React Native
-  - Backend: Database set up & API integration
-- Week 4: Implementing Memory Features/Logic
-  - Frontend: code memory input components & map features with Mapbox
-  - Backend: code backend logic for saving & retrieving memories
-- Week 5/6: Map Visualization & Enhancements | Music Suggestions & Popular Songs 
-  - Frontend: implement markers for user journeys/enhance map details, ability to comment/react on other user’s updates, display popular song choices (could be top 5 songs, top 5 genres, up      to participants → some kind of public listening data)
-  - Backend: implement real-time updates of listening history of what other users have listened to at certain locations & ability to comment/react to it, Music suggesting algorithm based off of what the user has been listening to
-- Week 7/8: Continue progress on Music Suggesting & UI Enhancements & User Auth, Presentation prep, Final Touches
-- Week 9/10: Presentation Clean up & Final Touches
 
 
 ## Tech Stack
