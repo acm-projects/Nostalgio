@@ -17,7 +17,7 @@ Nostalgio is an app that captures your listening and travel habits to make your 
 * Memory map visualization (A map that depicts locations traveled and its associated memories & songs over time)
 * Spotify integration to create playlists from these memories
 * Music suggestion based off of previous travel and listening habits
-* Track and display songs listened to by friends on map. (Can comment/react)
+* Track and display songs listened to by friends on map. 
   
 
 
@@ -26,6 +26,7 @@ Nostalgio is an app that captures your listening and travel habits to make your 
 
 * Audio recognition: recognizes songs in the area and adds it to your memories for that location.
 * Augmented Reality (AR) integration (AR trails that guide users through a city or location with music suggestions popping up at different spots. As users walk along the trail, they can experience the music history associated with each landmark.)
+* Social aspect: can comment and interact with other users (see their memory map, react to what they're listening to)
 
 
 
@@ -184,7 +185,14 @@ Nostalgio is an app that captures your listening and travel habits to make your 
 ## Competition 🫢
 * Spotify - even though they have recommended playlists, they not location based and don't have a feature to save these memories onto a map
 * Shazam - Shazam identifies songs based on audio samples and offers a way to discover new music. It also has some location-based features that show popular songs in specific areas. But it 
-  does not have the memory map 
+  does not have the memory map
+
+## Possible Roadblocks 🧠
+- Implementing real-time updates (e.g., live location tracking, real-time music recommendations) can be complex
+  - Start with basic real-time features and add more complexity as needed
+- Integrating multiple APIs
+  - Take time to understand how Mapbox & Spotify API works, especially first 2 weeks
+
   
 ## Meet the Team
 
