@@ -31,6 +31,99 @@ Nostalgio is an app that captures your listening and travel habits to make your 
 
 ## Milestones
 
+<details closed>
+  <summary>  <strong> Week 1: Setup ⚓ </strong> </summary>
+  <br>
+
+- General:
+  - Assign roles for front-end and back-end development.
+  - Discuss overall project scope, tech stack/options (React Native for frontend, AWS for backend)
+  - Schedule meetings for weekly meetings
+  - Start Low fidelity with everyone to get a vision of the app
+- Frontend:
+  - Start working on figma and be ready to show progress dev night
+  - Learn React Native/Flutter and decide which you wanna work with
+- Backend:
+  - Research AWS and begin setting up your environment (AWS EC2, S3).
+  - Start exploring database frameworks (e.g., MongoDB, DynamoDB).
+  - Explore Spotify API
+
+</details>
+<details closed>
+  <summary>  <strong> Week 1: Getting Started 🏃 </strong> </summary>
+  <br>
+  
+- Frontend:
+  - Figma design complete
+  - Basic Routing: Implement initial routing in React Native to connect key screens.
+- Backend:
+  - Continue researching the AWS tech stack 
+  - Database Schema: Design the DynamoDB schema to store user data, memories, and listening history.
+  - Mapbox Integration: Begin researching how to integrate Mapbox into the app for location tracking.
+  - Begin brainstorming and researching the music suggestion algorithm based on location and listening habits.
+
+</details>
+
+<details closed>
+  <summary>  <strong> Week 3/4: Implementation 🤓 </strong> </summary>
+  <br>
+
+- General:
+  - Team Sync: Regular check-ins to address any blockers, especially since the team is new to the tech stack.
+- Frontend:
+  - Core Pages: Begin coding key components such as the Memory Input Page, Map Visualization Page, and Music Suggestion Page.
+  - Mapbox Integration: Start integrating Mapbox into the frontend to display user locations and memory markers.
+- Backend:
+  - Database Setup: Implement the DynamoDB schema, focusing on saving and retrieving user memories and listening data.
+  - Spotify API Integration: Set up initial connections to the Spotify API to fetch user listening data.
+  - Mapbox API: Set up backend logic to handle location data and pass it to the frontend.
+
+</details>
+
+<details closed>
+  <summary>  <strong> Week 5/6: Key Features + Enhancements 🎵📊 </strong> </summary>
+  <br>
+
+- General:
+  - Midway Review: Review progress, adjust goals if necessary, and ensure both frontend and backend are on track for integration.
+- Frontend:
+  - Memory Visualization: Enhance map visualization with memory markers, user journeys, and interaction features (comments, reactions).
+  - Popular Songs Display: Implement UI to display popular songs and genres at specific locations.
+- Backend:
+  - Memory Logic: Finalize backend logic for saving and retrieving memories and associated music.
+  - Real-Time Updates: Implement real-time updates for what other users have listened to at certain locations.
+  - Music Suggestion Algorithm: Start developing the core algorithm for music suggestions based on user data and location.
+
+</details>
+
+<details closed>
+  <summary>  <strong> Week 7/8: Integration & UI Enhancements 🎵🏁 </strong> </summary>
+  <br>
+
+- General:
+  - Presentation Prep: Start preparing the presentation and demo, focusing on the key features and how they work together.
+- Frontend:
+  - UI Enhancements: Polish the UI and ensure smooth navigation between different pages.
+  - Integration Testing: Begin testing the integration between frontend and backend, especially for features like memory saving, map visualization, and music suggestions.
+- Backend:
+  - Final Integration: Complete the integration of all APIs (Spotify, Mapbox) and ensure the backend is fully functional.
+  - User Authentication: Finalize the user authentication flow and connect it with the database.
+  - Music Suggestion Algorithm: Start developing the core algorithm for music suggestions based on user data and location.
+
+</details>
+
+<details closed>
+  <summary>  <strong> Week 9/10: Final Touches & Presentation Prep 💪📢 </strong> </summary>
+  <br>
+
+- General:
+  - Bug Fixes & Polish: Address any bugs, finalize UI/UX, and ensure the app is stable and ready for presentation.
+  - Final Testing: Conduct thorough testing of all features, focusing on user journeys and the core algorithm.
+  - Presentation: Prepare slides, script, and rehearse the demo. Ensure everyone is confident with their part of the presentation.
+
+</details>
+
+
 - Week 1: Assign Roles & Set Up
 - Week 2: Wireframing & Research
 - Week 3: Start Implementation
@@ -57,9 +150,10 @@ Nostalgio is an app that captures your listening and travel habits to make your 
   * DynamoDB and S3 continue with the fully AWS approach however, Firebase/Firestore work great as needed
 * User Authentication: [Firebase / React Native Authentication](https://rnfirebase.io/auth/usage) or [Auth0](https://auth0.com/docs)
 
+
+
 ## Software to Install
   - [Visual Studio Code](https://code.visualstudio.com/)
-  - [Figma](https://www.figma.com/downloads/)
   - [React Native](https://reactnative.dev/docs/environment-setup)
   - [DynamoDB](https://aws.amazon.com/dynamodb/) / [Firebase](https://firebase.google.com/docs/web/setup)
   - [Node](https://nodejs.org/en/)
@@ -101,20 +195,20 @@ Nostalgio is an app that captures your listening and travel habits to make your 
 | git push origin "branch"      | push to branch                      |
 | git pull origin "branch"      | pull updates from a specific branch |
 
-## Competition
+## Competition 🫢
 * Spotify - even though they have recommended playlists, they not location based and don't have a feature to save these memories onto a map
 * Shazam - Shazam identifies songs based on audio samples and offers a way to discover new music. It also has some location-based features that show popular songs in specific areas. But it 
   does not have the memory map 
   
 ## Meet the Team
 
-Developers: 
+Developers ⭐: 
 * Sai Chauhan
 * Izma	Khurram
 * Andres Garcia Sanchez
 * Shivansh Vaidhyanathan
 * Sanjita Medishetty
       
-Project Manager: Shraddha Subash
+Project Manager 🤺: Shraddha Subash
 
-Industry Mentor: Erik Rodriguez
+Industry Mentor 👔: Erik Rodriguez
