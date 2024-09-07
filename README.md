@@ -16,8 +16,9 @@ Nostalgio is an app that captures your listening and travel habits to make your 
 * Memory saving (Allows users to save a list of songs attributed to a location)
 * Memory map visualization (A map that depicts locations traveled and its associated memories & songs over time)
 * Spotify integration to create playlists from these memories
-* Music suggestion based off of previous travel and listening habits
-* Track and display songs listened to by friends on map. 
+* Music suggestion based off of travel & listening habits
+* Track and display songs listened to by friends on map.
+* Stats on profile page
   
 
 
@@ -27,6 +28,7 @@ Nostalgio is an app that captures your listening and travel habits to make your 
 * Audio recognition: recognizes songs in the area and adds it to your memories for that location.
 * Augmented Reality (AR) integration (AR trails that guide users through a city or location with music suggestions popping up at different spots. As users walk along the trail, they can experience the music history associated with each landmark.)
 * Social aspect: can comment and interact with other users (see their memory map, react to what they're listening to)
+* Community Feed
 
 
 
