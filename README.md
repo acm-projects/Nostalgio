@@ -136,7 +136,7 @@ Nostalgio is an app that captures your listening and travel habits to make your 
 * Backend: [AWS Lambda](https://www.serverless.com/aws-lambda), [DynamoDB](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Introduction.html) & [S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html) Or [Firebase/Firestore](https://firebase.google.com/docs/firestore), [Express & Node](https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/Introduction), [Spotify API](https://developer.spotify.com/documentation/web-api), [MapBox API](https://docs.mapbox.com/api/overview/)
   * AWS Lambda is a compute service that runs your code in response to events and automatically manages the compute resources
   * DynamoDB and S3 continue with the fully AWS approach however, Firebase/Firestore work great as needed
-  * Express
+  * By using Express and Node.js, you can effectively manage the backend of your mobile app, providing a robust API that interacts with your frontend mobile application
 * User Authentication: [Auth0](https://auth0.com/docs)
 
 
