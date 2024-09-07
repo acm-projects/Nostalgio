@@ -131,11 +131,13 @@ Nostalgio is an app that captures your listening and travel habits to make your 
 * IDE: VSC
 * Frontend: [React Native](https://reactnative.dev/) with [MapBox Gl](https://docs.mapbox.com/help/glossary/maps-sdk-for-react-native/)
   * React Native is a cross compatible framework that paired with expo allows you to bring your apps to life while in development phases
+  * Material UI or Bootstrap / CSS Tailwind
   * MapBox is a community-maintained React Native library that provides reusable JavaScript components for integrating Mapbox maps into iOS and Android apps.
-* Backend: [AWS Lambda](https://www.serverless.com/aws-lambda), [DynamoDB](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Introduction.html)/[S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html) Or [Firebase/Firestore](https://firebase.google.com/docs/firestore), [Spotify API](https://developer.spotify.com/documentation/web-api), [MapBox API](https://docs.mapbox.com/api/overview/)
+* Backend: [AWS Lambda](https://www.serverless.com/aws-lambda), [DynamoDB](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Introduction.html) & [S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html) Or [Firebase/Firestore](https://firebase.google.com/docs/firestore), [Express & Node](https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/Introduction), [Spotify API](https://developer.spotify.com/documentation/web-api), [MapBox API](https://docs.mapbox.com/api/overview/)
   * AWS Lambda is a compute service that runs your code in response to events and automatically manages the compute resources
   * DynamoDB and S3 continue with the fully AWS approach however, Firebase/Firestore work great as needed
-* User Authentication: [Firebase / React Native Authentication](https://rnfirebase.io/auth/usage) or [Auth0](https://auth0.com/docs)
+  * Express
+* User Authentication: [Auth0](https://auth0.com/docs)
 
 
 
@@ -143,6 +145,7 @@ Nostalgio is an app that captures your listening and travel habits to make your 
   - [Visual Studio Code](https://code.visualstudio.com/)
   - [React Native](https://reactnative.dev/docs/environment-setup)
   - [DynamoDB](https://aws.amazon.com/dynamodb/) / [Firebase](https://firebase.google.com/docs/web/setup)
+  - [CSS Tailwind](https://tailwindcss.com/docs/guides/nextjs)
   - [Node](https://nodejs.org/en/)
   - [Express](https://expressjs.com/)
   - [Git](https://git-scm.com/downloads)
