@@ -51,7 +51,7 @@ Nostalgio is an app that captures your listening and travel habits to make your 
 
 </details>
 <details closed>
-  <summary>  <strong> Week 1: Getting Started 🏃 </strong> </summary>
+  <summary>  <strong> Week 2: Getting Started 🏃 </strong> </summary>
   <br>
   
 - Frontend:
