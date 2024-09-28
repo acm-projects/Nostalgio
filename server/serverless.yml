@@ -1,0 +1,262 @@
+org: andresgrc
+# "app" enables Serverless Framework Dashboard features and sharing them with other Services.
+app: nostalgio-backend
+service: nostalgio-backend
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+  environment:
+    COGNITO_USER_POOL_ID: ${env:COGNITO_USER_POOL_ID}
+    COGNITO_CLIENT_ID: ${env:COGNITO_CLIENT_ID}
+    COGNITO_REDIRECT_URI: ${env:COGNITO_REDIRECT_URI}
+    SPOTIFY_CLIENT_ID: ${env:SPOTIFY_CLIENT_ID}
+    SPOTIFY_CLIENT_SECRET: ${env:SPOTIFY_CLIENT_SECRET}
+    SPOTIFY_REDIRECT_URI: ${env:SPOTIFY_REDIRECT_URI}
+    USERS_TABLE: Users
+    MEMORIES_TABLE: Memories
+    AUTH_SESSION_TABLE: AuthSessionData
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - "cognito-idp:AdminCreateUser"
+        - "cognito-idp:AdminUpdateUserAttributes"
+        - "cognito-idp:AdminInitiateAuth"
+        - "cognito-idp:AdminRespondToAuthChallenge"
+        - "cognito-idp:ListUsers"
+        - "cognito-idp:AdminGetUser"
+        - "cognito-idp:AdminDeleteUser"
+      Resource: arn:aws:cognito-idp:${self:provider.region}:*:userpool/${env:COGNITO_USER_POOL_ID}
+
+    - Effect: Allow
+      Action:
+        - "lambda:InvokeFunction"
+      Resource: "*"
+
+    - Effect: Allow
+      Action:
+        - "dynamodb:Query"
+        - "dynamodb:PutItem"
+        - "dynamodb:GetItem"
+        - "dynamodb:UpdateItem"
+        - "dynamodb:DeleteItem"
+        - "dynamodb:DescribeStream"
+        - "dynamodb:GetRecords"
+        - "dynamodb:GetShardIterator"
+      Resource:
+        - !GetAtt UsersTable.Arn                # Full access to UsersTable
+        - !GetAtt UsersTable.StreamArn          # Stream access to UsersTable
+        - !GetAtt MemoriesTable.Arn             # Full access to MemoriesTable
+        - !GetAtt MemoriesTable.StreamArn       # Stream access to MemoriesTable
+        - !GetAtt AuthSessionData.Arn           # Full access to AuthSessionData
+        - arn:aws:dynamodb:${self:provider.region}:*:table/Users/index/SpotifyUserIdIndex
+
+    - Effect: Allow
+      Action:
+        - "logs:CreateLogGroup"
+        - "logs:CreateLogStream"
+        - "logs:PutLogEvents"
+      Resource: "*"
+
+package:
+  individually: true
+
+plugins:
+  - serverless-offline
+  
+functions:
+  # Spotify Handlers
+  spotifyAuth:
+    handler: src/auth/spotify/spotifyAuthHandler.spotifyAuthHandler
+    events:
+      - http:
+          path: auth/login
+          method: get
+          cors: true
+
+  spotifyCallback:
+    handler: src/auth/spotify/spotifyCallbackHandler.spotifyCallbackHandler
+    events:
+      - http:
+          path: callback
+          method: get
+          cors: true
+
+  exchangeSpotifyToken:
+    handler: src/auth/spotify/spotifyTokenManager.exchangeSpotifyToken
+    events:
+      - http:
+          path: exchangeSpotifyToken
+          method: post
+          cors: true
+
+  refreshSpotifyToken:
+    handler: src/auth/spotify/spotifyTokenManager.refreshSpotifyToken
+    events:
+      - http:
+          path: refreshSpotifyToken
+          method: post
+          cors: true
+
+  validateSpotifyToken:
+    handler: src/auth/spotify/spotifyTokenManager.validateSpotifyToken
+    events:
+      - http:
+          path: validateSpotifyToken/{userId}
+          method: post
+          cors: true
+
+  # User Handlers
+  createUser:
+    handler: src/users/handlers/createUser.createUserHandler
+    events:
+      - http:
+          path: users
+          method: post
+          cors: true
+
+  getUser:
+    handler: src/users/handlers/getUser.getUserHandler
+    events:
+      - http:
+          path: users/{userId}
+          method: get
+          cors: true
+      - http:
+          path: users/spotify/{spotifyUserId}
+          method: get
+          cors: true
+
+  updateUser:
+    handler: src/users/handlers/updateUser.updateUserHandler
+    events:
+      - http:
+          path: users/{userId}
+          method: put
+          cors: true
+
+  deleteUser:
+    handler: src/users/handlers/deleteUser.deleteUserHandler
+    events:
+      - http:
+          path: users/{userId}
+          method: delete
+          cors: true
+
+  # Memory Handlers
+  createMemory:
+    handler: src/memories/handlers/createMemory.createMemoryHandler
+    events:
+      - http:
+          path: memories
+          method: post
+          cors: true
+
+  getMemory:
+    handler: src/memories/handlers/getMemory.getMemoryHandler
+    events:
+      - http:
+          path: memories/{userId}/{memoryId}
+          method: get
+          cors: true
+
+  updateMemory:
+    handler: src/memories/handlers/updateMemory.updateMemoryHandler
+    events:
+      - http:
+          path: memories/{userId}/{memoryId}
+          method: put
+          cors: true
+
+  deleteMemory:
+    handler: src/memories/handlers/deleteMemory.deleteMemoryHandler
+    events:
+      - http:
+          path: memories/{userId}/{memoryId}
+          method: delete
+          cors: true
+
+  listMemories:
+    handler: src/memories/handlers/listMemories.listMemoriesHandler
+    events:
+      - http:
+          path: memories/{userId}
+          method: get
+          cors: true
+
+  streamMemoryUpdates:
+    handler: src/memories/handlers/streamMemoryUpdates.streamMemoryUpdatesHandler
+    events:
+      - stream:
+          type: dynamodb
+          arn: !GetAtt MemoriesTable.StreamArn
+  
+  # Spotify Tracks Handlers
+  getTopTracks:
+    handler: src/spotify/tracks/handlers/getTopTracks.getTopTracks
+    events:
+      - http:
+          path: spotify/tracks/top/{userId}
+          method: get
+          cors: true
+          # authorizer:
+          #   name: NostalgioAuthorizer  # Ensure this matches your current authorizer
+resources:
+  Resources:
+    AuthSessionData:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: AuthSessionData
+        AttributeDefinitions:
+          - AttributeName: UserId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: UserId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        TimeToLiveSpecification:
+          AttributeName: ExpiresAt
+          Enabled: true
+
+    UsersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Users
+        AttributeDefinitions:
+          - AttributeName: UserId
+            AttributeType: S
+          - AttributeName: SpotifyUserId  # Define SpotifyUserId for GSI
+            AttributeType: S
+        KeySchema:
+          - AttributeName: UserId
+            KeyType: HASH
+        GlobalSecondaryIndexes:
+          - IndexName: SpotifyUserIdIndex
+            KeySchema:
+              - AttributeName: SpotifyUserId
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+        BillingMode: PAY_PER_REQUEST
+        StreamSpecification:
+          StreamViewType: NEW_AND_OLD_IMAGES  # Enable streams for UsersTable
+
+    MemoriesTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Memories
+        AttributeDefinitions:
+          - AttributeName: UserId
+            AttributeType: S
+          - AttributeName: MemoryId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: UserId
+            KeyType: HASH
+          - AttributeName: MemoryId
+            KeyType: RANGE
+        BillingMode: PAY_PER_REQUEST
+        StreamSpecification:
+          StreamViewType: NEW_AND_OLD_IMAGES
