@@ -15,7 +15,9 @@
     "@aws-sdk/lib-dynamodb": "^3.645.0",
     "axios": "^1.7.7",
     "dotenv": "^16.4.5",
-    "nanoid": "^5.0.7"
+    "dynamodb-geo": "^0.4.0",
+    "nanoid": "^5.0.7",
+    "ngeohash": "^0.6.3"
   },
   "devDependencies": {
     "@types/uuid": "^10.0.0",
