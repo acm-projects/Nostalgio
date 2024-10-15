@@ -1,0 +1,45 @@
+{
+    "ongoing": {"id": "", "city": "Atlanta, GA", "startDate": "20240940", "art": "https://picsum.photos/1000?random=9"},
+    "trips": {
+        "Chicago, IL": [
+            [
+                {
+                    "id": "",
+                    "startDate": "20210730",
+                    "endDate": "20210810",
+                    "name": "covid chicago",
+                    "art": "https://picsum.photos/1000?random=2"
+                }
+            ],
+            [
+                {
+                    "id": "",
+                    "startDate": "20230506",
+                    "endDate": "20230510",
+                    "name": "chicago spring",
+                    "art": "https://picsum.photos/1000?random=3"
+                }
+            ],
+            [
+                {
+                    "id": "",
+                    "startDate": "20240506",
+                    "endDate": "20230510",
+                    "name": "chicago spring",
+                    "art": "https://picsum.photos/1000?random=4"
+                }
+            ]
+        ],
+        "Miami, FL": [
+            [
+                {
+                    "id": "",
+                    "startDate": "20220615",
+                    "endDate": "20220704",
+                    "name": "florida sunsets",
+                    "art": "https://picsum.photos/1000?random=5"
+                }
+            ]
+        ]
+    }
+}

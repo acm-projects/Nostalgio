@@ -1,0 +1,53 @@
+{
+    "trips": {
+        "New York, NY":[
+            [
+                {
+                    "id": "",
+                    "startDate": "20210420",
+                    "endDate": "20210423",
+                    "name": "nyc 1",
+                    "art": "https://picsum.photos/1000?random=2"
+                }
+            ],
+            [
+                {
+                    "id": "",
+                    "startDate": "20230206",
+                    "endDate": "20230510",
+                    "name": "trip!",
+                    "art": "https://picsum.photos/1000?random=3"
+                }
+            ],
+            [
+                {
+                    "id": "",
+                    "startDate": "20240706",
+                    "endDate": "20240710",
+                    "name": "summers.",
+                    "art": "https://picsum.photos/1000?random=4"
+                }
+            ]
+        ],
+        "Los Angeles, CA":[
+            [
+                {
+                    "id": "",
+                    "startDate": "20220615",
+                    "endDate": "20220704",
+                    "name": "la concert",
+                    "art": "https://picsum.photos/1000?random=5"
+                }
+            ],
+            [
+                {
+                    "id": "",
+                    "startDate": "20220615",
+                    "endDate": "20220704",
+                    "name": "la concert 2",
+                    "art": "https://picsum.photos/1000?random=6"
+                }
+            ]
+        ]
+    }
+}

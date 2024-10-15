@@ -1,0 +1,45 @@
+{
+    "ongoing": {"id": "chicIL20241001", "city": "Chicago, IL", "startDate": "20241001", "art": "https://picsum.photos/1000?random=1"},
+    "trips": {
+        "Chicago, IL":[
+            [
+                {
+                    "id": "ch1",
+                    "startDate": "20210730",
+                    "endDate": "20210810",
+                    "name": "covid chicago",
+                    "art": "https://picsum.photos/1000?random=2"
+                }
+            ],
+            [
+                {
+                    "id": "ch2",
+                    "startDate": "20230406",
+                    "endDate": "20230410",
+                    "name": "chicago spring",
+                    "art": "https://picsum.photos/1000?random=3"
+                }
+            ],
+            [
+                {
+                    "id": "ch3",
+                    "startDate": "20240506",
+                    "endDate": "20230510",
+                    "name": "chicago spring 2",
+                    "art": "https://picsum.photos/1000?random=4"
+                }
+            ]
+        ],
+        "Miami, FL":[
+            [
+                {
+                    "id": "fl1",
+                    "startDate": "20220615",
+                    "endDate": "20220704",
+                    "name": "florida sunsets",
+                    "art": "https://picsum.photos/1000?random=5"
+                }
+            ]
+        ]
+    }
+}
