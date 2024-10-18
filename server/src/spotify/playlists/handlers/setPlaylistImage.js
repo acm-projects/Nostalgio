@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { validateSpotifyToken } from '../../../auth/spotify/spotifyTokenManager.js';
+import { convertToJpeg } from '../../../s3/s3Service.js'; // Importing the convertToJpeg function
 
 /**
  * Handler to update a Spotify playlist cover image for a user.
@@ -11,13 +12,13 @@ export const setPlaylistImageHandler = async (event) => {
   try {
     // Step 1: Extract userId, playlistId, and image data from the request
     const { userId, playlistId } = event.pathParameters;
-    const { image } = JSON.parse(event.body);
+    const { image, contentType } = JSON.parse(event.body);
 
-    if (!userId || !playlistId || !image) {
-      console.warn('Missing required parameters: userId, playlistId, or image data');
+    if (!userId || !playlistId || !image || !contentType) {
+      console.warn('Missing required parameters: userId, playlistId, image data, or content type');
       return {
         statusCode: 400,
-        body: JSON.stringify({ message: 'userId, playlistId, and image data are required' }),
+        body: JSON.stringify({ message: 'userId, playlistId, image data, and content type are required' }),
       };
     }
 
@@ -31,21 +32,26 @@ export const setPlaylistImageHandler = async (event) => {
       throw new Error(`No valid access token available for user: ${userId}`);
     }
 
-    // Step 3: Send the PUT request to update the playlist image on Spotify
+    // Step 3: Convert the image to JPEG if necessary
+    const jpegImageBuffer = await convertToJpeg(Buffer.from(image, 'base64'), contentType);
+    const base64Image = jpegImageBuffer.toString('base64');
+
+    // Step 4: Send the PUT request to update the playlist image on Spotify
     const response = await axios.put(
       `https://api.spotify.com/v1/playlists/${playlistId}/images`,
-      image, // Base64 encoded image data as the body
+      base64Image, // Send raw Base64 JPEG data
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'image/jpeg',
+          'Content-Type': 'image/jpeg', // Spotify requires JPEG
         },
       }
     );
 
     console.log(`Successfully updated playlist image for playlistId: ${playlistId}`);
+    console.log(`Spotify response status: ${response.status}`);
 
-    // Step 4: Return a success response
+    // Step 5: Return a success response
     return {
       statusCode: 200,
       body: JSON.stringify({
@@ -55,6 +61,9 @@ export const setPlaylistImageHandler = async (event) => {
     };
   } catch (error) {
     console.error(`Error updating playlist image for playlistId: ${playlistId} - ${error.message}`);
+    if (error.response) {
+      console.error(`Spotify API Error: ${error.response.data.error.message}`);
+    }
     return {
       statusCode: 500,
       body: JSON.stringify({ message: 'Failed to update playlist image', error: error.message }),

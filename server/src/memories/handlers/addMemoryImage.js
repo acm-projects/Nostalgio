@@ -1,40 +1,54 @@
-// src/memories/handlers/addMemoryImageHandler.js
-
 import { setPlaylistImageHandler } from '../../spotify/playlists/handlers/setPlaylistImage.js';
+import { uploadImage } from '../../s3/s3Service.js';
 import { updateMemoryInDynamoDB } from '../memoryService.js';
-import { readFileSync } from 'fs';
 
 /**
  * Lambda handler to add an image to a memory by updating both the DynamoDB record and Spotify playlist image.
  * 
- * @param {Object} event - The API Gateway Lambda event object containing path parameters and image file.
+ * @param {Object} event - The API Gateway Lambda event object containing path parameters and body data.
  * @returns {Object} - HTTP response indicating success or failure.
  */
 export const addMemoryImageHandler = async (event) => {
-  try {
-    // Step 1: Extract userId, memoryId, and image data from path parameters and body
-    const { userId, memoryId } = event.pathParameters;
-    const { imageFilePath } = JSON.parse(event.body); // Path to image file
+  const { userId, memoryId } = event.pathParameters;
+  const contentType = event.headers['Content-Type'];
+  const originalFileName = event.headers['X-Original-File-Name']; // Retrieve the original file name from headers
 
-    if (!userId || !memoryId || !imageFilePath) {
-      console.warn('Missing required parameters: userId, memoryId, or image file path');
+  try {
+    // Step 1: Validate required parameters
+    const { imageBase64 } = JSON.parse(event.body);
+    if (!userId || !memoryId || !imageBase64 || !contentType || !originalFileName) {
+      console.warn('Missing required parameters: userId, memoryId, image data, contentType, or original file name.');
       return {
         statusCode: 400,
-        body: JSON.stringify({ message: 'userId, memoryId, and image file path are required' }),
+        body: JSON.stringify({
+          message: 'userId, memoryId, imageBase64, contentType, and originalFileName are required.',
+        }),
       };
     }
 
-    console.log(`Adding image to memory with memoryId: ${memoryId} for userId: ${userId}`);
+    console.log(`Received image for memory with memoryId: ${memoryId}, userId: ${userId}, file: ${originalFileName}`);
 
-    // Step 2: Read and encode the image file in base64
-    const imageBuffer = readFileSync(imageFilePath);
-    const imageBase64 = imageBuffer.toString('base64');
-    const base64ImageData = `data:image/jpeg;base64,${imageBase64}`;
+    // Step 2: Convert the base64 string to a Buffer
+    const imageBuffer = Buffer.from(imageBase64, 'base64');
+    
+    // Step 3: Validate image size (limit to 5MB)
+    const maxFileSize = 5 * 1024 * 1024; // 5MB limit
+    if (imageBuffer.length > maxFileSize) {
+      console.warn(`Image exceeds size limit. Size: ${imageBuffer.length} bytes`);
+      return {
+        statusCode: 413,
+        body: JSON.stringify({ message: 'Image size exceeds the 5MB limit.' }),
+      };
+    }
 
-    // Step 3: Use setPlaylistImageHandler to update the Spotify playlist cover image
+    // Step 4: Upload image to S3 using the original file name
+    const s3ImageUrl = await uploadImage('playlist', userId, imageBuffer, contentType, memoryId, originalFileName);
+    console.log(`Image successfully uploaded to S3. URL: ${s3ImageUrl}`);
+
+    // Step 5: Set the playlist image on Spotify using the base64 image data
     const setImageEvent = {
       pathParameters: { userId, playlistId: memoryId },
-      body: JSON.stringify({ image: base64ImageData }),
+      body: JSON.stringify({ image: imageBase64 }),
     };
 
     const setImageResponse = await setPlaylistImageHandler(setImageEvent);
@@ -45,19 +59,16 @@ export const addMemoryImageHandler = async (event) => {
 
     console.log(`Successfully updated Spotify playlist image for memoryId: ${memoryId}`);
 
-    // Step 4: Update the memory record in DynamoDB to include the image URL
-    const imageUrl = `https://open.spotify.com/playlist/${memoryId}/image.jpg`; // Example URL construction
-    await updateMemoryInDynamoDB(memoryId, { art: imageUrl });
+    // Step 6: Update the memory record in DynamoDB with the S3 image URL
+    await updateMemoryInDynamoDB(memoryId, { art: s3ImageUrl });
+    console.log(`Memory record updated in DynamoDB with image URL for memoryId: ${memoryId}`);
 
-    console.log(`Memory image updated in DynamoDB with memoryId: ${memoryId}`);
-
-    // Return success response
     return {
       statusCode: 200,
       body: JSON.stringify({
         message: 'Memory image added successfully',
         memoryId,
-        imageUrl,
+        imageUrl: s3ImageUrl,
       }),
     };
   } catch (error) {

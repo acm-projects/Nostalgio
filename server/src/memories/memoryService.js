@@ -125,10 +125,10 @@ export const deleteMemoryFromDynamoDB = async (memoryId) => {
 };
 
 /**
- * List all memories for a user from DynamoDB by userId.
+ * List all memories for a user from DynamoDB by userId, distinguishing ongoing and past trips.
  * 
  * @param {string} userId - The user ID to list memories for.
- * @returns {Array<Object>} - List of memories for the user.
+ * @returns {Object} - An object with categorized "ongoing" memory and "trips" for the user.
  */
 export const listMemoriesFromDynamoDB = async (userId) => {
   const params = {
@@ -139,14 +139,30 @@ export const listMemoriesFromDynamoDB = async (userId) => {
   };
 
   try {
+    // Query DynamoDB with the provided parameters
     const result = await dynamoDb.send(new QueryCommand(params));
-    console.log(`Retrieved ${result.Items?.length || 0} memories for userId: ${userId}`);
-    return result.Items || [];
+    const memories = result.Items || [];
+    let ongoing = null;
+    const trips = [];
+
+    // Categorize each memory as ongoing or completed based on the endDate
+    for (const memory of memories) {
+      const { memoryId, startDate, endDate, name, art, city } = memory;
+      if (!endDate) {
+        ongoing = { id: memoryId, city, startDate, art };
+      } else {
+        trips.push({ id: memoryId, startDate, endDate, name, art, city });
+      }
+    }
+
+    console.log(`Retrieved ${memories.length} memories for userId: ${userId}, categorized as ${trips.length} completed trips and ${ongoing ? '1 ongoing trip' : 'no ongoing trips'}.`);
+    return { ongoing, trips };
   } catch (error) {
-    console.error('Error listing memories from DynamoDB:', error);
+    console.error(`Error listing memories for userId: ${userId}`, error);
     throw new Error('Failed to list memories');
   }
 };
+
 
 /**
  * Retrieve all memories for a user from a specific city, distinguishing ongoing and past trips.
