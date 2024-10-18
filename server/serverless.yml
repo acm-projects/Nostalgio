@@ -19,8 +19,25 @@ provider:
     AUTH_SESSION_TABLE: AuthSessionData
     LISTENING_HISTORY_TABLE: ListeningHistoryTable
     MUSIC_SUGGESTIONS_TABLE: MusicSuggestionsTable
-
+    S3_BUCKET_NAME: ${self:custom.s3BucketName}
+  
+  apiGateway:
+    binaryMediaTypes:
+      - 'image/jpeg'
+      - 'image/png'
+      - 'image/gif'
+      - 'image/heic'
+      - 'image/webp'  # You can add more formats if needed
+      - 'application/octet-stream'  # General binary stream
+  
   iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - "s3:*"
+      Resource:
+        - arn:aws:s3:::${self:custom.s3BucketName}
+        - arn:aws:s3:::${self:custom.s3BucketName}/*
+
     - Effect: Allow
       Action:
         - "cognito-idp:AdminCreateUser"
@@ -362,6 +379,7 @@ functions:
           path: playlists/{userId}/{playlistId}/image
           method: put
           cors: true
+
 # Location Handlers
   reverseGeocode:
     handler: src/locations/handlers/reverseGeocode.reverseGeocodeHandler
@@ -375,6 +393,54 @@ functions:
                 latitude: true
                 longitude: true
           cors: true
+
+# S3 Handlers
+# Handler for uploading images
+  uploadImage:
+    handler: src/s3/handlers/uploadImageHandler.uploadImageHandler
+    events:
+      - http:
+          path: images/{userId}/{type}/{id}
+          method: put
+          cors: true
+          request:
+            parameters:
+              paths:
+                userId: true
+                type: true
+                id: true
+                
+  # Handler for retrieving image URLs
+  getImage:
+    handler: src/s3/handlers/getImageHandler.getImageHandler
+    events:
+      - http:
+          path: images/{userId}/{type}/{id}
+          method: get
+          cors: true
+          request:
+            parameters:
+              paths:
+                userId: true
+                type: true
+                id: true
+
+  # Handler for deleting images
+  deleteImage:
+    handler: src/s3/handlers/deleteImageHandler.deleteImageHandler
+    events:
+      - http:
+          path: images/{userId}/{type}/{id}
+          method: delete
+          cors: true
+          request:
+            parameters:
+              paths:
+                userId: true
+                type: true
+                id: true
+custom:
+  s3BucketName: nostalgio-user-content
 
 resources:
   Resources:
@@ -449,7 +515,6 @@ resources:
         StreamSpecification:
           StreamViewType: NEW_AND_OLD_IMAGES
 
-
     ListeningHistoryTable:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -502,3 +567,38 @@ resources:
         BillingMode: PAY_PER_REQUEST
         StreamSpecification:
           StreamViewType: NEW_AND_OLD_IMAGES
+    
+    UserMediaBucket:
+          Type: AWS::S3::Bucket
+          Properties:
+            BucketName: ${self:custom.s3BucketName}
+            CorsConfiguration:
+              CorsRules:
+                - AllowedOrigins:
+                    - "*" # Allowing access from any origin
+                  AllowedHeaders:
+                    - "*" # Allowing any headers
+                  AllowedMethods:
+                    - GET
+                    - PUT
+                    - POST
+                    - DELETE
+                    - HEAD
+                  MaxAge: 3000
+    BucketPolicy:
+      Type: AWS::S3::BucketPolicy
+      Properties:
+        Bucket: !Ref UserMediaBucket
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Sid: PublicReadGetObject
+              Effect: Allow
+              Principal: "*"
+              Action: "s3:GetObject"
+              Resource: "arn:aws:s3:::${self:custom.s3BucketName}/*"
+  Outputs:
+    UserMediaBucketName:
+      Value: !Ref UserMediaBucket
+      Export:
+        Name: UserMediaBucketName

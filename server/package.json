@@ -16,8 +16,10 @@
     "axios": "^1.7.7",
     "dotenv": "^16.4.5",
     "dynamodb-geo": "^0.4.0",
+    "mime-types": "^2.1.35",
     "nanoid": "^5.0.7",
-    "ngeohash": "^0.6.3"
+    "ngeohash": "^0.6.3",
+    "sharp": "^0.33.5"
   },
   "devDependencies": {
     "@types/uuid": "^10.0.0",

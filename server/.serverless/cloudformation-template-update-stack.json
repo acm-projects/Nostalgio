@@ -188,6 +188,24 @@
         "LogGroupName": "/aws/lambda/nostalgio-backend-dev-reverseGeocode"
       }
     },
+    "UploadImageLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/nostalgio-backend-dev-uploadImage"
+      }
+    },
+    "GetImageLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/nostalgio-backend-dev-getImage"
+      }
+    },
+    "DeleteImageLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/nostalgio-backend-dev-deleteImage"
+      }
+    },
     "IamRoleLambdaExecution": {
       "Type": "AWS::IAM::Role",
       "Properties": {
@@ -244,6 +262,16 @@
                     {
                       "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/nostalgio-backend-dev*:*:*"
                     }
+                  ]
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "s3:*"
+                  ],
+                  "Resource": [
+                    "arn:aws:s3:::nostalgio-user-content",
+                    "arn:aws:s3:::nostalgio-user-content/*"
                   ]
                 },
                 {
@@ -391,7 +419,7 @@
       "Properties": {
         "Code": {
           "S3Bucket": "serverless-framework-deployments-us-east-1-55cebd6e-28d6",
-          "S3Key": "serverless/nostalgio-backend/dev/1728528991172-2024-10-10T02:56:31.172Z/spotifyAuth.zip"
+          "S3Key": "serverless/nostalgio-backend/dev/1729288210372-2024-10-18T21:50:10.372Z/spotifyAuth.zip"
         },
         "Handler": "src/auth/spotify/spotifyAuthHandler.spotifyAuthHandler",
         "Runtime": "nodejs18.x",
@@ -411,7 +439,8 @@
             "MEMORIES_TABLE": "Memories",
             "AUTH_SESSION_TABLE": "AuthSessionData",
             "LISTENING_HISTORY_TABLE": "ListeningHistoryTable",
-            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable"
+            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable",
+            "S3_BUCKET_NAME": "nostalgio-user-content"
           }
         },
         "Role": {
@@ -430,7 +459,7 @@
       "Properties": {
         "Code": {
           "S3Bucket": "serverless-framework-deployments-us-east-1-55cebd6e-28d6",
-          "S3Key": "serverless/nostalgio-backend/dev/1728528991172-2024-10-10T02:56:31.172Z/spotifyCallback.zip"
+          "S3Key": "serverless/nostalgio-backend/dev/1729288210372-2024-10-18T21:50:10.372Z/spotifyCallback.zip"
         },
         "Handler": "src/auth/spotify/spotifyCallbackHandler.spotifyCallbackHandler",
         "Runtime": "nodejs18.x",
@@ -450,7 +479,8 @@
             "MEMORIES_TABLE": "Memories",
             "AUTH_SESSION_TABLE": "AuthSessionData",
             "LISTENING_HISTORY_TABLE": "ListeningHistoryTable",
-            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable"
+            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable",
+            "S3_BUCKET_NAME": "nostalgio-user-content"
           }
         },
         "Role": {
@@ -469,7 +499,7 @@
       "Properties": {
         "Code": {
           "S3Bucket": "serverless-framework-deployments-us-east-1-55cebd6e-28d6",
-          "S3Key": "serverless/nostalgio-backend/dev/1728528991172-2024-10-10T02:56:31.172Z/exchangeSpotifyToken.zip"
+          "S3Key": "serverless/nostalgio-backend/dev/1729288210372-2024-10-18T21:50:10.372Z/exchangeSpotifyToken.zip"
         },
         "Handler": "src/auth/spotify/spotifyTokenManager.exchangeSpotifyToken",
         "Runtime": "nodejs18.x",
@@ -489,7 +519,8 @@
             "MEMORIES_TABLE": "Memories",
             "AUTH_SESSION_TABLE": "AuthSessionData",
             "LISTENING_HISTORY_TABLE": "ListeningHistoryTable",
-            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable"
+            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable",
+            "S3_BUCKET_NAME": "nostalgio-user-content"
           }
         },
         "Role": {
@@ -508,7 +539,7 @@
       "Properties": {
         "Code": {
           "S3Bucket": "serverless-framework-deployments-us-east-1-55cebd6e-28d6",
-          "S3Key": "serverless/nostalgio-backend/dev/1728528991172-2024-10-10T02:56:31.172Z/refreshSpotifyToken.zip"
+          "S3Key": "serverless/nostalgio-backend/dev/1729288210372-2024-10-18T21:50:10.372Z/refreshSpotifyToken.zip"
         },
         "Handler": "src/auth/spotify/spotifyTokenManager.refreshSpotifyToken",
         "Runtime": "nodejs18.x",
@@ -528,7 +559,8 @@
             "MEMORIES_TABLE": "Memories",
             "AUTH_SESSION_TABLE": "AuthSessionData",
             "LISTENING_HISTORY_TABLE": "ListeningHistoryTable",
-            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable"
+            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable",
+            "S3_BUCKET_NAME": "nostalgio-user-content"
           }
         },
         "Role": {
@@ -547,7 +579,7 @@
       "Properties": {
         "Code": {
           "S3Bucket": "serverless-framework-deployments-us-east-1-55cebd6e-28d6",
-          "S3Key": "serverless/nostalgio-backend/dev/1728528991172-2024-10-10T02:56:31.172Z/validateSpotifyToken.zip"
+          "S3Key": "serverless/nostalgio-backend/dev/1729288210372-2024-10-18T21:50:10.372Z/validateSpotifyToken.zip"
         },
         "Handler": "src/auth/spotify/spotifyTokenManager.validateSpotifyToken",
         "Runtime": "nodejs18.x",
@@ -567,7 +599,8 @@
             "MEMORIES_TABLE": "Memories",
             "AUTH_SESSION_TABLE": "AuthSessionData",
             "LISTENING_HISTORY_TABLE": "ListeningHistoryTable",
-            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable"
+            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable",
+            "S3_BUCKET_NAME": "nostalgio-user-content"
           }
         },
         "Role": {
@@ -586,7 +619,7 @@
       "Properties": {
         "Code": {
           "S3Bucket": "serverless-framework-deployments-us-east-1-55cebd6e-28d6",
-          "S3Key": "serverless/nostalgio-backend/dev/1728528991172-2024-10-10T02:56:31.172Z/createUser.zip"
+          "S3Key": "serverless/nostalgio-backend/dev/1729288210372-2024-10-18T21:50:10.372Z/createUser.zip"
         },
         "Handler": "src/users/handlers/createUser.createUserHandler",
         "Runtime": "nodejs18.x",
@@ -606,7 +639,8 @@
             "MEMORIES_TABLE": "Memories",
             "AUTH_SESSION_TABLE": "AuthSessionData",
             "LISTENING_HISTORY_TABLE": "ListeningHistoryTable",
-            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable"
+            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable",
+            "S3_BUCKET_NAME": "nostalgio-user-content"
           }
         },
         "Role": {
@@ -625,7 +659,7 @@
       "Properties": {
         "Code": {
           "S3Bucket": "serverless-framework-deployments-us-east-1-55cebd6e-28d6",
-          "S3Key": "serverless/nostalgio-backend/dev/1728528991172-2024-10-10T02:56:31.172Z/getUser.zip"
+          "S3Key": "serverless/nostalgio-backend/dev/1729288210372-2024-10-18T21:50:10.372Z/getUser.zip"
         },
         "Handler": "src/users/handlers/getUser.getUserHandler",
         "Runtime": "nodejs18.x",
@@ -645,7 +679,8 @@
             "MEMORIES_TABLE": "Memories",
             "AUTH_SESSION_TABLE": "AuthSessionData",
             "LISTENING_HISTORY_TABLE": "ListeningHistoryTable",
-            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable"
+            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable",
+            "S3_BUCKET_NAME": "nostalgio-user-content"
           }
         },
         "Role": {
@@ -664,7 +699,7 @@
       "Properties": {
         "Code": {
           "S3Bucket": "serverless-framework-deployments-us-east-1-55cebd6e-28d6",
-          "S3Key": "serverless/nostalgio-backend/dev/1728528991172-2024-10-10T02:56:31.172Z/updateUser.zip"
+          "S3Key": "serverless/nostalgio-backend/dev/1729288210372-2024-10-18T21:50:10.372Z/updateUser.zip"
         },
         "Handler": "src/users/handlers/updateUser.updateUserHandler",
         "Runtime": "nodejs18.x",
@@ -684,7 +719,8 @@
             "MEMORIES_TABLE": "Memories",
             "AUTH_SESSION_TABLE": "AuthSessionData",
             "LISTENING_HISTORY_TABLE": "ListeningHistoryTable",
-            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable"
+            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable",
+            "S3_BUCKET_NAME": "nostalgio-user-content"
           }
         },
         "Role": {
@@ -703,7 +739,7 @@
       "Properties": {
         "Code": {
           "S3Bucket": "serverless-framework-deployments-us-east-1-55cebd6e-28d6",
-          "S3Key": "serverless/nostalgio-backend/dev/1728528991172-2024-10-10T02:56:31.172Z/deleteUser.zip"
+          "S3Key": "serverless/nostalgio-backend/dev/1729288210372-2024-10-18T21:50:10.372Z/deleteUser.zip"
         },
         "Handler": "src/users/handlers/deleteUser.deleteUserHandler",
         "Runtime": "nodejs18.x",
@@ -723,7 +759,8 @@
             "MEMORIES_TABLE": "Memories",
             "AUTH_SESSION_TABLE": "AuthSessionData",
             "LISTENING_HISTORY_TABLE": "ListeningHistoryTable",
-            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable"
+            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable",
+            "S3_BUCKET_NAME": "nostalgio-user-content"
           }
         },
         "Role": {
@@ -742,7 +779,7 @@
       "Properties": {
         "Code": {
           "S3Bucket": "serverless-framework-deployments-us-east-1-55cebd6e-28d6",
-          "S3Key": "serverless/nostalgio-backend/dev/1728528991172-2024-10-10T02:56:31.172Z/createMemory.zip"
+          "S3Key": "serverless/nostalgio-backend/dev/1729288210372-2024-10-18T21:50:10.372Z/createMemory.zip"
         },
         "Handler": "src/memories/handlers/createMemory.createMemoryHandler",
         "Runtime": "nodejs18.x",
@@ -762,7 +799,8 @@
             "MEMORIES_TABLE": "Memories",
             "AUTH_SESSION_TABLE": "AuthSessionData",
             "LISTENING_HISTORY_TABLE": "ListeningHistoryTable",
-            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable"
+            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable",
+            "S3_BUCKET_NAME": "nostalgio-user-content"
           }
         },
         "Role": {
@@ -781,7 +819,7 @@
       "Properties": {
         "Code": {
           "S3Bucket": "serverless-framework-deployments-us-east-1-55cebd6e-28d6",
-          "S3Key": "serverless/nostalgio-backend/dev/1728528991172-2024-10-10T02:56:31.172Z/getMemory.zip"
+          "S3Key": "serverless/nostalgio-backend/dev/1729288210372-2024-10-18T21:50:10.372Z/getMemory.zip"
         },
         "Handler": "src/memories/handlers/getMemory.getMemoryHandler",
         "Runtime": "nodejs18.x",
@@ -801,7 +839,8 @@
             "MEMORIES_TABLE": "Memories",
             "AUTH_SESSION_TABLE": "AuthSessionData",
             "LISTENING_HISTORY_TABLE": "ListeningHistoryTable",
-            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable"
+            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable",
+            "S3_BUCKET_NAME": "nostalgio-user-content"
           }
         },
         "Role": {
@@ -820,7 +859,7 @@
       "Properties": {
         "Code": {
           "S3Bucket": "serverless-framework-deployments-us-east-1-55cebd6e-28d6",
-          "S3Key": "serverless/nostalgio-backend/dev/1728528991172-2024-10-10T02:56:31.172Z/updateMemory.zip"
+          "S3Key": "serverless/nostalgio-backend/dev/1729288210372-2024-10-18T21:50:10.372Z/updateMemory.zip"
         },
         "Handler": "src/memories/handlers/updateMemory.updateMemoryHandler",
         "Runtime": "nodejs18.x",
@@ -840,7 +879,8 @@
             "MEMORIES_TABLE": "Memories",
             "AUTH_SESSION_TABLE": "AuthSessionData",
             "LISTENING_HISTORY_TABLE": "ListeningHistoryTable",
-            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable"
+            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable",
+            "S3_BUCKET_NAME": "nostalgio-user-content"
           }
         },
         "Role": {
@@ -859,7 +899,7 @@
       "Properties": {
         "Code": {
           "S3Bucket": "serverless-framework-deployments-us-east-1-55cebd6e-28d6",
-          "S3Key": "serverless/nostalgio-backend/dev/1728528991172-2024-10-10T02:56:31.172Z/deleteMemory.zip"
+          "S3Key": "serverless/nostalgio-backend/dev/1729288210372-2024-10-18T21:50:10.372Z/deleteMemory.zip"
         },
         "Handler": "src/memories/handlers/deleteMemory.deleteMemoryHandler",
         "Runtime": "nodejs18.x",
@@ -879,7 +919,8 @@
             "MEMORIES_TABLE": "Memories",
             "AUTH_SESSION_TABLE": "AuthSessionData",
             "LISTENING_HISTORY_TABLE": "ListeningHistoryTable",
-            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable"
+            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable",
+            "S3_BUCKET_NAME": "nostalgio-user-content"
           }
         },
         "Role": {
@@ -898,7 +939,7 @@
       "Properties": {
         "Code": {
           "S3Bucket": "serverless-framework-deployments-us-east-1-55cebd6e-28d6",
-          "S3Key": "serverless/nostalgio-backend/dev/1728528991172-2024-10-10T02:56:31.172Z/listMemories.zip"
+          "S3Key": "serverless/nostalgio-backend/dev/1729288210372-2024-10-18T21:50:10.372Z/listMemories.zip"
         },
         "Handler": "src/memories/handlers/listMemories.listMemoriesHandler",
         "Runtime": "nodejs18.x",
@@ -918,7 +959,8 @@
             "MEMORIES_TABLE": "Memories",
             "AUTH_SESSION_TABLE": "AuthSessionData",
             "LISTENING_HISTORY_TABLE": "ListeningHistoryTable",
-            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable"
+            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable",
+            "S3_BUCKET_NAME": "nostalgio-user-content"
           }
         },
         "Role": {
@@ -937,7 +979,7 @@
       "Properties": {
         "Code": {
           "S3Bucket": "serverless-framework-deployments-us-east-1-55cebd6e-28d6",
-          "S3Key": "serverless/nostalgio-backend/dev/1728528991172-2024-10-10T02:56:31.172Z/getCityMemories.zip"
+          "S3Key": "serverless/nostalgio-backend/dev/1729288210372-2024-10-18T21:50:10.372Z/getCityMemories.zip"
         },
         "Handler": "src/memories/handlers/getCityMemories.getCityMemoriesHandler",
         "Runtime": "nodejs18.x",
@@ -957,7 +999,8 @@
             "MEMORIES_TABLE": "Memories",
             "AUTH_SESSION_TABLE": "AuthSessionData",
             "LISTENING_HISTORY_TABLE": "ListeningHistoryTable",
-            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable"
+            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable",
+            "S3_BUCKET_NAME": "nostalgio-user-content"
           }
         },
         "Role": {
@@ -976,7 +1019,7 @@
       "Properties": {
         "Code": {
           "S3Bucket": "serverless-framework-deployments-us-east-1-55cebd6e-28d6",
-          "S3Key": "serverless/nostalgio-backend/dev/1728528991172-2024-10-10T02:56:31.172Z/addMemoryImage.zip"
+          "S3Key": "serverless/nostalgio-backend/dev/1729288210372-2024-10-18T21:50:10.372Z/addMemoryImage.zip"
         },
         "Handler": "src/memories/handlers/addMemoryImage.addMemoryImageHandler",
         "Runtime": "nodejs18.x",
@@ -996,7 +1039,8 @@
             "MEMORIES_TABLE": "Memories",
             "AUTH_SESSION_TABLE": "AuthSessionData",
             "LISTENING_HISTORY_TABLE": "ListeningHistoryTable",
-            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable"
+            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable",
+            "S3_BUCKET_NAME": "nostalgio-user-content"
           }
         },
         "Role": {
@@ -1015,7 +1059,7 @@
       "Properties": {
         "Code": {
           "S3Bucket": "serverless-framework-deployments-us-east-1-55cebd6e-28d6",
-          "S3Key": "serverless/nostalgio-backend/dev/1728528991172-2024-10-10T02:56:31.172Z/streamMemoryUpdates.zip"
+          "S3Key": "serverless/nostalgio-backend/dev/1729288210372-2024-10-18T21:50:10.372Z/streamMemoryUpdates.zip"
         },
         "Handler": "src/memories/handlers/streamMemoryUpdates.streamMemoryUpdatesHandler",
         "Runtime": "nodejs18.x",
@@ -1035,7 +1079,8 @@
             "MEMORIES_TABLE": "Memories",
             "AUTH_SESSION_TABLE": "AuthSessionData",
             "LISTENING_HISTORY_TABLE": "ListeningHistoryTable",
-            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable"
+            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable",
+            "S3_BUCKET_NAME": "nostalgio-user-content"
           }
         },
         "Role": {
@@ -1054,7 +1099,7 @@
       "Properties": {
         "Code": {
           "S3Bucket": "serverless-framework-deployments-us-east-1-55cebd6e-28d6",
-          "S3Key": "serverless/nostalgio-backend/dev/1728528991172-2024-10-10T02:56:31.172Z/storeListeningHistory.zip"
+          "S3Key": "serverless/nostalgio-backend/dev/1729288210372-2024-10-18T21:50:10.372Z/storeListeningHistory.zip"
         },
         "Handler": "src/listeningHistory/handlers/storeListeningHistory.handler",
         "Runtime": "nodejs18.x",
@@ -1074,7 +1119,8 @@
             "MEMORIES_TABLE": "Memories",
             "AUTH_SESSION_TABLE": "AuthSessionData",
             "LISTENING_HISTORY_TABLE": "ListeningHistoryTable",
-            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable"
+            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable",
+            "S3_BUCKET_NAME": "nostalgio-user-content"
           }
         },
         "Role": {
@@ -1093,7 +1139,7 @@
       "Properties": {
         "Code": {
           "S3Bucket": "serverless-framework-deployments-us-east-1-55cebd6e-28d6",
-          "S3Key": "serverless/nostalgio-backend/dev/1728528991172-2024-10-10T02:56:31.172Z/getListeningHistoryByLocation.zip"
+          "S3Key": "serverless/nostalgio-backend/dev/1729288210372-2024-10-18T21:50:10.372Z/getListeningHistoryByLocation.zip"
         },
         "Handler": "src/listeningHistory/handlers/getListeningHistoryByLocation.handler",
         "Runtime": "nodejs18.x",
@@ -1113,7 +1159,8 @@
             "MEMORIES_TABLE": "Memories",
             "AUTH_SESSION_TABLE": "AuthSessionData",
             "LISTENING_HISTORY_TABLE": "ListeningHistoryTable",
-            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable"
+            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable",
+            "S3_BUCKET_NAME": "nostalgio-user-content"
           }
         },
         "Role": {
@@ -1132,7 +1179,7 @@
       "Properties": {
         "Code": {
           "S3Bucket": "serverless-framework-deployments-us-east-1-55cebd6e-28d6",
-          "S3Key": "serverless/nostalgio-backend/dev/1728528991172-2024-10-10T02:56:31.172Z/suggestSongsByLocation.zip"
+          "S3Key": "serverless/nostalgio-backend/dev/1729288210372-2024-10-18T21:50:10.372Z/suggestSongsByLocation.zip"
         },
         "Handler": "src/musicSuggestions/handlers/suggestSongsByLocation.handler",
         "Runtime": "nodejs18.x",
@@ -1152,7 +1199,8 @@
             "MEMORIES_TABLE": "Memories",
             "AUTH_SESSION_TABLE": "AuthSessionData",
             "LISTENING_HISTORY_TABLE": "ListeningHistoryTable",
-            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable"
+            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable",
+            "S3_BUCKET_NAME": "nostalgio-user-content"
           }
         },
         "Role": {
@@ -1171,7 +1219,7 @@
       "Properties": {
         "Code": {
           "S3Bucket": "serverless-framework-deployments-us-east-1-55cebd6e-28d6",
-          "S3Key": "serverless/nostalgio-backend/dev/1728528991172-2024-10-10T02:56:31.172Z/getRecentTracks.zip"
+          "S3Key": "serverless/nostalgio-backend/dev/1729288210372-2024-10-18T21:50:10.372Z/getRecentTracks.zip"
         },
         "Handler": "src/spotify/tracks/handlers/getRecentTracks.getRecentTracksHandler",
         "Runtime": "nodejs18.x",
@@ -1191,7 +1239,8 @@
             "MEMORIES_TABLE": "Memories",
             "AUTH_SESSION_TABLE": "AuthSessionData",
             "LISTENING_HISTORY_TABLE": "ListeningHistoryTable",
-            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable"
+            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable",
+            "S3_BUCKET_NAME": "nostalgio-user-content"
           }
         },
         "Role": {
@@ -1210,7 +1259,7 @@
       "Properties": {
         "Code": {
           "S3Bucket": "serverless-framework-deployments-us-east-1-55cebd6e-28d6",
-          "S3Key": "serverless/nostalgio-backend/dev/1728528991172-2024-10-10T02:56:31.172Z/getTopTracks.zip"
+          "S3Key": "serverless/nostalgio-backend/dev/1729288210372-2024-10-18T21:50:10.372Z/getTopTracks.zip"
         },
         "Handler": "src/spotify/tracks/handlers/getTopTracks.getTopTracksHandler",
         "Runtime": "nodejs18.x",
@@ -1230,7 +1279,8 @@
             "MEMORIES_TABLE": "Memories",
             "AUTH_SESSION_TABLE": "AuthSessionData",
             "LISTENING_HISTORY_TABLE": "ListeningHistoryTable",
-            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable"
+            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable",
+            "S3_BUCKET_NAME": "nostalgio-user-content"
           }
         },
         "Role": {
@@ -1249,7 +1299,7 @@
       "Properties": {
         "Code": {
           "S3Bucket": "serverless-framework-deployments-us-east-1-55cebd6e-28d6",
-          "S3Key": "serverless/nostalgio-backend/dev/1728528991172-2024-10-10T02:56:31.172Z/getTopArtists.zip"
+          "S3Key": "serverless/nostalgio-backend/dev/1729288210372-2024-10-18T21:50:10.372Z/getTopArtists.zip"
         },
         "Handler": "src/spotify/tracks/handlers/getTopArtists.getTopArtistsHandler",
         "Runtime": "nodejs18.x",
@@ -1269,7 +1319,8 @@
             "MEMORIES_TABLE": "Memories",
             "AUTH_SESSION_TABLE": "AuthSessionData",
             "LISTENING_HISTORY_TABLE": "ListeningHistoryTable",
-            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable"
+            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable",
+            "S3_BUCKET_NAME": "nostalgio-user-content"
           }
         },
         "Role": {
@@ -1288,7 +1339,7 @@
       "Properties": {
         "Code": {
           "S3Bucket": "serverless-framework-deployments-us-east-1-55cebd6e-28d6",
-          "S3Key": "serverless/nostalgio-backend/dev/1728528991172-2024-10-10T02:56:31.172Z/getCurrentlyPlayingTrack.zip"
+          "S3Key": "serverless/nostalgio-backend/dev/1729288210372-2024-10-18T21:50:10.372Z/getCurrentlyPlayingTrack.zip"
         },
         "Handler": "src/spotify/tracks/handlers/getCurrentlyPlayingTrack.getCurrentlyPlayingTrackHandler",
         "Runtime": "nodejs18.x",
@@ -1308,7 +1359,8 @@
             "MEMORIES_TABLE": "Memories",
             "AUTH_SESSION_TABLE": "AuthSessionData",
             "LISTENING_HISTORY_TABLE": "ListeningHistoryTable",
-            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable"
+            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable",
+            "S3_BUCKET_NAME": "nostalgio-user-content"
           }
         },
         "Role": {
@@ -1327,7 +1379,7 @@
       "Properties": {
         "Code": {
           "S3Bucket": "serverless-framework-deployments-us-east-1-55cebd6e-28d6",
-          "S3Key": "serverless/nostalgio-backend/dev/1728528991172-2024-10-10T02:56:31.172Z/createPlaylist.zip"
+          "S3Key": "serverless/nostalgio-backend/dev/1729288210372-2024-10-18T21:50:10.372Z/createPlaylist.zip"
         },
         "Handler": "src/spotify/playlists/handlers/createPlaylist.createPlaylistHandler",
         "Runtime": "nodejs18.x",
@@ -1347,7 +1399,8 @@
             "MEMORIES_TABLE": "Memories",
             "AUTH_SESSION_TABLE": "AuthSessionData",
             "LISTENING_HISTORY_TABLE": "ListeningHistoryTable",
-            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable"
+            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable",
+            "S3_BUCKET_NAME": "nostalgio-user-content"
           }
         },
         "Role": {
@@ -1366,7 +1419,7 @@
       "Properties": {
         "Code": {
           "S3Bucket": "serverless-framework-deployments-us-east-1-55cebd6e-28d6",
-          "S3Key": "serverless/nostalgio-backend/dev/1728528991172-2024-10-10T02:56:31.172Z/addTrackToPlaylist.zip"
+          "S3Key": "serverless/nostalgio-backend/dev/1729288210372-2024-10-18T21:50:10.372Z/addTrackToPlaylist.zip"
         },
         "Handler": "src/spotify/playlists/handlers/addTrackToPlaylist.addTrackToPlaylistHandler",
         "Runtime": "nodejs18.x",
@@ -1386,7 +1439,8 @@
             "MEMORIES_TABLE": "Memories",
             "AUTH_SESSION_TABLE": "AuthSessionData",
             "LISTENING_HISTORY_TABLE": "ListeningHistoryTable",
-            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable"
+            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable",
+            "S3_BUCKET_NAME": "nostalgio-user-content"
           }
         },
         "Role": {
@@ -1405,7 +1459,7 @@
       "Properties": {
         "Code": {
           "S3Bucket": "serverless-framework-deployments-us-east-1-55cebd6e-28d6",
-          "S3Key": "serverless/nostalgio-backend/dev/1728528991172-2024-10-10T02:56:31.172Z/removeTrackFromPlaylist.zip"
+          "S3Key": "serverless/nostalgio-backend/dev/1729288210372-2024-10-18T21:50:10.372Z/removeTrackFromPlaylist.zip"
         },
         "Handler": "src/spotify/playlists/handlers/removeTrackFromPlaylist.removeTrackFromPlaylistHandler",
         "Runtime": "nodejs18.x",
@@ -1425,7 +1479,8 @@
             "MEMORIES_TABLE": "Memories",
             "AUTH_SESSION_TABLE": "AuthSessionData",
             "LISTENING_HISTORY_TABLE": "ListeningHistoryTable",
-            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable"
+            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable",
+            "S3_BUCKET_NAME": "nostalgio-user-content"
           }
         },
         "Role": {
@@ -1444,7 +1499,7 @@
       "Properties": {
         "Code": {
           "S3Bucket": "serverless-framework-deployments-us-east-1-55cebd6e-28d6",
-          "S3Key": "serverless/nostalgio-backend/dev/1728528991172-2024-10-10T02:56:31.172Z/getPlaylistDetails.zip"
+          "S3Key": "serverless/nostalgio-backend/dev/1729288210372-2024-10-18T21:50:10.372Z/getPlaylistDetails.zip"
         },
         "Handler": "src/spotify/playlists/handlers/getPlaylistDetails.getPlaylistDetailsHandler",
         "Runtime": "nodejs18.x",
@@ -1464,7 +1519,8 @@
             "MEMORIES_TABLE": "Memories",
             "AUTH_SESSION_TABLE": "AuthSessionData",
             "LISTENING_HISTORY_TABLE": "ListeningHistoryTable",
-            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable"
+            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable",
+            "S3_BUCKET_NAME": "nostalgio-user-content"
           }
         },
         "Role": {
@@ -1483,7 +1539,7 @@
       "Properties": {
         "Code": {
           "S3Bucket": "serverless-framework-deployments-us-east-1-55cebd6e-28d6",
-          "S3Key": "serverless/nostalgio-backend/dev/1728528991172-2024-10-10T02:56:31.172Z/deletePlaylist.zip"
+          "S3Key": "serverless/nostalgio-backend/dev/1729288210372-2024-10-18T21:50:10.372Z/deletePlaylist.zip"
         },
         "Handler": "src/spotify/playlists/handlers/deletePlaylist.deletePlaylistHandler",
         "Runtime": "nodejs18.x",
@@ -1503,7 +1559,8 @@
             "MEMORIES_TABLE": "Memories",
             "AUTH_SESSION_TABLE": "AuthSessionData",
             "LISTENING_HISTORY_TABLE": "ListeningHistoryTable",
-            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable"
+            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable",
+            "S3_BUCKET_NAME": "nostalgio-user-content"
           }
         },
         "Role": {
@@ -1522,7 +1579,7 @@
       "Properties": {
         "Code": {
           "S3Bucket": "serverless-framework-deployments-us-east-1-55cebd6e-28d6",
-          "S3Key": "serverless/nostalgio-backend/dev/1728528991172-2024-10-10T02:56:31.172Z/setPlaylistImage.zip"
+          "S3Key": "serverless/nostalgio-backend/dev/1729288210372-2024-10-18T21:50:10.372Z/setPlaylistImage.zip"
         },
         "Handler": "src/spotify/playlists/handlers/setPlaylistImage.setPlaylistImageHandler",
         "Runtime": "nodejs18.x",
@@ -1542,7 +1599,8 @@
             "MEMORIES_TABLE": "Memories",
             "AUTH_SESSION_TABLE": "AuthSessionData",
             "LISTENING_HISTORY_TABLE": "ListeningHistoryTable",
-            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable"
+            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable",
+            "S3_BUCKET_NAME": "nostalgio-user-content"
           }
         },
         "Role": {
@@ -1561,7 +1619,7 @@
       "Properties": {
         "Code": {
           "S3Bucket": "serverless-framework-deployments-us-east-1-55cebd6e-28d6",
-          "S3Key": "serverless/nostalgio-backend/dev/1728528991172-2024-10-10T02:56:31.172Z/reverseGeocode.zip"
+          "S3Key": "serverless/nostalgio-backend/dev/1729288210372-2024-10-18T21:50:10.372Z/reverseGeocode.zip"
         },
         "Handler": "src/locations/handlers/reverseGeocode.reverseGeocodeHandler",
         "Runtime": "nodejs18.x",
@@ -1581,7 +1639,8 @@
             "MEMORIES_TABLE": "Memories",
             "AUTH_SESSION_TABLE": "AuthSessionData",
             "LISTENING_HISTORY_TABLE": "ListeningHistoryTable",
-            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable"
+            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable",
+            "S3_BUCKET_NAME": "nostalgio-user-content"
           }
         },
         "Role": {
@@ -1595,320 +1654,478 @@
         "ReverseGeocodeLogGroup"
       ]
     },
-    "SpotifyAuthLambdaVersionJbR8Cp3sua5TftesoXh50qapDR3qfCGKlq4UyZJkmOY": {
+    "UploadImageLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": "serverless-framework-deployments-us-east-1-55cebd6e-28d6",
+          "S3Key": "serverless/nostalgio-backend/dev/1729288210372-2024-10-18T21:50:10.372Z/uploadImage.zip"
+        },
+        "Handler": "src/s3/handlers/uploadImageHandler.uploadImageHandler",
+        "Runtime": "nodejs18.x",
+        "FunctionName": "nostalgio-backend-dev-uploadImage",
+        "MemorySize": 1024,
+        "Timeout": 6,
+        "Environment": {
+          "Variables": {
+            "COGNITO_USER_POOL_ID": "us-east-1_lqzsgfHQr",
+            "COGNITO_CLIENT_ID": "12pcqimdf7f5qdk3h3uhv5nhtc",
+            "COGNITO_REDIRECT_URI": "https://0446xh4ok5.execute-api.us-east-1.amazonaws.com/dev/callback",
+            "SPOTIFY_CLIENT_ID": "c7806fa71cc749499f5c7517aa908f39",
+            "SPOTIFY_CLIENT_SECRET": "e343ef8996c2402f868dc9b0edcb4110",
+            "SPOTIFY_REDIRECT_URI": "https://0446xh4ok5.execute-api.us-east-1.amazonaws.com/dev/callback",
+            "GOOGLE_API_KEY": "AIzaSyBouCYy71Pvs2-8Ujjfy43nv2fP8shfnDc",
+            "USERS_TABLE": "Users",
+            "MEMORIES_TABLE": "Memories",
+            "AUTH_SESSION_TABLE": "AuthSessionData",
+            "LISTENING_HISTORY_TABLE": "ListeningHistoryTable",
+            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable",
+            "S3_BUCKET_NAME": "nostalgio-user-content"
+          }
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        }
+      },
+      "DependsOn": [
+        "UploadImageLogGroup"
+      ]
+    },
+    "GetImageLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": "serverless-framework-deployments-us-east-1-55cebd6e-28d6",
+          "S3Key": "serverless/nostalgio-backend/dev/1729288210372-2024-10-18T21:50:10.372Z/getImage.zip"
+        },
+        "Handler": "src/s3/handlers/getImageHandler.getImageHandler",
+        "Runtime": "nodejs18.x",
+        "FunctionName": "nostalgio-backend-dev-getImage",
+        "MemorySize": 1024,
+        "Timeout": 6,
+        "Environment": {
+          "Variables": {
+            "COGNITO_USER_POOL_ID": "us-east-1_lqzsgfHQr",
+            "COGNITO_CLIENT_ID": "12pcqimdf7f5qdk3h3uhv5nhtc",
+            "COGNITO_REDIRECT_URI": "https://0446xh4ok5.execute-api.us-east-1.amazonaws.com/dev/callback",
+            "SPOTIFY_CLIENT_ID": "c7806fa71cc749499f5c7517aa908f39",
+            "SPOTIFY_CLIENT_SECRET": "e343ef8996c2402f868dc9b0edcb4110",
+            "SPOTIFY_REDIRECT_URI": "https://0446xh4ok5.execute-api.us-east-1.amazonaws.com/dev/callback",
+            "GOOGLE_API_KEY": "AIzaSyBouCYy71Pvs2-8Ujjfy43nv2fP8shfnDc",
+            "USERS_TABLE": "Users",
+            "MEMORIES_TABLE": "Memories",
+            "AUTH_SESSION_TABLE": "AuthSessionData",
+            "LISTENING_HISTORY_TABLE": "ListeningHistoryTable",
+            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable",
+            "S3_BUCKET_NAME": "nostalgio-user-content"
+          }
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        }
+      },
+      "DependsOn": [
+        "GetImageLogGroup"
+      ]
+    },
+    "DeleteImageLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": "serverless-framework-deployments-us-east-1-55cebd6e-28d6",
+          "S3Key": "serverless/nostalgio-backend/dev/1729288210372-2024-10-18T21:50:10.372Z/deleteImage.zip"
+        },
+        "Handler": "src/s3/handlers/deleteImageHandler.deleteImageHandler",
+        "Runtime": "nodejs18.x",
+        "FunctionName": "nostalgio-backend-dev-deleteImage",
+        "MemorySize": 1024,
+        "Timeout": 6,
+        "Environment": {
+          "Variables": {
+            "COGNITO_USER_POOL_ID": "us-east-1_lqzsgfHQr",
+            "COGNITO_CLIENT_ID": "12pcqimdf7f5qdk3h3uhv5nhtc",
+            "COGNITO_REDIRECT_URI": "https://0446xh4ok5.execute-api.us-east-1.amazonaws.com/dev/callback",
+            "SPOTIFY_CLIENT_ID": "c7806fa71cc749499f5c7517aa908f39",
+            "SPOTIFY_CLIENT_SECRET": "e343ef8996c2402f868dc9b0edcb4110",
+            "SPOTIFY_REDIRECT_URI": "https://0446xh4ok5.execute-api.us-east-1.amazonaws.com/dev/callback",
+            "GOOGLE_API_KEY": "AIzaSyBouCYy71Pvs2-8Ujjfy43nv2fP8shfnDc",
+            "USERS_TABLE": "Users",
+            "MEMORIES_TABLE": "Memories",
+            "AUTH_SESSION_TABLE": "AuthSessionData",
+            "LISTENING_HISTORY_TABLE": "ListeningHistoryTable",
+            "MUSIC_SUGGESTIONS_TABLE": "MusicSuggestionsTable",
+            "S3_BUCKET_NAME": "nostalgio-user-content"
+          }
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        }
+      },
+      "DependsOn": [
+        "DeleteImageLogGroup"
+      ]
+    },
+    "SpotifyAuthLambdaVersion6deoXHqma6WsULKkkvObLbhlNONcx5xbck50eM3c7MQ": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "SpotifyAuthLambdaFunction"
         },
-        "CodeSha256": "Z3K3RvRnGabF31DY+tmK607H13Cl3mkNYx5Q4OcW4Go="
+        "CodeSha256": "7M156CwT18a3lXK8eQo9KFCm435OYWB21meEy9HVfPM="
       }
     },
-    "RefreshSpotifyTokenLambdaVersionGodXQfdYONmaVkETjzJcs2mIhWV6WDn5wxmPVBIz0": {
-      "Type": "AWS::Lambda::Version",
-      "DeletionPolicy": "Retain",
-      "Properties": {
-        "FunctionName": {
-          "Ref": "RefreshSpotifyTokenLambdaFunction"
-        },
-        "CodeSha256": "Z3K3RvRnGabF31DY+tmK607H13Cl3mkNYx5Q4OcW4Go="
-      }
-    },
-    "ExchangeSpotifyTokenLambdaVersionE1uewPFe3tljbfAvZkLwr0srO1NaKHpdYbJqLvktVY": {
-      "Type": "AWS::Lambda::Version",
-      "DeletionPolicy": "Retain",
-      "Properties": {
-        "FunctionName": {
-          "Ref": "ExchangeSpotifyTokenLambdaFunction"
-        },
-        "CodeSha256": "Z3K3RvRnGabF31DY+tmK607H13Cl3mkNYx5Q4OcW4Go="
-      }
-    },
-    "SpotifyCallbackLambdaVersionzvT3hECX4Fa89pCv14JCDIevLI2WJYlGGcmcwLwiPqY": {
-      "Type": "AWS::Lambda::Version",
-      "DeletionPolicy": "Retain",
-      "Properties": {
-        "FunctionName": {
-          "Ref": "SpotifyCallbackLambdaFunction"
-        },
-        "CodeSha256": "Z3K3RvRnGabF31DY+tmK607H13Cl3mkNYx5Q4OcW4Go="
-      }
-    },
-    "UpdateUserLambdaVersion3oz9SvHtAenKQY5GyjUifdzkRHn6KdPq7yc73iJf3xE": {
-      "Type": "AWS::Lambda::Version",
-      "DeletionPolicy": "Retain",
-      "Properties": {
-        "FunctionName": {
-          "Ref": "UpdateUserLambdaFunction"
-        },
-        "CodeSha256": "Z3K3RvRnGabF31DY+tmK607H13Cl3mkNYx5Q4OcW4Go="
-      }
-    },
-    "CreateUserLambdaVersionkg1G5WcMhKigmzuzRf85uFIXEyAHQmIShiNYZ35zd4I": {
-      "Type": "AWS::Lambda::Version",
-      "DeletionPolicy": "Retain",
-      "Properties": {
-        "FunctionName": {
-          "Ref": "CreateUserLambdaFunction"
-        },
-        "CodeSha256": "Z3K3RvRnGabF31DY+tmK607H13Cl3mkNYx5Q4OcW4Go="
-      }
-    },
-    "GetUserLambdaVersion7yXclQ6G00RaNbY0oj4FxgRHVlOJmaVRE3Ory6wksY": {
-      "Type": "AWS::Lambda::Version",
-      "DeletionPolicy": "Retain",
-      "Properties": {
-        "FunctionName": {
-          "Ref": "GetUserLambdaFunction"
-        },
-        "CodeSha256": "Z3K3RvRnGabF31DY+tmK607H13Cl3mkNYx5Q4OcW4Go="
-      }
-    },
-    "CreateMemoryLambdaVersionxikP1oC4J8DvK5qo1YmawnQSgFGC5eVyt6PrlKdwlrY": {
+    "CreateMemoryLambdaVersion5zFxDKLnMppGfMbQX5PLak1tygB5fTF2cbDmempQPBo": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "CreateMemoryLambdaFunction"
         },
-        "CodeSha256": "Z3K3RvRnGabF31DY+tmK607H13Cl3mkNYx5Q4OcW4Go="
+        "CodeSha256": "7M156CwT18a3lXK8eQo9KFCm435OYWB21meEy9HVfPM="
       }
     },
-    "UpdateMemoryLambdaVersionZT9mAaN3L4vOvxL12Mn3OaMgESgDEfSoQ1VUlfWHGs": {
+    "UpdateUserLambdaVersionDtioDDUNUwAn0U4KjThdg00tP1PHXPL4cHD82ZdPA": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
-          "Ref": "UpdateMemoryLambdaFunction"
+          "Ref": "UpdateUserLambdaFunction"
         },
-        "CodeSha256": "Z3K3RvRnGabF31DY+tmK607H13Cl3mkNYx5Q4OcW4Go="
+        "CodeSha256": "7M156CwT18a3lXK8eQo9KFCm435OYWB21meEy9HVfPM="
       }
     },
-    "DeleteUserLambdaVersionTbLvqe25V1RjXsclZqB6JpjPugEWqZgZaIRFz7hlu2w": {
+    "SpotifyCallbackLambdaVersionz3kdOdMk3xXbgKskCXR9sbubFQAzzoJK9VYsBQw2IE": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
-          "Ref": "DeleteUserLambdaFunction"
+          "Ref": "SpotifyCallbackLambdaFunction"
         },
-        "CodeSha256": "Z3K3RvRnGabF31DY+tmK607H13Cl3mkNYx5Q4OcW4Go="
+        "CodeSha256": "7M156CwT18a3lXK8eQo9KFCm435OYWB21meEy9HVfPM="
       }
     },
-    "DeleteMemoryLambdaVersionwuu45y6L5uMFsiZEq2Ci0IQfT9blmRitOZ7Xg4Ow": {
-      "Type": "AWS::Lambda::Version",
-      "DeletionPolicy": "Retain",
-      "Properties": {
-        "FunctionName": {
-          "Ref": "DeleteMemoryLambdaFunction"
-        },
-        "CodeSha256": "Z3K3RvRnGabF31DY+tmK607H13Cl3mkNYx5Q4OcW4Go="
-      }
-    },
-    "ValidateSpotifyTokenLambdaVersionin1pt91wmdxWLNSm6SFEQkbhy5xqWofhrFGgfqDavmY": {
+    "ValidateSpotifyTokenLambdaVersiona0KR7vajc1U6AREnMn8sBTP43rqrC5h63bO8Wsxb1E": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "ValidateSpotifyTokenLambdaFunction"
         },
-        "CodeSha256": "Z3K3RvRnGabF31DY+tmK607H13Cl3mkNYx5Q4OcW4Go="
+        "CodeSha256": "7M156CwT18a3lXK8eQo9KFCm435OYWB21meEy9HVfPM="
       }
     },
-    "AddMemoryImageLambdaVersionPW0sPbjahY4Y8rFnu9nPKvbGtaX6yn3y36j2YJ4UhY": {
-      "Type": "AWS::Lambda::Version",
-      "DeletionPolicy": "Retain",
-      "Properties": {
-        "FunctionName": {
-          "Ref": "AddMemoryImageLambdaFunction"
-        },
-        "CodeSha256": "Z3K3RvRnGabF31DY+tmK607H13Cl3mkNYx5Q4OcW4Go="
-      }
-    },
-    "GetMemoryLambdaVersions1eZSLNBSc3RPtefH7eaLEU94Ag8hfOtHtjAyu5EQ": {
-      "Type": "AWS::Lambda::Version",
-      "DeletionPolicy": "Retain",
-      "Properties": {
-        "FunctionName": {
-          "Ref": "GetMemoryLambdaFunction"
-        },
-        "CodeSha256": "Z3K3RvRnGabF31DY+tmK607H13Cl3mkNYx5Q4OcW4Go="
-      }
-    },
-    "ListMemoriesLambdaVersion4cl9DrJTrpSVo28ylNREv8nGBPyJkFiFBUWoKqs": {
-      "Type": "AWS::Lambda::Version",
-      "DeletionPolicy": "Retain",
-      "Properties": {
-        "FunctionName": {
-          "Ref": "ListMemoriesLambdaFunction"
-        },
-        "CodeSha256": "Z3K3RvRnGabF31DY+tmK607H13Cl3mkNYx5Q4OcW4Go="
-      }
-    },
-    "GetCityMemoriesLambdaVersion71dPDd3NUkNVE88VGCTlSdMmpYay5r2Ax0BzopQ": {
-      "Type": "AWS::Lambda::Version",
-      "DeletionPolicy": "Retain",
-      "Properties": {
-        "FunctionName": {
-          "Ref": "GetCityMemoriesLambdaFunction"
-        },
-        "CodeSha256": "Z3K3RvRnGabF31DY+tmK607H13Cl3mkNYx5Q4OcW4Go="
-      }
-    },
-    "SuggestSongsByLocationLambdaVersionIXpiMKsTZHkQGzKkq4poCvhMRPUynNcJ0uUyfJNXms": {
-      "Type": "AWS::Lambda::Version",
-      "DeletionPolicy": "Retain",
-      "Properties": {
-        "FunctionName": {
-          "Ref": "SuggestSongsByLocationLambdaFunction"
-        },
-        "CodeSha256": "Z3K3RvRnGabF31DY+tmK607H13Cl3mkNYx5Q4OcW4Go="
-      }
-    },
-    "GetCurrentlyPlayingTrackLambdaVersionSALxifadhMxfPVF5lWCOdBGPHv64I3ETFPuwdD1MU": {
-      "Type": "AWS::Lambda::Version",
-      "DeletionPolicy": "Retain",
-      "Properties": {
-        "FunctionName": {
-          "Ref": "GetCurrentlyPlayingTrackLambdaFunction"
-        },
-        "CodeSha256": "Z3K3RvRnGabF31DY+tmK607H13Cl3mkNYx5Q4OcW4Go="
-      }
-    },
-    "StoreListeningHistoryLambdaVersionjRDsLKzynq5NwvfXsBUZkaMTi2L3TDcvA1CuHLzv70": {
-      "Type": "AWS::Lambda::Version",
-      "DeletionPolicy": "Retain",
-      "Properties": {
-        "FunctionName": {
-          "Ref": "StoreListeningHistoryLambdaFunction"
-        },
-        "CodeSha256": "Z3K3RvRnGabF31DY+tmK607H13Cl3mkNYx5Q4OcW4Go="
-      }
-    },
-    "StreamMemoryUpdatesLambdaVersionCoVwkP6CDRNY7yUorfgX1gwze9UlaA4Xt2nbv0XtYM": {
+    "StreamMemoryUpdatesLambdaVersionxQ7VyrmcesDmFkDuHvqNZ5Zi0nZGGKJNsLR1SRcr50": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "StreamMemoryUpdatesLambdaFunction"
         },
-        "CodeSha256": "Z3K3RvRnGabF31DY+tmK607H13Cl3mkNYx5Q4OcW4Go="
+        "CodeSha256": "7M156CwT18a3lXK8eQo9KFCm435OYWB21meEy9HVfPM="
       }
     },
-    "RemoveTrackFromPlaylistLambdaVersionjRi7ZqmWp0WD1Jb9esFmn1VufvLqETYHATFM8byuh4U": {
+    "GetUserLambdaVersionoQQM71qnOiflrlm5KH3jJ5MzRlwNDmWCHD04KEy7Ozo": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
-          "Ref": "RemoveTrackFromPlaylistLambdaFunction"
+          "Ref": "GetUserLambdaFunction"
         },
-        "CodeSha256": "Z3K3RvRnGabF31DY+tmK607H13Cl3mkNYx5Q4OcW4Go="
+        "CodeSha256": "7M156CwT18a3lXK8eQo9KFCm435OYWB21meEy9HVfPM="
       }
     },
-    "GetListeningHistoryByLocationLambdaVersionD21EfbEJr1U6Ndgg368pPNmHbTe1cjvekAZbQkf0A": {
+    "CreateUserLambdaVersionqCxwKkBjymSSxGnR0SNNNrpj8F7O91Zl32tjGxdPXc": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "CreateUserLambdaFunction"
+        },
+        "CodeSha256": "7M156CwT18a3lXK8eQo9KFCm435OYWB21meEy9HVfPM="
+      }
+    },
+    "RefreshSpotifyTokenLambdaVersionpLuOxRQJbXjetRad1z8AosUvO3sWySJQxlqZt1Rt0": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "RefreshSpotifyTokenLambdaFunction"
+        },
+        "CodeSha256": "7M156CwT18a3lXK8eQo9KFCm435OYWB21meEy9HVfPM="
+      }
+    },
+    "StoreListeningHistoryLambdaVersion84XbCDVTiLLPFpPpuDadzdvHwZ3E5RJOfuzEzo9Fxo": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "StoreListeningHistoryLambdaFunction"
+        },
+        "CodeSha256": "7M156CwT18a3lXK8eQo9KFCm435OYWB21meEy9HVfPM="
+      }
+    },
+    "ListMemoriesLambdaVersionjSFZzBhQSwYzMB6mWTCF9Rvows7brJvvSHXLqebIzs": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "ListMemoriesLambdaFunction"
+        },
+        "CodeSha256": "7M156CwT18a3lXK8eQo9KFCm435OYWB21meEy9HVfPM="
+      }
+    },
+    "GetCityMemoriesLambdaVersionRXbyJWoOZNv9ggGvXA5hweI8NSgRy0vhXpbTIwvINNc": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "GetCityMemoriesLambdaFunction"
+        },
+        "CodeSha256": "7M156CwT18a3lXK8eQo9KFCm435OYWB21meEy9HVfPM="
+      }
+    },
+    "UpdateMemoryLambdaVersiond7F9qq7ffnlP4EfFnLR4okb3ClQ3V7ZgKPf78UUsaOc": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "UpdateMemoryLambdaFunction"
+        },
+        "CodeSha256": "7M156CwT18a3lXK8eQo9KFCm435OYWB21meEy9HVfPM="
+      }
+    },
+    "GetListeningHistoryByLocationLambdaVersionxuMle7ZJCQbeSszFQoknsMnGzd7zfVMQL8YQuHQ0E": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "GetListeningHistoryByLocationLambdaFunction"
         },
-        "CodeSha256": "Z3K3RvRnGabF31DY+tmK607H13Cl3mkNYx5Q4OcW4Go="
+        "CodeSha256": "7M156CwT18a3lXK8eQo9KFCm435OYWB21meEy9HVfPM="
       }
     },
-    "GetTopArtistsLambdaVersionwolLGNVMJo6bXl4UfiReP3KUnhERyZqi4l0VxTiYKI": {
+    "GetCurrentlyPlayingTrackLambdaVersionrWSTePSlELVblu8R5FHdONhbYHmNiy1sPyyt3C8EEXA": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
-          "Ref": "GetTopArtistsLambdaFunction"
+          "Ref": "GetCurrentlyPlayingTrackLambdaFunction"
         },
-        "CodeSha256": "Z3K3RvRnGabF31DY+tmK607H13Cl3mkNYx5Q4OcW4Go="
+        "CodeSha256": "7M156CwT18a3lXK8eQo9KFCm435OYWB21meEy9HVfPM="
       }
     },
-    "CreatePlaylistLambdaVersionBp6me3UEkA9FXDqSdIVap7bIHYOIZ512TBuTkQCcI": {
-      "Type": "AWS::Lambda::Version",
-      "DeletionPolicy": "Retain",
-      "Properties": {
-        "FunctionName": {
-          "Ref": "CreatePlaylistLambdaFunction"
-        },
-        "CodeSha256": "Z3K3RvRnGabF31DY+tmK607H13Cl3mkNYx5Q4OcW4Go="
-      }
-    },
-    "GetRecentTracksLambdaVersionhTHgheDMEeJsVFGrG4PgMB3QMbVyUVr8CvQT2NVkeE": {
-      "Type": "AWS::Lambda::Version",
-      "DeletionPolicy": "Retain",
-      "Properties": {
-        "FunctionName": {
-          "Ref": "GetRecentTracksLambdaFunction"
-        },
-        "CodeSha256": "Z3K3RvRnGabF31DY+tmK607H13Cl3mkNYx5Q4OcW4Go="
-      }
-    },
-    "GetTopTracksLambdaVersionQBH4mZXSDLhy2NqJPje1lq15sJnv9DKSarYIfRvHDU": {
-      "Type": "AWS::Lambda::Version",
-      "DeletionPolicy": "Retain",
-      "Properties": {
-        "FunctionName": {
-          "Ref": "GetTopTracksLambdaFunction"
-        },
-        "CodeSha256": "Z3K3RvRnGabF31DY+tmK607H13Cl3mkNYx5Q4OcW4Go="
-      }
-    },
-    "AddTrackToPlaylistLambdaVersionXBkTBIvIOwQJvR8ct5mWMlIdrWTrULDy42lfQ81SQU": {
+    "AddTrackToPlaylistLambdaVersiontH041SKI33xS6r6PCaW6eASDySVoFNhmi7zkg": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "AddTrackToPlaylistLambdaFunction"
         },
-        "CodeSha256": "Z3K3RvRnGabF31DY+tmK607H13Cl3mkNYx5Q4OcW4Go="
+        "CodeSha256": "7M156CwT18a3lXK8eQo9KFCm435OYWB21meEy9HVfPM="
       }
     },
-    "GetPlaylistDetailsLambdaVersion9UemFCBbDWYSLPNt8H1mkFnut51CZvUe9ZdHPL3yQ": {
+    "AddMemoryImageLambdaVersionXTAz7AxFrGokaXpsxv9jIdtyanoRXAkV093nBfLo": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
-          "Ref": "GetPlaylistDetailsLambdaFunction"
+          "Ref": "AddMemoryImageLambdaFunction"
         },
-        "CodeSha256": "Z3K3RvRnGabF31DY+tmK607H13Cl3mkNYx5Q4OcW4Go="
+        "CodeSha256": "7M156CwT18a3lXK8eQo9KFCm435OYWB21meEy9HVfPM="
       }
     },
-    "DeletePlaylistLambdaVersionrWbClJ7NiaNk1jo7Dv4yqu530EhMYZxugnxspnO0U": {
+    "SuggestSongsByLocationLambdaVersioneXpEFqi3sQmOptnx43C36umq2Kl08mt4MmZJGGXr0": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "SuggestSongsByLocationLambdaFunction"
+        },
+        "CodeSha256": "7M156CwT18a3lXK8eQo9KFCm435OYWB21meEy9HVfPM="
+      }
+    },
+    "CreatePlaylistLambdaVersionTq6tNKcVqruXlndXRLahXrAi1eOq0WtTyj7EQ4d5Xc": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "CreatePlaylistLambdaFunction"
+        },
+        "CodeSha256": "7M156CwT18a3lXK8eQo9KFCm435OYWB21meEy9HVfPM="
+      }
+    },
+    "GetTopTracksLambdaVersionEhaPD1A9JQDfqEYQOwVR4wbfsKBDiouyk4WLdLFboBI": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "GetTopTracksLambdaFunction"
+        },
+        "CodeSha256": "7M156CwT18a3lXK8eQo9KFCm435OYWB21meEy9HVfPM="
+      }
+    },
+    "DeletePlaylistLambdaVersionBR8gz8DKX6BF840MVHJ4LsAWAjLIMOGXK2CfI2qQ": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "DeletePlaylistLambdaFunction"
         },
-        "CodeSha256": "Z3K3RvRnGabF31DY+tmK607H13Cl3mkNYx5Q4OcW4Go="
+        "CodeSha256": "7M156CwT18a3lXK8eQo9KFCm435OYWB21meEy9HVfPM="
       }
     },
-    "SetPlaylistImageLambdaVersionRpesbiItoRavEjIARF0t4rGaEMR6HNmLztW1J8gimk": {
+    "GetPlaylistDetailsLambdaVersionvhceT1wrDz1dMHewrbSIxETbEAADk0YUiIRTlmvlC2U": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
-          "Ref": "SetPlaylistImageLambdaFunction"
+          "Ref": "GetPlaylistDetailsLambdaFunction"
         },
-        "CodeSha256": "Z3K3RvRnGabF31DY+tmK607H13Cl3mkNYx5Q4OcW4Go="
+        "CodeSha256": "7M156CwT18a3lXK8eQo9KFCm435OYWB21meEy9HVfPM="
       }
     },
-    "ReverseGeocodeLambdaVersionMNRpCoGfcKG6cQo56dUjibMnzukcGO43H64Z2zKPLM": {
+    "GetMemoryLambdaVersionG6QpeoHU0PLINhOnzR6MN8uEFM2gfApJS44nYNsUnSU": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "GetMemoryLambdaFunction"
+        },
+        "CodeSha256": "7M156CwT18a3lXK8eQo9KFCm435OYWB21meEy9HVfPM="
+      }
+    },
+    "DeleteMemoryLambdaVersionxyh4AeJU0vldKkLzvMvKHSk1lweWAufVm0rS96prvj0": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "DeleteMemoryLambdaFunction"
+        },
+        "CodeSha256": "7M156CwT18a3lXK8eQo9KFCm435OYWB21meEy9HVfPM="
+      }
+    },
+    "ReverseGeocodeLambdaVersionVXR3ul0h5w9g84q1c4hjViBIsAuh0kolDsBBJLX4": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "ReverseGeocodeLambdaFunction"
         },
-        "CodeSha256": "Z3K3RvRnGabF31DY+tmK607H13Cl3mkNYx5Q4OcW4Go="
+        "CodeSha256": "7M156CwT18a3lXK8eQo9KFCm435OYWB21meEy9HVfPM="
+      }
+    },
+    "RemoveTrackFromPlaylistLambdaVersion3yN1kG31ibx0O5NWZiDtnvQamUldTpPqo8dXXNhXt2k": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "RemoveTrackFromPlaylistLambdaFunction"
+        },
+        "CodeSha256": "7M156CwT18a3lXK8eQo9KFCm435OYWB21meEy9HVfPM="
+      }
+    },
+    "SetPlaylistImageLambdaVersionQPIvXCEthRirHdBTdaAHrrNsujwjWge4PonGQcQaEY": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "SetPlaylistImageLambdaFunction"
+        },
+        "CodeSha256": "7M156CwT18a3lXK8eQo9KFCm435OYWB21meEy9HVfPM="
+      }
+    },
+    "UploadImageLambdaVersion5eJ7g6gQOMxASZx0ELWqWRw2s4urVaBr1dbESO8kzs": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "UploadImageLambdaFunction"
+        },
+        "CodeSha256": "7M156CwT18a3lXK8eQo9KFCm435OYWB21meEy9HVfPM="
+      }
+    },
+    "GetRecentTracksLambdaVersion8sFG2mToCKK1n2hNqGTDu5qhrib9VTEqnthL9cR94": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "GetRecentTracksLambdaFunction"
+        },
+        "CodeSha256": "7M156CwT18a3lXK8eQo9KFCm435OYWB21meEy9HVfPM="
+      }
+    },
+    "DeleteUserLambdaVersionn756qHzT2qNGmNqcP6OfR7Tuj8XCPkq3YzyUt7A9ioo": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "DeleteUserLambdaFunction"
+        },
+        "CodeSha256": "7M156CwT18a3lXK8eQo9KFCm435OYWB21meEy9HVfPM="
+      }
+    },
+    "ExchangeSpotifyTokenLambdaVersionbV2KHkXt7xDcoRZUsXU6I5TDcsy602Q4qYQGFogHROg": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "ExchangeSpotifyTokenLambdaFunction"
+        },
+        "CodeSha256": "7M156CwT18a3lXK8eQo9KFCm435OYWB21meEy9HVfPM="
+      }
+    },
+    "GetTopArtistsLambdaVersionFuqLohyHK882Wc4CvVc2m8wa5TdJ4mS7NA7pSsaseVY": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "GetTopArtistsLambdaFunction"
+        },
+        "CodeSha256": "7M156CwT18a3lXK8eQo9KFCm435OYWB21meEy9HVfPM="
+      }
+    },
+    "GetImageLambdaVersionbWgrxllJ6zg5No7S9LVKifaGDrhDOIkYj25s7xQHoEc": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "GetImageLambdaFunction"
+        },
+        "CodeSha256": "7M156CwT18a3lXK8eQo9KFCm435OYWB21meEy9HVfPM="
+      }
+    },
+    "DeleteImageLambdaVersionMs20hTIpAhJm8bAXYNH42lmlBGRH1CxXhsOChQzmdk": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "DeleteImageLambdaFunction"
+        },
+        "CodeSha256": "7M156CwT18a3lXK8eQo9KFCm435OYWB21meEy9HVfPM="
       }
     },
     "ApiGatewayRestApi": {
       "Type": "AWS::ApiGateway::RestApi",
       "Properties": {
         "Name": "dev-nostalgio-backend",
+        "BinaryMediaTypes": [
+          "image/jpeg",
+          "image/png",
+          "image/gif",
+          "image/heic",
+          "image/webp",
+          "application/octet-stream"
+        ],
         "EndpointConfiguration": {
           "Types": [
             "EDGE"
@@ -2350,6 +2567,57 @@
           ]
         },
         "PathPart": "reverseGeocode",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayResourceImages": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Fn::GetAtt": [
+            "ApiGatewayRestApi",
+            "RootResourceId"
+          ]
+        },
+        "PathPart": "images",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayResourceImagesUseridVar": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Ref": "ApiGatewayResourceImages"
+        },
+        "PathPart": "{userId}",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayResourceImagesUseridVarTypeVar": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Ref": "ApiGatewayResourceImagesUseridVar"
+        },
+        "PathPart": "{type}",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayResourceImagesUseridVarTypeVarIdVar": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Ref": "ApiGatewayResourceImagesUseridVarTypeVar"
+        },
+        "PathPart": "{id}",
         "RestApiId": {
           "Ref": "ApiGatewayRestApi"
         }
@@ -3474,6 +3742,51 @@
         },
         "ResourceId": {
           "Ref": "ApiGatewayResourceReversegeocode"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayMethodImagesUseridVarTypeVarIdVarOptions": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "OPTIONS",
+        "MethodResponses": [
+          {
+            "StatusCode": "200",
+            "ResponseParameters": {
+              "method.response.header.Access-Control-Allow-Origin": true,
+              "method.response.header.Access-Control-Allow-Headers": true,
+              "method.response.header.Access-Control-Allow-Methods": true
+            },
+            "ResponseModels": {}
+          }
+        ],
+        "RequestParameters": {},
+        "Integration": {
+          "Type": "MOCK",
+          "RequestTemplates": {
+            "application/json": "{statusCode:200}"
+          },
+          "ContentHandling": "CONVERT_TO_TEXT",
+          "IntegrationResponses": [
+            {
+              "StatusCode": "200",
+              "ResponseParameters": {
+                "method.response.header.Access-Control-Allow-Origin": "'*'",
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent,X-Amzn-Trace-Id'",
+                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,DELETE,GET,PUT'"
+              },
+              "ResponseTemplates": {
+                "application/json": ""
+              }
+            }
+          ]
+        },
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceImagesUseridVarTypeVarIdVar"
         },
         "RestApiId": {
           "Ref": "ApiGatewayRestApi"
@@ -4954,6 +5267,165 @@
         "ReverseGeocodeLambdaPermissionApiGateway"
       ]
     },
+    "ApiGatewayMethodImagesUseridVarTypeVarIdVarPut": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "PUT",
+        "RequestParameters": {
+          "method.request.path.userId": true,
+          "method.request.path.type": true,
+          "method.request.path.id": true
+        },
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceImagesUseridVarTypeVarIdVar"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": false,
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "UploadImageLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": [],
+        "RequestValidatorId": {
+          "Ref": "ApiGatewayNostalgiobackendRequestValidator"
+        }
+      },
+      "DependsOn": [
+        "UploadImageLambdaPermissionApiGateway"
+      ]
+    },
+    "ApiGatewayMethodImagesUseridVarTypeVarIdVarGet": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "GET",
+        "RequestParameters": {
+          "method.request.path.userId": true,
+          "method.request.path.type": true,
+          "method.request.path.id": true
+        },
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceImagesUseridVarTypeVarIdVar"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": false,
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "GetImageLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": [],
+        "RequestValidatorId": {
+          "Ref": "ApiGatewayNostalgiobackendRequestValidator"
+        }
+      },
+      "DependsOn": [
+        "GetImageLambdaPermissionApiGateway"
+      ]
+    },
+    "ApiGatewayMethodImagesUseridVarTypeVarIdVarDelete": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "DELETE",
+        "RequestParameters": {
+          "method.request.path.userId": true,
+          "method.request.path.type": true,
+          "method.request.path.id": true
+        },
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceImagesUseridVarTypeVarIdVar"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": false,
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "DeleteImageLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": [],
+        "RequestValidatorId": {
+          "Ref": "ApiGatewayNostalgiobackendRequestValidator"
+        }
+      },
+      "DependsOn": [
+        "DeleteImageLambdaPermissionApiGateway"
+      ]
+    },
     "ApiGatewayNostalgiobackendRequestValidator": {
       "Type": "AWS::ApiGateway::RequestValidator",
       "Properties": {
@@ -4965,7 +5437,7 @@
         "Name": "nostalgio-backend-dev | Validate request body and querystring parameters"
       }
     },
-    "ApiGatewayDeployment1728528928183": {
+    "ApiGatewayDeployment1729288123246": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -4999,6 +5471,7 @@
         "ApiGatewayMethodPlaylistsUseridVarPlaylistidVarOptions",
         "ApiGatewayMethodPlaylistsUseridVarPlaylistidVarImageOptions",
         "ApiGatewayMethodReversegeocodeOptions",
+        "ApiGatewayMethodImagesUseridVarTypeVarIdVarOptions",
         "ApiGatewayMethodAuthLoginGet",
         "ApiGatewayMethodCallbackGet",
         "ApiGatewayMethodExchangespotifytokenPost",
@@ -5029,7 +5502,10 @@
         "ApiGatewayMethodPlaylistsUseridVarPlaylistidVarGet",
         "ApiGatewayMethodPlaylistsUseridVarPlaylistidVarDelete",
         "ApiGatewayMethodPlaylistsUseridVarPlaylistidVarImagePut",
-        "ApiGatewayMethodReversegeocodeGet"
+        "ApiGatewayMethodReversegeocodeGet",
+        "ApiGatewayMethodImagesUseridVarTypeVarIdVarPut",
+        "ApiGatewayMethodImagesUseridVarTypeVarIdVarGet",
+        "ApiGatewayMethodImagesUseridVarTypeVarIdVarDelete"
       ]
     },
     "SpotifyAuthLambdaPermissionApiGateway": {
@@ -6142,6 +6618,117 @@
         }
       }
     },
+    "UploadImageLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "UploadImageLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
+    "GetImageLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "GetImageLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
+    "DeleteImageLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "DeleteImageLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
     "StreamMemoryUpdatesEventSourceMappingDynamodbMemories": {
       "Type": "AWS::Lambda::EventSourceMapping",
       "DependsOn": [
@@ -6381,6 +6968,52 @@
           "StreamViewType": "NEW_AND_OLD_IMAGES"
         }
       }
+    },
+    "UserMediaBucket": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "BucketName": "nostalgio-user-content",
+        "CorsConfiguration": {
+          "CorsRules": [
+            {
+              "AllowedOrigins": [
+                "*"
+              ],
+              "AllowedHeaders": [
+                "*"
+              ],
+              "AllowedMethods": [
+                "GET",
+                "PUT",
+                "POST",
+                "DELETE",
+                "HEAD"
+              ],
+              "MaxAge": 3000
+            }
+          ]
+        }
+      }
+    },
+    "BucketPolicy": {
+      "Type": "AWS::S3::BucketPolicy",
+      "Properties": {
+        "Bucket": {
+          "Ref": "UserMediaBucket"
+        },
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Sid": "PublicReadGetObject",
+              "Effect": "Allow",
+              "Principal": "*",
+              "Action": "s3:GetObject",
+              "Resource": "arn:aws:s3:::nostalgio-user-content/*"
+            }
+          ]
+        }
+      }
     }
   },
   "Outputs": {
@@ -6393,133 +7026,97 @@
     "SpotifyAuthLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "SpotifyAuthLambdaVersionJbR8Cp3sua5TftesoXh50qapDR3qfCGKlq4UyZJkmOY"
+        "Ref": "SpotifyAuthLambdaVersion6deoXHqma6WsULKkkvObLbhlNONcx5xbck50eM3c7MQ"
       },
       "Export": {
         "Name": "sls-nostalgio-backend-dev-SpotifyAuthLambdaFunctionQualifiedArn"
       }
     },
-    "RefreshSpotifyTokenLambdaFunctionQualifiedArn": {
-      "Description": "Current Lambda function version",
-      "Value": {
-        "Ref": "RefreshSpotifyTokenLambdaVersionGodXQfdYONmaVkETjzJcs2mIhWV6WDn5wxmPVBIz0"
-      },
-      "Export": {
-        "Name": "sls-nostalgio-backend-dev-RefreshSpotifyTokenLambdaFunctionQualifiedArn"
-      }
-    },
-    "ExchangeSpotifyTokenLambdaFunctionQualifiedArn": {
-      "Description": "Current Lambda function version",
-      "Value": {
-        "Ref": "ExchangeSpotifyTokenLambdaVersionE1uewPFe3tljbfAvZkLwr0srO1NaKHpdYbJqLvktVY"
-      },
-      "Export": {
-        "Name": "sls-nostalgio-backend-dev-ExchangeSpotifyTokenLambdaFunctionQualifiedArn"
-      }
-    },
-    "SpotifyCallbackLambdaFunctionQualifiedArn": {
-      "Description": "Current Lambda function version",
-      "Value": {
-        "Ref": "SpotifyCallbackLambdaVersionzvT3hECX4Fa89pCv14JCDIevLI2WJYlGGcmcwLwiPqY"
-      },
-      "Export": {
-        "Name": "sls-nostalgio-backend-dev-SpotifyCallbackLambdaFunctionQualifiedArn"
-      }
-    },
-    "UpdateUserLambdaFunctionQualifiedArn": {
-      "Description": "Current Lambda function version",
-      "Value": {
-        "Ref": "UpdateUserLambdaVersion3oz9SvHtAenKQY5GyjUifdzkRHn6KdPq7yc73iJf3xE"
-      },
-      "Export": {
-        "Name": "sls-nostalgio-backend-dev-UpdateUserLambdaFunctionQualifiedArn"
-      }
-    },
-    "CreateUserLambdaFunctionQualifiedArn": {
-      "Description": "Current Lambda function version",
-      "Value": {
-        "Ref": "CreateUserLambdaVersionkg1G5WcMhKigmzuzRf85uFIXEyAHQmIShiNYZ35zd4I"
-      },
-      "Export": {
-        "Name": "sls-nostalgio-backend-dev-CreateUserLambdaFunctionQualifiedArn"
-      }
-    },
-    "GetUserLambdaFunctionQualifiedArn": {
-      "Description": "Current Lambda function version",
-      "Value": {
-        "Ref": "GetUserLambdaVersion7yXclQ6G00RaNbY0oj4FxgRHVlOJmaVRE3Ory6wksY"
-      },
-      "Export": {
-        "Name": "sls-nostalgio-backend-dev-GetUserLambdaFunctionQualifiedArn"
-      }
-    },
     "CreateMemoryLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "CreateMemoryLambdaVersionxikP1oC4J8DvK5qo1YmawnQSgFGC5eVyt6PrlKdwlrY"
+        "Ref": "CreateMemoryLambdaVersion5zFxDKLnMppGfMbQX5PLak1tygB5fTF2cbDmempQPBo"
       },
       "Export": {
         "Name": "sls-nostalgio-backend-dev-CreateMemoryLambdaFunctionQualifiedArn"
       }
     },
-    "UpdateMemoryLambdaFunctionQualifiedArn": {
+    "UpdateUserLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "UpdateMemoryLambdaVersionZT9mAaN3L4vOvxL12Mn3OaMgESgDEfSoQ1VUlfWHGs"
+        "Ref": "UpdateUserLambdaVersionDtioDDUNUwAn0U4KjThdg00tP1PHXPL4cHD82ZdPA"
       },
       "Export": {
-        "Name": "sls-nostalgio-backend-dev-UpdateMemoryLambdaFunctionQualifiedArn"
+        "Name": "sls-nostalgio-backend-dev-UpdateUserLambdaFunctionQualifiedArn"
       }
     },
-    "DeleteUserLambdaFunctionQualifiedArn": {
+    "SpotifyCallbackLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "DeleteUserLambdaVersionTbLvqe25V1RjXsclZqB6JpjPugEWqZgZaIRFz7hlu2w"
+        "Ref": "SpotifyCallbackLambdaVersionz3kdOdMk3xXbgKskCXR9sbubFQAzzoJK9VYsBQw2IE"
       },
       "Export": {
-        "Name": "sls-nostalgio-backend-dev-DeleteUserLambdaFunctionQualifiedArn"
-      }
-    },
-    "DeleteMemoryLambdaFunctionQualifiedArn": {
-      "Description": "Current Lambda function version",
-      "Value": {
-        "Ref": "DeleteMemoryLambdaVersionwuu45y6L5uMFsiZEq2Ci0IQfT9blmRitOZ7Xg4Ow"
-      },
-      "Export": {
-        "Name": "sls-nostalgio-backend-dev-DeleteMemoryLambdaFunctionQualifiedArn"
+        "Name": "sls-nostalgio-backend-dev-SpotifyCallbackLambdaFunctionQualifiedArn"
       }
     },
     "ValidateSpotifyTokenLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "ValidateSpotifyTokenLambdaVersionin1pt91wmdxWLNSm6SFEQkbhy5xqWofhrFGgfqDavmY"
+        "Ref": "ValidateSpotifyTokenLambdaVersiona0KR7vajc1U6AREnMn8sBTP43rqrC5h63bO8Wsxb1E"
       },
       "Export": {
         "Name": "sls-nostalgio-backend-dev-ValidateSpotifyTokenLambdaFunctionQualifiedArn"
       }
     },
-    "AddMemoryImageLambdaFunctionQualifiedArn": {
+    "StreamMemoryUpdatesLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "AddMemoryImageLambdaVersionPW0sPbjahY4Y8rFnu9nPKvbGtaX6yn3y36j2YJ4UhY"
+        "Ref": "StreamMemoryUpdatesLambdaVersionxQ7VyrmcesDmFkDuHvqNZ5Zi0nZGGKJNsLR1SRcr50"
       },
       "Export": {
-        "Name": "sls-nostalgio-backend-dev-AddMemoryImageLambdaFunctionQualifiedArn"
+        "Name": "sls-nostalgio-backend-dev-StreamMemoryUpdatesLambdaFunctionQualifiedArn"
       }
     },
-    "GetMemoryLambdaFunctionQualifiedArn": {
+    "GetUserLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "GetMemoryLambdaVersions1eZSLNBSc3RPtefH7eaLEU94Ag8hfOtHtjAyu5EQ"
+        "Ref": "GetUserLambdaVersionoQQM71qnOiflrlm5KH3jJ5MzRlwNDmWCHD04KEy7Ozo"
       },
       "Export": {
-        "Name": "sls-nostalgio-backend-dev-GetMemoryLambdaFunctionQualifiedArn"
+        "Name": "sls-nostalgio-backend-dev-GetUserLambdaFunctionQualifiedArn"
+      }
+    },
+    "CreateUserLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "CreateUserLambdaVersionqCxwKkBjymSSxGnR0SNNNrpj8F7O91Zl32tjGxdPXc"
+      },
+      "Export": {
+        "Name": "sls-nostalgio-backend-dev-CreateUserLambdaFunctionQualifiedArn"
+      }
+    },
+    "RefreshSpotifyTokenLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "RefreshSpotifyTokenLambdaVersionpLuOxRQJbXjetRad1z8AosUvO3sWySJQxlqZt1Rt0"
+      },
+      "Export": {
+        "Name": "sls-nostalgio-backend-dev-RefreshSpotifyTokenLambdaFunctionQualifiedArn"
+      }
+    },
+    "StoreListeningHistoryLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "StoreListeningHistoryLambdaVersion84XbCDVTiLLPFpPpuDadzdvHwZ3E5RJOfuzEzo9Fxo"
+      },
+      "Export": {
+        "Name": "sls-nostalgio-backend-dev-StoreListeningHistoryLambdaFunctionQualifiedArn"
       }
     },
     "ListMemoriesLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "ListMemoriesLambdaVersion4cl9DrJTrpSVo28ylNREv8nGBPyJkFiFBUWoKqs"
+        "Ref": "ListMemoriesLambdaVersionjSFZzBhQSwYzMB6mWTCF9Rvows7brJvvSHXLqebIzs"
       },
       "Export": {
         "Name": "sls-nostalgio-backend-dev-ListMemoriesLambdaFunctionQualifiedArn"
@@ -6528,145 +7125,208 @@
     "GetCityMemoriesLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "GetCityMemoriesLambdaVersion71dPDd3NUkNVE88VGCTlSdMmpYay5r2Ax0BzopQ"
+        "Ref": "GetCityMemoriesLambdaVersionRXbyJWoOZNv9ggGvXA5hweI8NSgRy0vhXpbTIwvINNc"
       },
       "Export": {
         "Name": "sls-nostalgio-backend-dev-GetCityMemoriesLambdaFunctionQualifiedArn"
       }
     },
-    "SuggestSongsByLocationLambdaFunctionQualifiedArn": {
+    "UpdateMemoryLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "SuggestSongsByLocationLambdaVersionIXpiMKsTZHkQGzKkq4poCvhMRPUynNcJ0uUyfJNXms"
+        "Ref": "UpdateMemoryLambdaVersiond7F9qq7ffnlP4EfFnLR4okb3ClQ3V7ZgKPf78UUsaOc"
       },
       "Export": {
-        "Name": "sls-nostalgio-backend-dev-SuggestSongsByLocationLambdaFunctionQualifiedArn"
-      }
-    },
-    "GetCurrentlyPlayingTrackLambdaFunctionQualifiedArn": {
-      "Description": "Current Lambda function version",
-      "Value": {
-        "Ref": "GetCurrentlyPlayingTrackLambdaVersionSALxifadhMxfPVF5lWCOdBGPHv64I3ETFPuwdD1MU"
-      },
-      "Export": {
-        "Name": "sls-nostalgio-backend-dev-GetCurrentlyPlayingTrackLambdaFunctionQualifiedArn"
-      }
-    },
-    "StoreListeningHistoryLambdaFunctionQualifiedArn": {
-      "Description": "Current Lambda function version",
-      "Value": {
-        "Ref": "StoreListeningHistoryLambdaVersionjRDsLKzynq5NwvfXsBUZkaMTi2L3TDcvA1CuHLzv70"
-      },
-      "Export": {
-        "Name": "sls-nostalgio-backend-dev-StoreListeningHistoryLambdaFunctionQualifiedArn"
-      }
-    },
-    "StreamMemoryUpdatesLambdaFunctionQualifiedArn": {
-      "Description": "Current Lambda function version",
-      "Value": {
-        "Ref": "StreamMemoryUpdatesLambdaVersionCoVwkP6CDRNY7yUorfgX1gwze9UlaA4Xt2nbv0XtYM"
-      },
-      "Export": {
-        "Name": "sls-nostalgio-backend-dev-StreamMemoryUpdatesLambdaFunctionQualifiedArn"
-      }
-    },
-    "RemoveTrackFromPlaylistLambdaFunctionQualifiedArn": {
-      "Description": "Current Lambda function version",
-      "Value": {
-        "Ref": "RemoveTrackFromPlaylistLambdaVersionjRi7ZqmWp0WD1Jb9esFmn1VufvLqETYHATFM8byuh4U"
-      },
-      "Export": {
-        "Name": "sls-nostalgio-backend-dev-RemoveTrackFromPlaylistLambdaFunctionQualifiedArn"
+        "Name": "sls-nostalgio-backend-dev-UpdateMemoryLambdaFunctionQualifiedArn"
       }
     },
     "GetListeningHistoryByLocationLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "GetListeningHistoryByLocationLambdaVersionD21EfbEJr1U6Ndgg368pPNmHbTe1cjvekAZbQkf0A"
+        "Ref": "GetListeningHistoryByLocationLambdaVersionxuMle7ZJCQbeSszFQoknsMnGzd7zfVMQL8YQuHQ0E"
       },
       "Export": {
         "Name": "sls-nostalgio-backend-dev-GetListeningHistoryByLocationLambdaFunctionQualifiedArn"
       }
     },
-    "GetTopArtistsLambdaFunctionQualifiedArn": {
+    "GetCurrentlyPlayingTrackLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "GetTopArtistsLambdaVersionwolLGNVMJo6bXl4UfiReP3KUnhERyZqi4l0VxTiYKI"
+        "Ref": "GetCurrentlyPlayingTrackLambdaVersionrWSTePSlELVblu8R5FHdONhbYHmNiy1sPyyt3C8EEXA"
       },
       "Export": {
-        "Name": "sls-nostalgio-backend-dev-GetTopArtistsLambdaFunctionQualifiedArn"
-      }
-    },
-    "CreatePlaylistLambdaFunctionQualifiedArn": {
-      "Description": "Current Lambda function version",
-      "Value": {
-        "Ref": "CreatePlaylistLambdaVersionBp6me3UEkA9FXDqSdIVap7bIHYOIZ512TBuTkQCcI"
-      },
-      "Export": {
-        "Name": "sls-nostalgio-backend-dev-CreatePlaylistLambdaFunctionQualifiedArn"
-      }
-    },
-    "GetRecentTracksLambdaFunctionQualifiedArn": {
-      "Description": "Current Lambda function version",
-      "Value": {
-        "Ref": "GetRecentTracksLambdaVersionhTHgheDMEeJsVFGrG4PgMB3QMbVyUVr8CvQT2NVkeE"
-      },
-      "Export": {
-        "Name": "sls-nostalgio-backend-dev-GetRecentTracksLambdaFunctionQualifiedArn"
-      }
-    },
-    "GetTopTracksLambdaFunctionQualifiedArn": {
-      "Description": "Current Lambda function version",
-      "Value": {
-        "Ref": "GetTopTracksLambdaVersionQBH4mZXSDLhy2NqJPje1lq15sJnv9DKSarYIfRvHDU"
-      },
-      "Export": {
-        "Name": "sls-nostalgio-backend-dev-GetTopTracksLambdaFunctionQualifiedArn"
+        "Name": "sls-nostalgio-backend-dev-GetCurrentlyPlayingTrackLambdaFunctionQualifiedArn"
       }
     },
     "AddTrackToPlaylistLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "AddTrackToPlaylistLambdaVersionXBkTBIvIOwQJvR8ct5mWMlIdrWTrULDy42lfQ81SQU"
+        "Ref": "AddTrackToPlaylistLambdaVersiontH041SKI33xS6r6PCaW6eASDySVoFNhmi7zkg"
       },
       "Export": {
         "Name": "sls-nostalgio-backend-dev-AddTrackToPlaylistLambdaFunctionQualifiedArn"
       }
     },
-    "GetPlaylistDetailsLambdaFunctionQualifiedArn": {
+    "AddMemoryImageLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "GetPlaylistDetailsLambdaVersion9UemFCBbDWYSLPNt8H1mkFnut51CZvUe9ZdHPL3yQ"
+        "Ref": "AddMemoryImageLambdaVersionXTAz7AxFrGokaXpsxv9jIdtyanoRXAkV093nBfLo"
       },
       "Export": {
-        "Name": "sls-nostalgio-backend-dev-GetPlaylistDetailsLambdaFunctionQualifiedArn"
+        "Name": "sls-nostalgio-backend-dev-AddMemoryImageLambdaFunctionQualifiedArn"
+      }
+    },
+    "SuggestSongsByLocationLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "SuggestSongsByLocationLambdaVersioneXpEFqi3sQmOptnx43C36umq2Kl08mt4MmZJGGXr0"
+      },
+      "Export": {
+        "Name": "sls-nostalgio-backend-dev-SuggestSongsByLocationLambdaFunctionQualifiedArn"
+      }
+    },
+    "CreatePlaylistLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "CreatePlaylistLambdaVersionTq6tNKcVqruXlndXRLahXrAi1eOq0WtTyj7EQ4d5Xc"
+      },
+      "Export": {
+        "Name": "sls-nostalgio-backend-dev-CreatePlaylistLambdaFunctionQualifiedArn"
+      }
+    },
+    "GetTopTracksLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "GetTopTracksLambdaVersionEhaPD1A9JQDfqEYQOwVR4wbfsKBDiouyk4WLdLFboBI"
+      },
+      "Export": {
+        "Name": "sls-nostalgio-backend-dev-GetTopTracksLambdaFunctionQualifiedArn"
       }
     },
     "DeletePlaylistLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "DeletePlaylistLambdaVersionrWbClJ7NiaNk1jo7Dv4yqu530EhMYZxugnxspnO0U"
+        "Ref": "DeletePlaylistLambdaVersionBR8gz8DKX6BF840MVHJ4LsAWAjLIMOGXK2CfI2qQ"
       },
       "Export": {
         "Name": "sls-nostalgio-backend-dev-DeletePlaylistLambdaFunctionQualifiedArn"
       }
     },
-    "SetPlaylistImageLambdaFunctionQualifiedArn": {
+    "GetPlaylistDetailsLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "SetPlaylistImageLambdaVersionRpesbiItoRavEjIARF0t4rGaEMR6HNmLztW1J8gimk"
+        "Ref": "GetPlaylistDetailsLambdaVersionvhceT1wrDz1dMHewrbSIxETbEAADk0YUiIRTlmvlC2U"
       },
       "Export": {
-        "Name": "sls-nostalgio-backend-dev-SetPlaylistImageLambdaFunctionQualifiedArn"
+        "Name": "sls-nostalgio-backend-dev-GetPlaylistDetailsLambdaFunctionQualifiedArn"
+      }
+    },
+    "GetMemoryLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "GetMemoryLambdaVersionG6QpeoHU0PLINhOnzR6MN8uEFM2gfApJS44nYNsUnSU"
+      },
+      "Export": {
+        "Name": "sls-nostalgio-backend-dev-GetMemoryLambdaFunctionQualifiedArn"
+      }
+    },
+    "DeleteMemoryLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "DeleteMemoryLambdaVersionxyh4AeJU0vldKkLzvMvKHSk1lweWAufVm0rS96prvj0"
+      },
+      "Export": {
+        "Name": "sls-nostalgio-backend-dev-DeleteMemoryLambdaFunctionQualifiedArn"
       }
     },
     "ReverseGeocodeLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "ReverseGeocodeLambdaVersionMNRpCoGfcKG6cQo56dUjibMnzukcGO43H64Z2zKPLM"
+        "Ref": "ReverseGeocodeLambdaVersionVXR3ul0h5w9g84q1c4hjViBIsAuh0kolDsBBJLX4"
       },
       "Export": {
         "Name": "sls-nostalgio-backend-dev-ReverseGeocodeLambdaFunctionQualifiedArn"
+      }
+    },
+    "RemoveTrackFromPlaylistLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "RemoveTrackFromPlaylistLambdaVersion3yN1kG31ibx0O5NWZiDtnvQamUldTpPqo8dXXNhXt2k"
+      },
+      "Export": {
+        "Name": "sls-nostalgio-backend-dev-RemoveTrackFromPlaylistLambdaFunctionQualifiedArn"
+      }
+    },
+    "SetPlaylistImageLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "SetPlaylistImageLambdaVersionQPIvXCEthRirHdBTdaAHrrNsujwjWge4PonGQcQaEY"
+      },
+      "Export": {
+        "Name": "sls-nostalgio-backend-dev-SetPlaylistImageLambdaFunctionQualifiedArn"
+      }
+    },
+    "UploadImageLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "UploadImageLambdaVersion5eJ7g6gQOMxASZx0ELWqWRw2s4urVaBr1dbESO8kzs"
+      },
+      "Export": {
+        "Name": "sls-nostalgio-backend-dev-UploadImageLambdaFunctionQualifiedArn"
+      }
+    },
+    "GetRecentTracksLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "GetRecentTracksLambdaVersion8sFG2mToCKK1n2hNqGTDu5qhrib9VTEqnthL9cR94"
+      },
+      "Export": {
+        "Name": "sls-nostalgio-backend-dev-GetRecentTracksLambdaFunctionQualifiedArn"
+      }
+    },
+    "DeleteUserLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "DeleteUserLambdaVersionn756qHzT2qNGmNqcP6OfR7Tuj8XCPkq3YzyUt7A9ioo"
+      },
+      "Export": {
+        "Name": "sls-nostalgio-backend-dev-DeleteUserLambdaFunctionQualifiedArn"
+      }
+    },
+    "ExchangeSpotifyTokenLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "ExchangeSpotifyTokenLambdaVersionbV2KHkXt7xDcoRZUsXU6I5TDcsy602Q4qYQGFogHROg"
+      },
+      "Export": {
+        "Name": "sls-nostalgio-backend-dev-ExchangeSpotifyTokenLambdaFunctionQualifiedArn"
+      }
+    },
+    "GetTopArtistsLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "GetTopArtistsLambdaVersionFuqLohyHK882Wc4CvVc2m8wa5TdJ4mS7NA7pSsaseVY"
+      },
+      "Export": {
+        "Name": "sls-nostalgio-backend-dev-GetTopArtistsLambdaFunctionQualifiedArn"
+      }
+    },
+    "GetImageLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "GetImageLambdaVersionbWgrxllJ6zg5No7S9LVKifaGDrhDOIkYj25s7xQHoEc"
+      },
+      "Export": {
+        "Name": "sls-nostalgio-backend-dev-GetImageLambdaFunctionQualifiedArn"
+      }
+    },
+    "DeleteImageLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "DeleteImageLambdaVersionMs20hTIpAhJm8bAXYNH42lmlBGRH1CxXhsOChQzmdk"
+      },
+      "Export": {
+        "Name": "sls-nostalgio-backend-dev-DeleteImageLambdaFunctionQualifiedArn"
       }
     },
     "ServiceEndpoint": {
@@ -6693,6 +7353,14 @@
       },
       "Export": {
         "Name": "sls-nostalgio-backend-dev-ServiceEndpoint"
+      }
+    },
+    "UserMediaBucketName": {
+      "Value": {
+        "Ref": "UserMediaBucket"
+      },
+      "Export": {
+        "Name": "UserMediaBucketName"
       }
     }
   }
