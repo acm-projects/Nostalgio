@@ -1,5 +1,4 @@
 org: andresgrc
-# "app" enables Serverless Framework Dashboard features and sharing them with other Services.
 app: nostalgio-backend
 service: nostalgio-backend
 
@@ -14,9 +13,12 @@ provider:
     SPOTIFY_CLIENT_ID: ${env:SPOTIFY_CLIENT_ID}
     SPOTIFY_CLIENT_SECRET: ${env:SPOTIFY_CLIENT_SECRET}
     SPOTIFY_REDIRECT_URI: ${env:SPOTIFY_REDIRECT_URI}
+    GOOGLE_API_KEY: ${env:GOOGLE_API_KEY}
     USERS_TABLE: Users
     MEMORIES_TABLE: Memories
     AUTH_SESSION_TABLE: AuthSessionData
+    LISTENING_HISTORY_TABLE: ListeningHistoryTable
+    MUSIC_SUGGESTIONS_TABLE: MusicSuggestionsTable
 
   iamRoleStatements:
     - Effect: Allow
@@ -46,12 +48,20 @@ provider:
         - "dynamodb:GetRecords"
         - "dynamodb:GetShardIterator"
       Resource:
-        - !GetAtt UsersTable.Arn                # Full access to UsersTable
-        - !GetAtt UsersTable.StreamArn          # Stream access to UsersTable
-        - !GetAtt MemoriesTable.Arn             # Full access to MemoriesTable
-        - !GetAtt MemoriesTable.StreamArn       # Stream access to MemoriesTable
-        - !GetAtt AuthSessionData.Arn           # Full access to AuthSessionData
+        - !GetAtt UsersTable.Arn
+        - !GetAtt UsersTable.StreamArn
+        - !GetAtt Memories.Arn
+        - !GetAtt Memories.StreamArn
+        - !GetAtt AuthSessionData.Arn
+        - !GetAtt ListeningHistoryTable.Arn
+        - !GetAtt ListeningHistoryTable.StreamArn
+        - !GetAtt MusicSuggestionsTable.Arn
+        - !GetAtt MusicSuggestionsTable.StreamArn
         - arn:aws:dynamodb:${self:provider.region}:*:table/Users/index/SpotifyUserIdIndex
+        - arn:aws:dynamodb:${self:provider.region}:*:table/Memories/index/CityUserIndex
+        - arn:aws:dynamodb:${self:provider.region}:*:table/Memories/index/UserMemoryIndex
+        - arn:aws:dynamodb:${self:provider.region}:*:table/ListeningHistoryTable/index/TrackIdIndex
+        - arn:aws:dynamodb:${self:provider.region}:*:table/ListeningHistoryTable/index/UserIdIndex
 
     - Effect: Allow
       Action:
@@ -65,9 +75,9 @@ package:
 
 plugins:
   - serverless-offline
-  
+
 functions:
-  # Spotify Handlers
+  # Authorization Handlers
   spotifyAuth:
     handler: src/auth/spotify/spotifyAuthHandler.spotifyAuthHandler
     events:
@@ -186,23 +196,186 @@ functions:
           method: get
           cors: true
 
+  getCityMemories:
+    handler: src/memories/handlers/getCityMemories.getCityMemoriesHandler
+    events:
+      - http:
+          path: memories/{userId}/city/{city}
+          method: get
+          cors: true
+  
+  addMemoryImage:
+    handler: src/memories/handlers/addMemoryImage.addMemoryImageHandler
+    events:
+      - http:
+          path: memories/{userId}/{memoryId}/image
+          method: put
+          cors: true
+
   streamMemoryUpdates:
     handler: src/memories/handlers/streamMemoryUpdates.streamMemoryUpdatesHandler
     events:
       - stream:
           type: dynamodb
-          arn: !GetAtt MemoriesTable.StreamArn
-  
-  # Spotify Tracks Handlers
-  getTopTracks:
-    handler: src/spotify/tracks/handlers/getTopTracks.getTopTracks
+          arn: !GetAtt Memories.StreamArn
+
+  # Listening History Handlers
+  storeListeningHistory:
+    handler: src/listeningHistory/handlers/storeListeningHistory.handler
     events:
       - http:
-          path: spotify/tracks/top/{userId}
+          path: listening-history/store
+          method: post
+          cors: true
+
+  getListeningHistoryByLocation:
+    handler: src/listeningHistory/handlers/getListeningHistoryByLocation.handler
+    events:
+      - http:
+          path: listening-history/{lat}/{lon}
           method: get
           cors: true
-          # authorizer:
-          #   name: NostalgioAuthorizer  # Ensure this matches your current authorizer
+          request:
+            parameters:
+              paths:
+                lat: true   # Required path parameter
+                lon: true   # Required path parameter
+              querystrings:
+                radius: false  # Optional, handled in the handler code if omitted
+
+  # Music Suggestion Handler
+  suggestSongsByLocation:
+    handler: src/musicSuggestions/handlers/suggestSongsByLocation.handler
+    events:
+      - http:
+          path: users/{userId}/suggestions/location
+          method: get
+          cors: true
+          request:
+            parameters:
+              querystrings:
+                lat: true
+                lon: true
+                radius: false  # Optional parameter, defaults to null
+  
+  # Spotify Api Calls 
+  getRecentTracks:
+    handler: src/spotify/tracks/handlers/getRecentTracks.getRecentTracksHandler
+    events:
+      - http:
+          path: /users/{userId}/spotify/recent-tracks
+          method: get
+          cors: true
+
+  getTopTracks:
+    handler: src/spotify/tracks/handlers/getTopTracks.getTopTracksHandler
+    events:
+      - http:
+          path: /users/{userId}/spotify/top-tracks
+          method: get
+          cors: true
+
+  getTopArtists:
+    handler: src/spotify/tracks/handlers/getTopArtists.getTopArtistsHandler
+    events:
+      - http:
+          path: /users/{userId}/spotify/top-artists
+          method: get
+          cors: true
+  
+  getCurrentlyPlayingTrack:
+    handler: src/spotify/tracks/handlers/getCurrentlyPlayingTrack.getCurrentlyPlayingTrackHandler
+    events:
+      - http:
+          path: users/{userId}/spotify/currently-playing
+          method: get
+          cors: true
+          request:
+            parameters:
+              paths:
+                userId: true
+
+# Spotify Playlist Handlers
+  createPlaylist:
+    handler: src/spotify/playlists/handlers/createPlaylist.createPlaylistHandler
+    events:
+      - http:
+          path: playlists/{userId}
+          method: post
+          cors: true
+          request:
+            parameters:
+              paths:
+                userId: true
+
+  addTrackToPlaylist:
+    handler: src/spotify/playlists/handlers/addTrackToPlaylist.addTrackToPlaylistHandler
+    events:
+      - http:
+          path: playlists/{userId}/{playlistId}/tracks
+          method: post
+          cors: true
+          request:
+            parameters:
+              paths:
+                userId: true
+                playlistId: true
+
+  removeTrackFromPlaylist:
+    handler: src/spotify/playlists/handlers/removeTrackFromPlaylist.removeTrackFromPlaylistHandler
+    events:
+      - http:
+          path: playlists/{userId}/{playlistId}/tracks
+          method: delete
+          cors: true
+          request:
+            parameters:
+              paths:
+                userId: true
+                playlistId: true
+
+  getPlaylistDetails:
+    handler: src/spotify/playlists/handlers/getPlaylistDetails.getPlaylistDetailsHandler
+    events:
+      - http:
+          path: playlists/{userId}/{playlistId}
+          method: get
+          cors: true
+          request:
+            parameters:
+              paths:
+                userId: true
+                playlistId: true
+  
+  deletePlaylist:
+    handler: src/spotify/playlists/handlers/deletePlaylist.deletePlaylistHandler
+    events:
+      - http:
+          path: playlists/{userId}/{playlistId}
+          method: delete
+          cors: true
+  
+  setPlaylistImage:
+    handler: src/spotify/playlists/handlers/setPlaylistImage.setPlaylistImageHandler
+    events:
+      - http:
+          path: playlists/{userId}/{playlistId}/image
+          method: put
+          cors: true
+# Location Handlers
+  reverseGeocode:
+    handler: src/locations/handlers/reverseGeocode.reverseGeocodeHandler
+    events:
+      - http:
+          path: reverseGeocode
+          method: get
+          request:
+            parameters:
+              querystrings:
+                latitude: true
+                longitude: true
+          cors: true
+
 resources:
   Resources:
     AuthSessionData:
@@ -241,22 +414,91 @@ resources:
               ProjectionType: ALL
         BillingMode: PAY_PER_REQUEST
         StreamSpecification:
-          StreamViewType: NEW_AND_OLD_IMAGES  # Enable streams for UsersTable
+          StreamViewType: NEW_AND_OLD_IMAGES
 
-    MemoriesTable:
+    Memories:
       Type: AWS::DynamoDB::Table
       Properties:
         TableName: Memories
         AttributeDefinitions:
-          - AttributeName: UserId
+          - AttributeName: memoryId
             AttributeType: S
-          - AttributeName: MemoryId
+          - AttributeName: city
+            AttributeType: S
+          - AttributeName: userId
             AttributeType: S
         KeySchema:
-          - AttributeName: UserId
+          - AttributeName: memoryId
             KeyType: HASH
-          - AttributeName: MemoryId
-            KeyType: RANGE
+        GlobalSecondaryIndexes:
+          - IndexName: CityUserIndex  # GSI for querying by userId and city
+            KeySchema:
+              - AttributeName: userId
+                KeyType: HASH
+              - AttributeName: city
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+          - IndexName: UserMemoryIndex  # GSI for querying by userId
+            KeySchema:
+              - AttributeName: userId
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+        BillingMode: PAY_PER_REQUEST
+        StreamSpecification:
+          StreamViewType: NEW_AND_OLD_IMAGES
+
+
+    ListeningHistoryTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ListeningHistoryTable
+        AttributeDefinitions:
+          - AttributeName: geohash
+            AttributeType: S  # Partition key to store geohash (latitude + longitude)
+          - AttributeName: timestamp
+            AttributeType: N  # Sort key to store timestamp as a number
+          - AttributeName: trackId
+            AttributeType: S  # GSI for querying by trackId
+          - AttributeName: userId
+            AttributeType: S  # GSI for querying by userId
+        KeySchema:
+          - AttributeName: geohash
+            KeyType: HASH  # Partition key (location)
+          - AttributeName: timestamp
+            KeyType: RANGE  # Sort key (timestamp)
+        GlobalSecondaryIndexes:
+          - IndexName: TrackIdIndex
+            KeySchema:
+              - AttributeName: trackId
+                KeyType: HASH  # GSI for trackId
+              - AttributeName: timestamp
+                KeyType: RANGE  # Sort by timestamp for tracks
+            Projection:
+              ProjectionType: ALL
+          - IndexName: UserIdIndex
+            KeySchema:
+              - AttributeName: userId
+                KeyType: HASH  # GSI for userId
+              - AttributeName: timestamp
+                KeyType: RANGE  # Sort by timestamp for user queries
+            Projection:
+              ProjectionType: ALL
+        BillingMode: PAY_PER_REQUEST
+        StreamSpecification:
+          StreamViewType: NEW_AND_OLD_IMAGES  # Enable streams for listening history
+
+    MusicSuggestionsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: MusicSuggestionsTable
+        AttributeDefinitions:
+          - AttributeName: locationId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: locationId
+            KeyType: HASH
         BillingMode: PAY_PER_REQUEST
         StreamSpecification:
           StreamViewType: NEW_AND_OLD_IMAGES
