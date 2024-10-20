@@ -16,6 +16,7 @@ provider:
     GOOGLE_API_KEY: ${env:GOOGLE_API_KEY}
     USERS_TABLE: Users
     MEMORIES_TABLE: Memories
+    BADGES_TABLE: Badges
     AUTH_SESSION_TABLE: AuthSessionData
     LISTENING_HISTORY_TABLE: ListeningHistoryTable
     MUSIC_SUGGESTIONS_TABLE: MusicSuggestionsTable
@@ -74,6 +75,9 @@ provider:
         - !GetAtt ListeningHistoryTable.StreamArn
         - !GetAtt MusicSuggestionsTable.Arn
         - !GetAtt MusicSuggestionsTable.StreamArn
+        - !GetAtt Badges.Arn
+        - !GetAtt Badges.StreamArn
+        - arn:aws:dynamodb:${self:provider.region}:*:table/Badges/index/userId-lastVisitedDate-index
         - arn:aws:dynamodb:${self:provider.region}:*:table/Users/index/SpotifyUserIdIndex
         - arn:aws:dynamodb:${self:provider.region}:*:table/Memories/index/CityUserIndex
         - arn:aws:dynamodb:${self:provider.region}:*:table/Memories/index/UserMemoryIndex
@@ -235,6 +239,31 @@ functions:
       - stream:
           type: dynamodb
           arn: !GetAtt Memories.StreamArn
+  
+  # Badges Handlers
+  createBadge:
+    handler: src/badges/handlers/createOrUpdateBadge.createOrUpdateBadgeHandler
+    events:
+      - http:
+          path: badges
+          method: post
+          cors: true
+  
+  getRecentBadges:
+    handler: src/badges/handlers/listRecentBadges.listRecentBadgesHandler
+    events:
+      - http:
+          path: badges/{userId}
+          method: get
+          cors: true
+
+  deleteBadge:
+    handler: src/badges/handlers/deleteBadge.deleteBadgeHandler
+    events:
+      - http:
+          path: badges/{userId}/{city}
+          method: delete
+          cors: true
 
   # Listening History Handlers
   storeListeningHistory:
@@ -509,6 +538,35 @@ resources:
             KeySchema:
               - AttributeName: userId
                 KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+        BillingMode: PAY_PER_REQUEST
+        StreamSpecification:
+          StreamViewType: NEW_AND_OLD_IMAGES
+
+    Badges:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Badges
+        AttributeDefinitions:
+          - AttributeName: userId
+            AttributeType: S
+          - AttributeName: city
+            AttributeType: S
+          - AttributeName: lastVisitedDate
+            AttributeType: S
+        KeySchema:
+          - AttributeName: userId
+            KeyType: HASH
+          - AttributeName: city
+            KeyType: RANGE
+        GlobalSecondaryIndexes:
+          - IndexName: userId-lastVisitedDate-index  # GSI for querying by recent trips for userId
+            KeySchema:
+              - AttributeName: userId
+                KeyType: HASH
+              - AttributeName: lastVisitedDate
+                KeyType: RANGE
             Projection:
               ProjectionType: ALL
         BillingMode: PAY_PER_REQUEST

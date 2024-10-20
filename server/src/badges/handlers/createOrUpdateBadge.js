@@ -7,7 +7,7 @@ export const createOrUpdateBadgeHandler = async (event) => {
 
     try{
         await storeOrUpdateBadgeInDynamoDB({
-            UserId: userId,
+            userId: userId,
             city:city,
             lastVisitedDate: currentTimestamp,
             country:country,
@@ -25,5 +25,4 @@ export const createOrUpdateBadgeHandler = async (event) => {
         };
     }
 }
-
 

@@ -1,6 +1,7 @@
 import { listRecentBadgesFromDynamoDB } from "../badgeService.js";
 
 export const listRecentBadgesHandler = async (event) => {
+    console.log("Received event:", JSON.stringify(event));
     const {userId} = event.pathParameters;
 
     try {
@@ -18,16 +19,3 @@ export const listRecentBadgesHandler = async (event) => {
     }
     
 };
-
-const event = {
-    pathParameters: {
-        userId: "12345",  // Replace with the actual userId you want to test
-    },
-};
-
-// Call the handler function
-listRecentBadgesHandler(event).then((response) => {
-    console.log('Lambda Response:', response);
-}).catch((error) => {
-    console.error('Error:', error);
-});
