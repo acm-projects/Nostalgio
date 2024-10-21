@@ -15,6 +15,7 @@ const scopes = [
   'user-library-modify',
   'user-read-playback-state',
   'user-modify-playback-state',
+  'ugc-image-upload',
 ].join(' ');  // Scopes need to be space-separated
 
 /**
