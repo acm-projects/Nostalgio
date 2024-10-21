@@ -9,11 +9,14 @@ import { getAudioFeatures } from '../../utils/audioFeaturesUtils.js';  // For fe
  * @returns {Object} - The response containing the top tracks or an error message.
  */
 export const getTopTracksHandler = async (event) => {
+  let userId; // Declare userId outside try block to avoid scope issues in catch block
+
   try {
     // Step 1: Extract the userId from path parameters
-    const { userId } = event.pathParameters;
+    userId = event.pathParameters?.userId;
 
     if (!userId) {
+      console.warn('Missing userId in path parameters.');
       return {
         statusCode: 400,
         body: JSON.stringify({ message: 'Missing userId in path parameters' }),
@@ -49,11 +52,15 @@ export const getTopTracksHandler = async (event) => {
       },
     });
 
+    if (!response.data || !response.data.items) {
+      throw new Error('Invalid data returned from Spotify API.');
+    }
+
     // Step 5: Extract track IDs for audio features lookup
     const trackIds = response.data.items.map(track => track.id);
 
     // Log the actual array of track IDs to ensure it's an array
-    console.log('trackIds array:', trackIds);
+    console.log('Track IDs array:', trackIds);
 
     if (!Array.isArray(trackIds) || trackIds.length === 0) {
       throw new Error('No track IDs found or invalid data returned from Spotify.');
@@ -62,7 +69,7 @@ export const getTopTracksHandler = async (event) => {
     // Step 6: Fetch audio features for the tracks
     const audioFeatures = await getAudioFeatures(accessToken, trackIds);
 
-    // Step 7: Format the response to include essential track data and audio features
+    // Step 7: Format the response to include essential track data and audio features, with default values
     const formattedTracks = response.data.items.map((track, index) => ({
       trackId: track.id,  // Include the trackId in the response
       name: track.name,
@@ -70,7 +77,7 @@ export const getTopTracksHandler = async (event) => {
       duration_ms: track.duration_ms,
       explicit: track.explicit,
       preview_url: track.preview_url,
-      artists: item.track.artists.map(artist => ({
+      artists: track.artists.map(artist => ({
         name: artist.name,
         id: artist.id,  // Include artist ID here
       })),
@@ -83,10 +90,12 @@ export const getTopTracksHandler = async (event) => {
       track_url: track.external_urls.spotify,
       uri: track.uri,
       audio_features: {
-        tempo: audioFeatures[index]?.tempo || null,
-        danceability: audioFeatures[index]?.danceability || null,
-        energy: audioFeatures[index]?.energy || null,
-      },  // Include key audio features
+        tempo: audioFeatures[index]?.tempo || 0,
+        danceability: audioFeatures[index]?.danceability || 0,
+        energy: audioFeatures[index]?.energy || 0,
+        acousticness: audioFeatures[index]?.acousticness || 0,
+        valence: audioFeatures[index]?.valence || 0,
+      },  // Include all key audio features with defaults
     }));
 
     // Step 8: Log the formatted response for debugging purposes
@@ -103,12 +112,12 @@ export const getTopTracksHandler = async (event) => {
 
   } catch (error) {
     // Step 10: Error handling
-    console.error(`Error fetching top tracks for user: ${userId} - ${error.message}`);
+    console.error(`Error fetching top tracks for user: ${userId || 'unknown'} - ${error.message}`);
 
     return {
       statusCode: 500,
       body: JSON.stringify({
-        message: `Failed to fetch top tracks for user: ${userId}`,
+        message: `Failed to fetch top tracks for user: ${userId || 'unknown'}`,
         error: error.message,
       }),
     };
