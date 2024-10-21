@@ -22,12 +22,16 @@ export const uploadImageToCloudinary = async (imageBuffer, originalFileName) => 
     console.log(`Preparing to upload image to Cloudinary: ${originalFileName}`);
     console.log(`Initial image buffer size: ${(imageBuffer.length / 1024).toFixed(2)} KB`);
 
+    // Clean the file name (remove the file extension)
+    const cleanFileName = originalFileName.split('.').slice(0, -1).join('.');
+    console.log(`Cleaned file name for Cloudinary upload: ${cleanFileName}`);
+
     return new Promise((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
         {
           resource_type: 'image',
           format: 'jpg',
-          public_id: originalFileName,
+          public_id: cleanFileName, // Use cleaned file name
           overwrite: true,
           transformation: [
             { width: 800, crop: "limit" },
@@ -51,7 +55,7 @@ export const uploadImageToCloudinary = async (imageBuffer, originalFileName) => 
               {
                 resource_type: 'image',
                 format: 'jpg',
-                public_id: originalFileName,
+                public_id: cleanFileName, // Reuse the cleaned file name
                 overwrite: true,
                 transformation: [
                   { width: 800, crop: "limit" },
