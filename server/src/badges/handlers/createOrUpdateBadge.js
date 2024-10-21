@@ -1,9 +1,12 @@
 import { storeOrUpdateBadgeInDynamoDB } from "../badgeService.js";
+import { reverseGeocode } from "../../locations/handlers/reverseGeocode.js";
 
 export const createOrUpdateBadgeHandler = async (event) => {
-    const { userId, city, country} = JSON.parse(event.body);
+    const { userId, latitude, longitude, country} = JSON.parse(event.body);
 
     const currentTimestamp = new Date().toISOString();
+    const city = await reverseGeocode({latitude, longitude});
+    console.log(`City identified: ${city}`);
 
     try{
         await storeOrUpdateBadgeInDynamoDB({
