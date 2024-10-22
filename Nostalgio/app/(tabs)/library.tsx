@@ -1,12 +1,12 @@
-import { StyleSheet, SafeAreaView, Image, ScrollView, Animated, TouchableOpacity } from 'react-native';
+import { StyleSheet, SafeAreaView, Image, ScrollView, ActivityIndicator, TouchableOpacity, ImageBackground } from 'react-native';
 
 import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
 
-import { useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Svg, { Path, SvgProps } from 'react-native-svg';
 
-import {default as trips} from "@/trips1.json"; //Change depending on data
+//import {default as trips} from "@/tripsnew.json"; //Change depending on data
 import { format } from 'date-fns';
 
 export function SolarArrowDownBold(props: SvgProps) {
@@ -19,8 +19,8 @@ export function SolarArrowDownBold(props: SvgProps) {
 
 function formatDate(dateString:string) {
   let year = parseInt(dateString.substring(0, 4), 10);
-  let month = parseInt(dateString.substring(4, 6), 10) - 1;
-  let day = parseInt(dateString.substring(6, 8), 10);
+  let month = parseInt(dateString.substring(5, 7), 10) - 1;
+  let day = parseInt(dateString.substring(8, 10), 10);
   
   return format(new Date(year, month, day), 'MM.dd.yyyy');
 }
@@ -44,34 +44,78 @@ function renderTrip(trip: any, index: number) {
 }
 
 export default function LibraryScreen() {
+  const [tripsData, setTripsData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  // Fetching the data
+  useEffect(() => {
+    const fetchTrips = async () => {
+      try {
+        const response = await fetch('https://chauhansai.github.io/Script-Projects/tripsnew.json'); // Replace with your actual URL
+        const data = await response.json();
+        //console.log('Raw JSON data:', data);
+
+        const formattedData = formatTripsByCity(data);
+        setTripsData(formattedData);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching trips data:", error);
+        setLoading(false);
+      }
+    };
+
+    fetchTrips();
+  }, []);
+
+  // Function to group trips by city
+  function formatTripsByCity(data: any) {
+    const groupedTrips: any = {};
+
+    data.trips.forEach((trip: any) => {
+      const city = trip.city;
+
+      if (!groupedTrips[city]) {
+        groupedTrips[city] = [];
+      }
+      groupedTrips[city].push([trip]);
+    });
+
+    return {
+      ongoing: data.ongoing,
+      trips: groupedTrips,
+    };
+  }
+
+  if (loading) {
+    return <ActivityIndicator size="large" color="#4361EE" />;
+  }
+
   return (
+    <ImageBackground source={require('@/assets/images/background.png')} resizeMode='cover' style={{flex:1}} >
     <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
       <SafeAreaView style={{ flex: 1 }}>
-        {trips.ongoing && (
-          <TouchableOpacity style={styles.ongoing} onPress={() => handleClick(trips.ongoing.id)}>
+        {tripsData.ongoing && (
+          <TouchableOpacity style={styles.ongoing} onPress={() => handleClick(tripsData.ongoing.id)}>
             <View style={styles.boxlhs}>
-              <Image style={styles.image} source={{ uri: trips.ongoing.art }} />
+              <Image style={styles.image} source={{ uri: tripsData.ongoing.art }} />
             </View>
             <View style={styles.boxmhs}>
               <Text style={styles.subtitle}>Ongoing Trip:</Text>
-              <Text style={styles.title}>{trips.ongoing.city}</Text>
-              <Text style={styles.subtitle}>{formatDate(trips.ongoing.startDate)} - Present</Text>
+              <Text style={styles.title}>{tripsData.ongoing.city}</Text>
+              <Text style={styles.subtitle}>{formatDate(tripsData.ongoing.startDate)} - Present</Text>
             </View>
             <View style={styles.boxrhs} />
           </TouchableOpacity>
         )}
-        
-        {Object.keys(trips.trips).map((city, cityIndex) => {
-          const cityTrips = trips.trips[city];
-          
+
+        {Object.keys(tripsData.trips).map((city, cityIndex) => {
+          const cityTrips = tripsData.trips[city];
+
           if (cityTrips.length === 1) {
             const trip = cityTrips[0][0]; // Access the single trip
             return (
               <View key={cityIndex} style={{ backgroundColor: 'transparent', width: '100%' }}>
-                <TouchableOpacity
-                  style={styles.item}
-                  onPress={() => handleClick(trip.id)}
-                >
+                <TouchableOpacity style={styles.item} onPress={() => handleClick(trip.id)}>
                   <View style={styles.boxlhs}>
                     <Image style={styles.image} source={{ uri: trip.art }} />
                   </View>
@@ -95,21 +139,18 @@ export default function LibraryScreen() {
                     <Text style={styles.title}>{city}</Text>
                     <Text style={styles.subtitle}>{cityTrips.length} trips</Text>
                   </View>
-                  <View style={styles.boxrhs}>
-                    <SolarArrowDownBold width={'50%'} height={50} color={'#ffffff'} />
-                  </View>
+                  <View style={styles.boxrhs} />
                 </TouchableOpacity>
 
                 {/* Trips in City Section */}
-                {cityTrips.map((tripArray, tripIndex) => (
-                  tripArray.map((trip, index) => renderTrip(trip, tripIndex * 10 + index))
-                ))}
+                {cityTrips.map((tripArray: any[], tripIndex: number) => tripArray.map((trip, index) => renderTrip(trip, tripIndex * 10 + index)))}
               </View>
             );
           }
         })}
       </SafeAreaView>
     </ScrollView>
+    </ImageBackground>
   );
 }
 
@@ -134,7 +175,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: '#4361EE',
+    backgroundColor: 'rgba(0, 0, 0, 0)',
   },
   contentContainer: {
     padding: 15, 
