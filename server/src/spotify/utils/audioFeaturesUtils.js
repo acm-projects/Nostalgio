@@ -34,19 +34,19 @@ export const getAudioFeatures = async (accessToken, trackIds) => {
     if (response.data && response.data.audio_features) {
       console.log(`Fetched audio features for ${response.data.audio_features.length} tracks.`);
 
-      // Format the audio features, filtering out null values and extracting relevant info
+      // Format the audio features, filtering out null values and providing defaults
       const formattedAudioFeatures = response.data.audio_features
         .filter(track => track !== null)  // Exclude null entries
         .map(track => ({
           trackId: track.id,
-          tempo: track.tempo,
-          danceability: track.danceability,
-          energy: track.energy,
-          acousticness: track.acousticness,
-          valence: track.valence,
+          tempo: track.tempo || 0,  // Default to 0 if not provided
+          danceability: track.danceability || 0,  // Default to 0 if not provided
+          energy: track.energy || 0,  // Default to 0 if not provided
+          acousticness: track.acousticness || 0,  // Default to 0 if not provided
+          valence: track.valence || 0,  // Default to 0 if not provided
         }));
 
-      console.log('Formatted audio features:', formattedAudioFeatures);
+      console.log('Formatted audio features with defaults:', formattedAudioFeatures);
 
       return formattedAudioFeatures;
     } else {

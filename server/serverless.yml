@@ -14,6 +14,9 @@ provider:
     SPOTIFY_CLIENT_SECRET: ${env:SPOTIFY_CLIENT_SECRET}
     SPOTIFY_REDIRECT_URI: ${env:SPOTIFY_REDIRECT_URI}
     GOOGLE_API_KEY: ${env:GOOGLE_API_KEY}
+    CLOUDINARY_CLOUD_NAME: ${env:CLOUDINARY_CLOUD_NAME}
+    CLOUDINARY_API_KEY: ${env:CLOUDINARY_API_KEY}
+    CLOUDINARY_API_SECRET: ${env:CLOUDINARY_API_SECRET}
     USERS_TABLE: Users
     MEMORIES_TABLE: Memories
     BADGES_TABLE: Badges
@@ -405,7 +408,7 @@ functions:
     handler: src/spotify/playlists/handlers/setPlaylistImage.setPlaylistImageHandler
     events:
       - http:
-          path: playlists/{userId}/{playlistId}/image
+          path: playlists/{userId}/memories/{memoryId}/image  # Changed from /{memoryId} to /memories/{memoryId}
           method: put
           cors: true
 
@@ -438,7 +441,7 @@ functions:
                 userId: true
                 type: true
                 id: true
-                
+
   # Handler for retrieving image URLs
   getImage:
     handler: src/s3/handlers/getImageHandler.getImageHandler
@@ -544,6 +547,7 @@ resources:
         StreamSpecification:
           StreamViewType: NEW_AND_OLD_IMAGES
 
+
     Badges:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -572,6 +576,7 @@ resources:
         BillingMode: PAY_PER_REQUEST
         StreamSpecification:
           StreamViewType: NEW_AND_OLD_IMAGES
+
 
     ListeningHistoryTable:
       Type: AWS::DynamoDB::Table
@@ -643,6 +648,13 @@ resources:
                     - DELETE
                     - HEAD
                   MaxAge: 3000
+
+            PublicAccessBlockConfiguration:  # Ensure public access is correctly blocked or allowed as needed
+              BlockPublicAcls: false          # Allows public access to ACLs
+              BlockPublicPolicy: false        # Allows public access policies
+              IgnorePublicAcls: false         # Ensures ACLs are not ignored
+              RestrictPublicBuckets: false    # Prevents restriction on public access
+
     BucketPolicy:
       Type: AWS::S3::BucketPolicy
       Properties:

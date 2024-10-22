@@ -11,9 +11,10 @@ import { storeMemoryInDynamoDB, updateMemoryInDynamoDB, listMemoriesFromDynamoDB
  */
 export const createMemoryHandler = async (event) => {
   try {
-    // Step 1: Extract user input from the request body
+    // Step 1: Parse the request body and extract the necessary parameters
     const { userId, latitude, longitude, name, art, isPublic = true } = JSON.parse(event.body);
 
+    // Ensure required fields are present
     if (!userId || !latitude || !longitude || !name) {
       console.warn('Missing required memory creation parameters');
       return {
@@ -24,37 +25,40 @@ export const createMemoryHandler = async (event) => {
 
     console.log(`Creating memory for userId: ${userId} with name: ${name}, at coordinates: (${latitude}, ${longitude})`);
 
-    // Step 2: Check for ongoing memory and add an end date if necessary
-    const existingMemories = await listMemoriesFromDynamoDB(userId);
-    const ongoingMemory = existingMemories.find(memory => !memory.endDate);
+    // Step 2: Retrieve existing memories for the user
+    const { ongoing, trips } = await listMemoriesFromDynamoDB(userId);
 
-    if (ongoingMemory) {
+    // If there is an ongoing memory, add an end date to close it
+    if (ongoing) {
       console.log(`Found ongoing memory for userId: ${userId}. Updating with an end date.`);
-      await updateMemoryInDynamoDB(ongoingMemory.memoryId, { endDate: new Date().toISOString() });
+      await updateMemoryInDynamoDB(ongoing.id, { endDate: new Date().toISOString() });
     }
 
-    // Step 3: Perform reverse geocoding to get the city name from coordinates
+    // Step 3: Perform reverse geocoding to get the city name based on the latitude and longitude
     const city = await reverseGeocode({ latitude, longitude });
     console.log(`City identified: ${city}`);
 
-    // Step 4: Construct an event for createPlaylistHandler with required parameters
+    // Step 4: Prepare to create a Spotify playlist
     const createPlaylistEvent = {
       pathParameters: { userId },
       body: JSON.stringify({ playlistName: name, isPublic }),
     };
 
-    // Step 5: Invoke createPlaylistHandler as if it's receiving a direct API request
+    // Step 5: Call the createPlaylistHandler to create the Spotify playlist
     const playlistResponse = await createPlaylistHandler(createPlaylistEvent);
     const playlistData = JSON.parse(playlistResponse.body);
 
+    // Check if playlist creation was successful
     if (playlistResponse.statusCode !== 200) {
-      throw new Error(`Failed to create Spotify playlist: ${playlistData.message}`);
+      console.error(`Failed to create Spotify playlist: ${playlistData.message}`);
+      throw new Error(playlistData.message);
     }
 
+    // Extract the playlist ID and other details
     const { playlistId: memoryId, spotifyUrl, createdAt: startDate } = playlistData;
     console.log(`Spotify playlist created with ID: ${memoryId}, public: ${isPublic}, startDate: ${startDate}`);
 
-    // Step 6: Prepare memory data for DynamoDB storage
+    // Step 6: Prepare the memory data for storing in DynamoDB
     const memoryData = {
       memoryId,
       userId,
@@ -62,13 +66,14 @@ export const createMemoryHandler = async (event) => {
       name,
       startDate,
       spotifyUrl,
-      art: art || null,
+      art: art || null,  // If no art is provided, set it to null
     };
 
+    // Store the memory in DynamoDB
     console.log(`Storing memory data in DynamoDB: ${JSON.stringify(memoryData)}`);
     await storeMemoryInDynamoDB(memoryData);
 
-    // Step 7: Return success response with memory and Spotify details
+    // Step 7: Return a successful response with the created memory details
     return {
       statusCode: 201,
       body: JSON.stringify({
@@ -78,6 +83,7 @@ export const createMemoryHandler = async (event) => {
       }),
     };
   } catch (error) {
+    // Log any errors encountered during memory creation
     console.error(`Error creating memory: ${error.message}`);
     return {
       statusCode: 500,

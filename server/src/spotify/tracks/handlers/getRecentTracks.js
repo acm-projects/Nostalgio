@@ -9,11 +9,14 @@ import { getAudioFeatures } from '../../utils/audioFeaturesUtils.js';  // For fe
  * @returns {Object} - The response containing the recently played tracks or an error message.
  */
 export const getRecentTracksHandler = async (event) => {
+  let userId;  // Declare userId to use in error handling
+
   try {
     // Step 1: Extract the userId from path parameters
-    const { userId } = event.pathParameters;
+    userId = event.pathParameters?.userId;
 
     if (!userId) {
+      console.warn('Missing userId in path parameters.');
       return {
         statusCode: 400,
         body: JSON.stringify({ message: 'Missing userId in path parameters' }),
@@ -48,6 +51,10 @@ export const getRecentTracksHandler = async (event) => {
       },
     });
 
+    if (!response.data || !response.data.items) {
+      throw new Error('Invalid data returned from Spotify API.');
+    }
+
     // Step 5: Extract track IDs for audio features lookup
     const trackIds = response.data.items.map(item => item.track.id);
     console.log(`Fetched recent track IDs: ${trackIds}`);
@@ -55,7 +62,7 @@ export const getRecentTracksHandler = async (event) => {
     // Step 6: Fetch audio features for the tracks
     const audioFeatures = await getAudioFeatures(accessToken, trackIds);
 
-    // Step 7: Format the response to include essential track data and audio features
+    // Step 7: Format the response to include essential track data and audio features with default values
     const formattedTracks = response.data.items.map((item, index) => ({
       trackId: item.track.id,  // Include the trackId in the response
       played_at: item.played_at,  // Timestamp of when the track was played
@@ -77,10 +84,12 @@ export const getRecentTracksHandler = async (event) => {
       track_url: item.track.external_urls.spotify,
       uri: item.track.uri,
       audio_features: {
-        tempo: audioFeatures[index]?.tempo || null,
-        danceability: audioFeatures[index]?.danceability || null,
-        energy: audioFeatures[index]?.energy || null,
-      },  // Include key audio features
+        tempo: audioFeatures[index]?.tempo || 0,  // Default to 0 if undefined
+        danceability: audioFeatures[index]?.danceability || 0,  // Default to 0 if undefined
+        energy: audioFeatures[index]?.energy || 0,  // Default to 0 if undefined
+        acousticness: audioFeatures[index]?.acousticness || 0,  // Default to 0 if undefined
+        valence: audioFeatures[index]?.valence || 0,  // Default to 0 if undefined
+      },
     }));
 
     // Step 8: Log the formatted response for debugging purposes
@@ -97,12 +106,12 @@ export const getRecentTracksHandler = async (event) => {
 
   } catch (error) {
     // Step 10: Error handling
-    console.error(`Error fetching recent tracks for user: ${userId} - ${error.message}`);
+    console.error(`Error fetching recent tracks for user: ${userId || 'unknown'} - ${error.message}`);
 
     return {
       statusCode: 500,
       body: JSON.stringify({
-        message: `Failed to fetch recent tracks for user: ${userId}`,
+        message: `Failed to fetch recent tracks for user: ${userId || 'unknown'}`,
         error: error.message,
       }),
     };
