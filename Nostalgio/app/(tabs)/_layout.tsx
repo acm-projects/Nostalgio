@@ -18,12 +18,7 @@ function TabBarIcon(props: {
   color: string;
 }) {
   return <MaterialCommunityIcons size={28} style={{ marginBottom: -3}} {...props} />;
-
-  name: React.ComponentProps<typeof FontAwesome>['name'];
-  color: string;
-}) {
-  return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
-}
+} 
 
 // Tab Icons at https://icon-sets.iconify.design/solar/
 export function SolarLibraryBold(props: SvgProps) {
@@ -69,12 +64,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color, size }) => <SolarMapPointBold width={size} height={size} color={color} />,
             
         tabBarActiveTintColor: '#4361EE',
-        // Disable the static render of the header on web
-        // to prevent a hydration error in React Navigation v6.
-        headerShown: useClientOnlyValue(false, false),
-      }}>
-  
-          headerRight: () => (
+        headerRight: () => (
             <Link href="/modal" asChild>
               <Pressable>
                 {({ pressed }) => (
@@ -90,8 +80,11 @@ export default function TabLayout() {
               </Pressable>
             </Link>
           ),
-        }}
-      />
+        // Disable the static render of the header on web
+        // to prevent a hydration error in React Navigation v6.
+      }}/>
+  
+          
       <Tabs.Screen
 
         name="library"
