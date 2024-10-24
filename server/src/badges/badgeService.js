@@ -135,10 +135,37 @@ export const deleteBadgeFromDynamoDB = async (userId, city) => {
    * Retrieve a badge from Dynamo by badgeId
    * 
    * @param {string} userId
+   * @param {string} city
    * @returns {Object|null}
    * 
    */
 
-  export const getBadgeFromDynamoDB = async (params) => {
+  export const getBadgeFromDynamoDB = async (userId, city) => {
+    try{
+        const params = {
+            TableName: process.env.BADGES_TABLE,  // Main table name
+            KeyConditionExpression: 'userId = :userId AND city = :city',
+            ExpressionAttributeValues: {
+                ':userId': userId,
+                ':city': city,
+            },
+        };
+
+        const result = await dynamoDb.send(new QueryCommand(params));
+        if(result.Items && result.Items.length > 0) {
+            console.log(`Retrieved badge for userId: ${userId}`);
+            return result.Items;
+
+        }
+        else {
+            console.log(`No ${city} badge found for userId: ${userId}`);
+            return null;
+        }
+        }catch(error) {
+            console.error('Error fetching badge:', error);
+            throw new Error('Failed to fetch badge');
+        }
+
+    }
     
-  }
+  
