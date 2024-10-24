@@ -1,4 +1,5 @@
 import { StyleSheet, SafeAreaView, Image, ScrollView, ActivityIndicator, TouchableOpacity, ImageBackground } from 'react-native';
+import { useRouter } from 'expo-router';
 
 import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
@@ -25,11 +26,7 @@ function formatDate(dateString:string) {
   return format(new Date(year, month, day), 'MM.dd.yyyy');
 }
 
-function handleClick(id:string){
-  console.log(id)
-}
-
-function renderTrip(trip: any, index: number) {
+function renderTrip(trip: any, index: number, handleClick: (id: string) => void) {
   return (
     <TouchableOpacity key={index} style={[styles.item, { transform: [{ scale: 0.85 }] }]} onPress={() => handleClick(trip.id)}>
       <View style={styles.boxlhs}>
@@ -44,6 +41,12 @@ function renderTrip(trip: any, index: number) {
 }
 
 export default function LibraryScreen() {
+  const router = useRouter();
+  function handleClick(id: string) {
+    console.log("Opening", id);
+    router.push(`/trip?id=${id}`);
+  }
+
   const [tripsData, setTripsData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
@@ -143,7 +146,7 @@ export default function LibraryScreen() {
                 </TouchableOpacity>
 
                 {/* Trips in City Section */}
-                {cityTrips.map((tripArray: any[], tripIndex: number) => tripArray.map((trip, index) => renderTrip(trip, tripIndex * 10 + index)))}
+                {cityTrips.map((tripArray: any[], tripIndex: number) => tripArray.map((trip, index) => renderTrip(trip, tripIndex * 10 + index, handleClick)))}
               </View>
             );
           }
