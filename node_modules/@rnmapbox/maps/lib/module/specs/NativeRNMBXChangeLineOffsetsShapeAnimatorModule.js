@@ -1,0 +1,6 @@
+import { TurboModuleRegistry } from 'react-native';
+
+//import type { UnsafeMixed } from './codegenUtils';
+
+export default TurboModuleRegistry.getEnforcing('RNMBXChangeLineOffsetsShapeAnimatorModule');
+//# sourceMappingURL=NativeRNMBXChangeLineOffsetsShapeAnimatorModule.js.map
