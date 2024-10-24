@@ -1,0 +1,1 @@
+{"version":3,"names":["React","memo","NativeStyleImport","props","createElement"],"sourceRoot":"../../../src","sources":["components/StyleImport.tsx"],"mappings":"AAAA,OAAOA,KAAK,IAAIC,IAAI,QAAQ,OAAO;AAEnC,OAAOC,iBAAiB,MAAM,0CAA0C;AAuBxE;AACA;AACA;AACA;AACA;AACA,4BAAeD,IAAI,CAAEE,KAAY,IAAK;EACpC,oBAAOH,KAAA,CAAAI,aAAA,CAACF,iBAAiB,EAAKC,KAAQ,CAAC;AACzC,CAAC,CAAC","ignoreList":[]}
