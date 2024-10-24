@@ -3,6 +3,8 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Link, Tabs } from 'expo-router';
 import { Pressable } from 'react-native';
 
+import AntDesign from '@expo/vector-icons/AntDesign';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import Svg, { Path, SvgProps } from 'react-native-svg';
 
 import Colors from '@/constants/Colors';
@@ -11,6 +13,12 @@ import { useClientOnlyValue } from '@/components/useClientOnlyValue';
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
+
+  name: React.ComponentProps<typeof MaterialCommunityIcons>['name'];
+  color: string;
+}) {
+  return <MaterialCommunityIcons size={28} style={{ marginBottom: -3}} {...props} />;
+
   name: React.ComponentProps<typeof FontAwesome>['name'];
   color: string;
 }) {
@@ -41,25 +49,42 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
+
+        tabBarActiveTintColor: Colors[colorScheme ?? 'dark'].tint,
+        // Disable the static render of the header on web
+        // to prevent a hydration error in React Navigation v6.
+        headerShown: useClientOnlyValue(false, true),
+      }}>
+      <Tabs.Screen
+        name="two"
+        options={{
+          title: 'Profile',
+          tabBarIcon: ({ color }) => <TabBarIcon name="account" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="index"
+        options={{
+          title: 'Map',
+          tabBarIcon: ({ color, size }) => <SolarMapPointBold width={size} height={size} color={color} />,
+            
         tabBarActiveTintColor: '#4361EE',
         // Disable the static render of the header on web
         // to prevent a hydration error in React Navigation v6.
         headerShown: useClientOnlyValue(false, false),
       }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Tab One',
-          tabBarIcon: ({ color, size }) => <SolarMapPointBold width={size} height={size} color={color} />,
+  
           headerRight: () => (
             <Link href="/modal" asChild>
               <Pressable>
                 {({ pressed }) => (
-                  <FontAwesome
-                    name="info-circle"
+
+                  <MaterialCommunityIcons
+                    name="chevron-down"
                     size={25}
-                    color='#4361EE'
-                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
+                    color={Colors[colorScheme ?? 'dark'].text}
+                    style={{ marginRight: 10, opacity: pressed ? 0.5 : 1 }}
+
                   />
                 )}
               </Pressable>
@@ -68,6 +93,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+
         name="library"
         options={{
           tabBarShowLabel: true,
@@ -76,8 +102,10 @@ export default function TabLayout() {
           //tabBarIcon: ({ color, size }) => <MaterialIcons name="library-music" size={size} color={color} />,
           //tabBarIcon: ({ color, size }) => <Icon icon="solar:library-bold" width={size} color={color} />,
           tabBarIcon: ({ color, size }) => <SolarLibraryBold width={size} height={size} color={color} />,
+
         }}
       />
     </Tabs>
   );
 }
+
