@@ -1,0 +1,504 @@
+org: andresgrc
+app: nostalgio-backend
+service: nostalgio-backend
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+  environment:
+    COGNITO_USER_POOL_ID: ${env:COGNITO_USER_POOL_ID}
+    COGNITO_CLIENT_ID: ${env:COGNITO_CLIENT_ID}
+    COGNITO_REDIRECT_URI: ${env:COGNITO_REDIRECT_URI}
+    SPOTIFY_CLIENT_ID: ${env:SPOTIFY_CLIENT_ID}
+    SPOTIFY_CLIENT_SECRET: ${env:SPOTIFY_CLIENT_SECRET}
+    SPOTIFY_REDIRECT_URI: ${env:SPOTIFY_REDIRECT_URI}
+    GOOGLE_API_KEY: ${env:GOOGLE_API_KEY}
+    USERS_TABLE: Users
+    MEMORIES_TABLE: Memories
+    AUTH_SESSION_TABLE: AuthSessionData
+    LISTENING_HISTORY_TABLE: ListeningHistoryTable
+    MUSIC_SUGGESTIONS_TABLE: MusicSuggestionsTable
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - "cognito-idp:AdminCreateUser"
+        - "cognito-idp:AdminUpdateUserAttributes"
+        - "cognito-idp:AdminInitiateAuth"
+        - "cognito-idp:AdminRespondToAuthChallenge"
+        - "cognito-idp:ListUsers"
+        - "cognito-idp:AdminGetUser"
+        - "cognito-idp:AdminDeleteUser"
+      Resource: arn:aws:cognito-idp:${self:provider.region}:*:userpool/${env:COGNITO_USER_POOL_ID}
+
+    - Effect: Allow
+      Action:
+        - "lambda:InvokeFunction"
+      Resource: "*"
+
+    - Effect: Allow
+      Action:
+        - "dynamodb:Query"
+        - "dynamodb:PutItem"
+        - "dynamodb:GetItem"
+        - "dynamodb:UpdateItem"
+        - "dynamodb:DeleteItem"
+        - "dynamodb:DescribeStream"
+        - "dynamodb:GetRecords"
+        - "dynamodb:GetShardIterator"
+      Resource:
+        - !GetAtt UsersTable.Arn
+        - !GetAtt UsersTable.StreamArn
+        - !GetAtt Memories.Arn
+        - !GetAtt Memories.StreamArn
+        - !GetAtt AuthSessionData.Arn
+        - !GetAtt ListeningHistoryTable.Arn
+        - !GetAtt ListeningHistoryTable.StreamArn
+        - !GetAtt MusicSuggestionsTable.Arn
+        - !GetAtt MusicSuggestionsTable.StreamArn
+        - arn:aws:dynamodb:${self:provider.region}:*:table/Users/index/SpotifyUserIdIndex
+        - arn:aws:dynamodb:${self:provider.region}:*:table/Memories/index/CityUserIndex
+        - arn:aws:dynamodb:${self:provider.region}:*:table/Memories/index/UserMemoryIndex
+        - arn:aws:dynamodb:${self:provider.region}:*:table/ListeningHistoryTable/index/TrackIdIndex
+        - arn:aws:dynamodb:${self:provider.region}:*:table/ListeningHistoryTable/index/UserIdIndex
+
+    - Effect: Allow
+      Action:
+        - "logs:CreateLogGroup"
+        - "logs:CreateLogStream"
+        - "logs:PutLogEvents"
+      Resource: "*"
+
+package:
+  individually: true
+
+plugins:
+  - serverless-offline
+
+functions:
+  # Authorization Handlers
+  spotifyAuth:
+    handler: src/auth/spotify/spotifyAuthHandler.spotifyAuthHandler
+    events:
+      - http:
+          path: auth/login
+          method: get
+          cors: true
+
+  spotifyCallback:
+    handler: src/auth/spotify/spotifyCallbackHandler.spotifyCallbackHandler
+    events:
+      - http:
+          path: callback
+          method: get
+          cors: true
+
+  exchangeSpotifyToken:
+    handler: src/auth/spotify/spotifyTokenManager.exchangeSpotifyToken
+    events:
+      - http:
+          path: exchangeSpotifyToken
+          method: post
+          cors: true
+
+  refreshSpotifyToken:
+    handler: src/auth/spotify/spotifyTokenManager.refreshSpotifyToken
+    events:
+      - http:
+          path: refreshSpotifyToken
+          method: post
+          cors: true
+
+  validateSpotifyToken:
+    handler: src/auth/spotify/spotifyTokenManager.validateSpotifyToken
+    events:
+      - http:
+          path: validateSpotifyToken/{userId}
+          method: post
+          cors: true
+
+  # User Handlers
+  createUser:
+    handler: src/users/handlers/createUser.createUserHandler
+    events:
+      - http:
+          path: users
+          method: post
+          cors: true
+
+  getUser:
+    handler: src/users/handlers/getUser.getUserHandler
+    events:
+      - http:
+          path: users/{userId}
+          method: get
+          cors: true
+      - http:
+          path: users/spotify/{spotifyUserId}
+          method: get
+          cors: true
+
+  updateUser:
+    handler: src/users/handlers/updateUser.updateUserHandler
+    events:
+      - http:
+          path: users/{userId}
+          method: put
+          cors: true
+
+  deleteUser:
+    handler: src/users/handlers/deleteUser.deleteUserHandler
+    events:
+      - http:
+          path: users/{userId}
+          method: delete
+          cors: true
+
+  # Memory Handlers
+  createMemory:
+    handler: src/memories/handlers/createMemory.createMemoryHandler
+    events:
+      - http:
+          path: memories
+          method: post
+          cors: true
+
+  getMemory:
+    handler: src/memories/handlers/getMemory.getMemoryHandler
+    events:
+      - http:
+          path: memories/{userId}/{memoryId}
+          method: get
+          cors: true
+
+  updateMemory:
+    handler: src/memories/handlers/updateMemory.updateMemoryHandler
+    events:
+      - http:
+          path: memories/{userId}/{memoryId}
+          method: put
+          cors: true
+
+  deleteMemory:
+    handler: src/memories/handlers/deleteMemory.deleteMemoryHandler
+    events:
+      - http:
+          path: memories/{userId}/{memoryId}
+          method: delete
+          cors: true
+
+  listMemories:
+    handler: src/memories/handlers/listMemories.listMemoriesHandler
+    events:
+      - http:
+          path: memories/{userId}
+          method: get
+          cors: true
+
+  getCityMemories:
+    handler: src/memories/handlers/getCityMemories.getCityMemoriesHandler
+    events:
+      - http:
+          path: memories/{userId}/city/{city}
+          method: get
+          cors: true
+  
+  addMemoryImage:
+    handler: src/memories/handlers/addMemoryImage.addMemoryImageHandler
+    events:
+      - http:
+          path: memories/{userId}/{memoryId}/image
+          method: put
+          cors: true
+
+  streamMemoryUpdates:
+    handler: src/memories/handlers/streamMemoryUpdates.streamMemoryUpdatesHandler
+    events:
+      - stream:
+          type: dynamodb
+          arn: !GetAtt Memories.StreamArn
+
+  # Listening History Handlers
+  storeListeningHistory:
+    handler: src/listeningHistory/handlers/storeListeningHistory.handler
+    events:
+      - http:
+          path: listening-history/store
+          method: post
+          cors: true
+
+  getListeningHistoryByLocation:
+    handler: src/listeningHistory/handlers/getListeningHistoryByLocation.handler
+    events:
+      - http:
+          path: listening-history/{lat}/{lon}
+          method: get
+          cors: true
+          request:
+            parameters:
+              paths:
+                lat: true   # Required path parameter
+                lon: true   # Required path parameter
+              querystrings:
+                radius: false  # Optional, handled in the handler code if omitted
+
+  # Music Suggestion Handler
+  suggestSongsByLocation:
+    handler: src/musicSuggestions/handlers/suggestSongsByLocation.handler
+    events:
+      - http:
+          path: users/{userId}/suggestions/location
+          method: get
+          cors: true
+          request:
+            parameters:
+              querystrings:
+                lat: true
+                lon: true
+                radius: false  # Optional parameter, defaults to null
+  
+  # Spotify Api Calls 
+  getRecentTracks:
+    handler: src/spotify/tracks/handlers/getRecentTracks.getRecentTracksHandler
+    events:
+      - http:
+          path: /users/{userId}/spotify/recent-tracks
+          method: get
+          cors: true
+
+  getTopTracks:
+    handler: src/spotify/tracks/handlers/getTopTracks.getTopTracksHandler
+    events:
+      - http:
+          path: /users/{userId}/spotify/top-tracks
+          method: get
+          cors: true
+
+  getTopArtists:
+    handler: src/spotify/tracks/handlers/getTopArtists.getTopArtistsHandler
+    events:
+      - http:
+          path: /users/{userId}/spotify/top-artists
+          method: get
+          cors: true
+  
+  getCurrentlyPlayingTrack:
+    handler: src/spotify/tracks/handlers/getCurrentlyPlayingTrack.getCurrentlyPlayingTrackHandler
+    events:
+      - http:
+          path: users/{userId}/spotify/currently-playing
+          method: get
+          cors: true
+          request:
+            parameters:
+              paths:
+                userId: true
+
+# Spotify Playlist Handlers
+  createPlaylist:
+    handler: src/spotify/playlists/handlers/createPlaylist.createPlaylistHandler
+    events:
+      - http:
+          path: playlists/{userId}
+          method: post
+          cors: true
+          request:
+            parameters:
+              paths:
+                userId: true
+
+  addTrackToPlaylist:
+    handler: src/spotify/playlists/handlers/addTrackToPlaylist.addTrackToPlaylistHandler
+    events:
+      - http:
+          path: playlists/{userId}/{playlistId}/tracks
+          method: post
+          cors: true
+          request:
+            parameters:
+              paths:
+                userId: true
+                playlistId: true
+
+  removeTrackFromPlaylist:
+    handler: src/spotify/playlists/handlers/removeTrackFromPlaylist.removeTrackFromPlaylistHandler
+    events:
+      - http:
+          path: playlists/{userId}/{playlistId}/tracks
+          method: delete
+          cors: true
+          request:
+            parameters:
+              paths:
+                userId: true
+                playlistId: true
+
+  getPlaylistDetails:
+    handler: src/spotify/playlists/handlers/getPlaylistDetails.getPlaylistDetailsHandler
+    events:
+      - http:
+          path: playlists/{userId}/{playlistId}
+          method: get
+          cors: true
+          request:
+            parameters:
+              paths:
+                userId: true
+                playlistId: true
+  
+  deletePlaylist:
+    handler: src/spotify/playlists/handlers/deletePlaylist.deletePlaylistHandler
+    events:
+      - http:
+          path: playlists/{userId}/{playlistId}
+          method: delete
+          cors: true
+  
+  setPlaylistImage:
+    handler: src/spotify/playlists/handlers/setPlaylistImage.setPlaylistImageHandler
+    events:
+      - http:
+          path: playlists/{userId}/{playlistId}/image
+          method: put
+          cors: true
+# Location Handlers
+  reverseGeocode:
+    handler: src/locations/handlers/reverseGeocode.reverseGeocodeHandler
+    events:
+      - http:
+          path: reverseGeocode
+          method: get
+          request:
+            parameters:
+              querystrings:
+                latitude: true
+                longitude: true
+          cors: true
+
+resources:
+  Resources:
+    AuthSessionData:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: AuthSessionData
+        AttributeDefinitions:
+          - AttributeName: UserId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: UserId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        TimeToLiveSpecification:
+          AttributeName: ExpiresAt
+          Enabled: true
+
+    UsersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Users
+        AttributeDefinitions:
+          - AttributeName: UserId
+            AttributeType: S
+          - AttributeName: SpotifyUserId  # Define SpotifyUserId for GSI
+            AttributeType: S
+        KeySchema:
+          - AttributeName: UserId
+            KeyType: HASH
+        GlobalSecondaryIndexes:
+          - IndexName: SpotifyUserIdIndex
+            KeySchema:
+              - AttributeName: SpotifyUserId
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+        BillingMode: PAY_PER_REQUEST
+        StreamSpecification:
+          StreamViewType: NEW_AND_OLD_IMAGES
+
+    Memories:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Memories
+        AttributeDefinitions:
+          - AttributeName: memoryId
+            AttributeType: S
+          - AttributeName: city
+            AttributeType: S
+          - AttributeName: userId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: memoryId
+            KeyType: HASH
+        GlobalSecondaryIndexes:
+          - IndexName: CityUserIndex  # GSI for querying by userId and city
+            KeySchema:
+              - AttributeName: userId
+                KeyType: HASH
+              - AttributeName: city
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+          - IndexName: UserMemoryIndex  # GSI for querying by userId
+            KeySchema:
+              - AttributeName: userId
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+        BillingMode: PAY_PER_REQUEST
+        StreamSpecification:
+          StreamViewType: NEW_AND_OLD_IMAGES
+
+
+    ListeningHistoryTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ListeningHistoryTable
+        AttributeDefinitions:
+          - AttributeName: geohash
+            AttributeType: S  # Partition key to store geohash (latitude + longitude)
+          - AttributeName: timestamp
+            AttributeType: N  # Sort key to store timestamp as a number
+          - AttributeName: trackId
+            AttributeType: S  # GSI for querying by trackId
+          - AttributeName: userId
+            AttributeType: S  # GSI for querying by userId
+        KeySchema:
+          - AttributeName: geohash
+            KeyType: HASH  # Partition key (location)
+          - AttributeName: timestamp
+            KeyType: RANGE  # Sort key (timestamp)
+        GlobalSecondaryIndexes:
+          - IndexName: TrackIdIndex
+            KeySchema:
+              - AttributeName: trackId
+                KeyType: HASH  # GSI for trackId
+              - AttributeName: timestamp
+                KeyType: RANGE  # Sort by timestamp for tracks
+            Projection:
+              ProjectionType: ALL
+          - IndexName: UserIdIndex
+            KeySchema:
+              - AttributeName: userId
+                KeyType: HASH  # GSI for userId
+              - AttributeName: timestamp
+                KeyType: RANGE  # Sort by timestamp for user queries
+            Projection:
+              ProjectionType: ALL
+        BillingMode: PAY_PER_REQUEST
+        StreamSpecification:
+          StreamViewType: NEW_AND_OLD_IMAGES  # Enable streams for listening history
+
+    MusicSuggestionsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: MusicSuggestionsTable
+        AttributeDefinitions:
+          - AttributeName: locationId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: locationId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        StreamSpecification:
+          StreamViewType: NEW_AND_OLD_IMAGES
