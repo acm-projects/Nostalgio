@@ -1,6 +1,8 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
+
 import { Unbounded_400Regular, useFonts } from '@expo-google-fonts/unbounded';
+
 
 import { ExternalLink } from './ExternalLink';
 import { MonoText } from './StyledText';
@@ -12,6 +14,7 @@ export default function EditScreenInfo({ path }: { path: string }) {
   return (
     <View>
       <View style={styles.getStartedContainer}>
+
 
         <View
           style={[styles.codeHighlightContainer, styles.homeScreenFilename]}
@@ -41,12 +44,6 @@ export default function EditScreenInfo({ path }: { path: string }) {
   );
 }
 
-//<Text
-  //        style={styles.getStartedText}
-    //      lightColor="rgba(0,0,0,0.8)"
-      //    darkColor="rgba(255,255,255,0.8)">
-        //  Open up the code for this screen:
-        //</Text>
 
 const styles = StyleSheet.create({
   getStartedContainer: {
@@ -65,6 +62,7 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     textAlign: 'center',
     fontFamily: 'Unbounded_400Regular'
+
   },
   helpContainer: {
     marginTop: 15,
@@ -77,5 +75,6 @@ const styles = StyleSheet.create({
   helpLinkText: {
     textAlign: 'center',
     fontFamily: 'Unbounded_400Regular'
+
   },
 });

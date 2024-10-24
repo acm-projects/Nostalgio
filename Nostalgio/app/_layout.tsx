@@ -1,10 +1,13 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
+
 import { Unbounded_400Regular, useFonts } from '@expo-google-fonts/unbounded';
+
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
+
 import * as Font from 'expo-font';
 
 
@@ -25,26 +28,10 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
-    //SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-    //...FontAwesome.font,
-    //'Unbounded_Regular' : require('./assets/fonts/Unbounded-Regular.ttf'),
     Unbounded_400Regular,
   });
 
-  // Expo Router uses Error Boundaries to catch errors in the navigation tree.
-  /*useEffect(() => {
-    if (error) throw error;
-  }, [error]);
 
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
-
-  if (!loaded) {
-    return null;
-  }*/
 
   useEffect(() => {
     if(loaded || error){
@@ -71,5 +58,4 @@ function RootLayoutNav() {
     </ThemeProvider>
   );
 }
-
 

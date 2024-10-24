@@ -17,6 +17,7 @@
       "infoPlist": {
         "UIBackgroundModes" : ["location", "fetch", "remote-notification", "geofencing"]
       }
+
     },
     "android": {
       "adaptiveIcon": {
@@ -46,6 +47,3 @@
     }
   }
 }
-
-
-

@@ -1,3 +1,4 @@
+
 import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
 import {Image} from 'react-native';
@@ -176,24 +177,28 @@ export default function TabOneScreen() {
 
 const screenWidth = Dimensions.get("window").width;
 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
+
   startTrip: {
     position: 'absolute',
     fontSize: 16,
     fontWeight: 'bold',
     fontFamily: 'Unbounded_400Regular',
     left: 55,
+
   },
   separator: {
     marginVertical: 30,
     height: 1,
     width: '80%',
   },
+
   map: {
     width: '100%',
     height: '100%',
@@ -281,5 +286,6 @@ const styles = StyleSheet.create({
   }
 
 });
+
 
 
