@@ -21,7 +21,6 @@ export default function TabOneScreen() {
         <Pressable onPress={() => {}} style={styles.button}>
           <Text style={styles.text01}>following</Text>
         </Pressable>
-        
       </View>
 
   
@@ -151,7 +150,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center', 
     marginBottom: 20,
-    width: 400,
+    width: 350,
     height: 80,
   },
   poc: {

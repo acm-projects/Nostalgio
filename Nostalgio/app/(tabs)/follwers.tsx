@@ -1,7 +1,9 @@
+import {Text,View} from "react-native"
+import { Link } from "expo-router"
 import React from 'react';
-import { View, Text, Image, Pressable, StyleSheet } from 'react-native';
+import { Image, Pressable, StyleSheet } from 'react-native';
 
-export default function TabOneScreen() {
+ export default function TabOneScreen() {
   return (
     <View style={styles.container}>
 
@@ -19,9 +21,8 @@ export default function TabOneScreen() {
           <Text style={styles.pec}>Katie Thompson</Text>
         </View>
         <Pressable onPress={() => {}} style={styles.button}>
-          <Text style={styles.text01}>following</Text>
+          <Text style={styles.text01}>Follow</Text>
         </Pressable>
-        
       </View>
 
   
@@ -39,7 +40,7 @@ export default function TabOneScreen() {
           <Text style={styles.pec}>Tom Ricks</Text>
         </View>
         <Pressable onPress={() => {}} style={styles.button}>
-          <Text style={styles.text01}>following</Text>
+          <Text style={styles.text01}>Follow</Text>
         </Pressable>
       </View>
 
@@ -57,7 +58,7 @@ export default function TabOneScreen() {
           <Text style={styles.pec}>Haeliy Wang</Text>
         </View>
         <Pressable onPress={() => {}} style={styles.button}>
-          <Text style={styles.text01}>following</Text>
+          <Text style={styles.text01}>Follow</Text>
         </Pressable>
       </View>
 
@@ -75,7 +76,7 @@ export default function TabOneScreen() {
           <Text style={styles.pec}>Hadden Watts</Text>
         </View>
         <Pressable onPress={() => {}} style={styles.button}>
-          <Text style={styles.text01}>following</Text>
+          <Text style={styles.text01}>Follow</Text>
         </Pressable>
       </View>
 
@@ -93,7 +94,7 @@ export default function TabOneScreen() {
           <Text style={styles.pec}>Christine Cooper</Text>
         </View>
         <Pressable onPress={() => {}} style={styles.button}>
-          <Text style={styles.text01}>following</Text>
+          <Text style={styles.text01}>Follow</Text>
         </Pressable>
       </View>
 
@@ -111,7 +112,7 @@ export default function TabOneScreen() {
           <Text style={styles.pec}>Beth Rogers</Text>
         </View>
         <Pressable onPress={() => {}} style={styles.button}>
-          <Text style={styles.text01}>following</Text>
+          <Text style={styles.text01}>Follow</Text>
         </Pressable>
       </View>
 
@@ -129,7 +130,7 @@ export default function TabOneScreen() {
           <Text style={styles.pec}>Nikki Jones </Text>
         </View>
         <Pressable onPress={() => {}} style={styles.button}>
-          <Text style={styles.text01}>following</Text>
+          <Text style={styles.text01}>Follow</Text>
         </Pressable>
       </View>
 
@@ -151,7 +152,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center', 
     marginBottom: 20,
-    width: 400,
+    width: 350,
     height: 80,
   },
   poc: {
@@ -172,16 +173,15 @@ const styles = StyleSheet.create({
     borderRadius: 30, 
   },
   text01: {
-    color: 'black',
-    fontWeight:'semibold',
+    color: 'white',
     alignSelf: 'center',
-    fontSize: 16,
+    fontSize: 18,
   },
   button: {
-    width: 120, 
-    height: 40, 
-    backgroundColor: 'lightgray',
-    borderRadius: 60,
+    width: 90, 
+    height: 50, 
+    backgroundColor: '#6a5acd',
+    borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -189,3 +189,7 @@ const styles = StyleSheet.create({
     marginRight: 10, 
   },
 });
+
+
+
+
