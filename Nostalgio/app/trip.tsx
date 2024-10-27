@@ -1,9 +1,9 @@
-import { useLocalSearchParams } from 'expo-router';
-import { Text, View } from 'react-native';
+import { useLocalSearchParams } from "expo-router";
+import { Text, View } from "react-native";
 
 export default function TripPage() {
   const { id } = useLocalSearchParams(); // This will extract the id from the URL
-  
+
   console.log("Opened", id);
 
   return (
