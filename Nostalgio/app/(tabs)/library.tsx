@@ -15,8 +15,9 @@ import { Text, View } from "@/components/Themed";
 import { useEffect, useState } from "react";
 import Svg, { Path, SvgProps } from "react-native-svg";
 
-//import {default as trips} from "@/tripsnew.json"; //Change depending on data
 import { format } from "date-fns";
+
+const userID = "e4484428-30d1-7021-bd4a-74095f2f86c2"; //Remove when authentication added
 
 export function SolarArrowDownBold(props: SvgProps) {
   return (
@@ -70,7 +71,6 @@ function renderTrip(
 export default function LibraryScreen() {
   const router = useRouter();
   function handleClick(id: string) {
-    console.log("Opening", id);
     router.push(`/trip?id=${id}`);
   }
 
@@ -82,8 +82,8 @@ export default function LibraryScreen() {
     const fetchTrips = async () => {
       try {
         const response = await fetch(
-          "https://chauhansai.github.io/Script-Projects/tripsnew.json"
-        ); // Replace with your actual URL
+          `https://6p6xrc3hu4.execute-api.us-east-1.amazonaws.com/dev/memories/${userID}`
+        ); // Replace with endpoint URL
         const data = await response.json();
         //console.log('Raw JSON data:', data);
 
@@ -119,7 +119,15 @@ export default function LibraryScreen() {
   }
 
   if (loading) {
-    return <ActivityIndicator size="large" color="#4361EE" />;
+    return (
+      <ImageBackground
+        source={require("@/assets/images/background.png")}
+        resizeMode="cover"
+        style={{ flex: 1 }}
+      >
+        <ActivityIndicator size="large" color="#FFFFFF" style={{ top: 25 }} />
+      </ImageBackground>
+    );
   }
 
   return (

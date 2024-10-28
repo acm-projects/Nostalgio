@@ -21,6 +21,8 @@ function TabBarIcon(props: {
   );
 }
 
+const activeTintColor = "#4361EE";
+
 // Tab Icons at https://icon-sets.iconify.design/solar/
 export function SolarLibraryBold(props: SvgProps) {
   return (
@@ -64,6 +66,28 @@ export function SolarMapPointBold(props: SvgProps) {
   );
 }
 
+export function SolarUserBold(props: SvgProps) {
+  return (
+    <Svg
+      width={props.width || "24"}
+      height={props.height || "24"}
+      viewBox="0 0 24 24"
+      fill="none"
+      {...props}
+    >
+      <Path
+        fill={props.color || "currentColor"}
+        d="M12 2 A 4 4 0 1 1 12 10 A 4 4 0 1 1 12 2"
+      />
+      <Path
+        fill={props.color || "currentColor"}
+        d="M20 17.5c0 2.485 0 4.5-8 4.5s-8-2.015-8-4.5S7.582 13 12 13s8 2.015 8 4.5"
+      />
+    </Svg>
+  );
+}
+
+
 export default function TabLayout() {
   const colorScheme = useColorScheme();
 
@@ -77,12 +101,13 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name="two"
+        name="profile"
         options={{
           title: "Profile",
-          tabBarIcon: ({ color }) => (
-            <TabBarIcon name="account" color={color} />
+          tabBarIcon: ({ color, size }) => (
+            <SolarUserBold width={size} height={size} color={color} />
           ),
+          tabBarActiveTintColor: activeTintColor,
         }}
       />
       <Tabs.Screen
@@ -92,8 +117,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color, size }) => (
             <SolarMapPointBold width={size} height={size} color={color} />
           ),
-
-          tabBarActiveTintColor: "#4361EE",
+          tabBarActiveTintColor: activeTintColor,
           headerRight: () => (
             <Link href="/modal" asChild>
               <Pressable>
@@ -118,12 +142,10 @@ export default function TabLayout() {
         options={{
           tabBarShowLabel: true,
           title: "Library",
-          //tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-          //tabBarIcon: ({ color, size }) => <MaterialIcons name="library-music" size={size} color={color} />,
-          //tabBarIcon: ({ color, size }) => <Icon icon="solar:library-bold" width={size} color={color} />,
           tabBarIcon: ({ color, size }) => (
             <SolarLibraryBold width={size} height={size} color={color} />
           ),
+          tabBarActiveTintColor: activeTintColor,
         }}
       />
     </Tabs>
