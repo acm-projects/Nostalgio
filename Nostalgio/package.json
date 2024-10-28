@@ -15,7 +15,10 @@
   "dependencies": {
     "@expo-google-fonts/unbounded": "^0.2.3",
     "@expo/vector-icons": "^14.0.2",
+    "@iconify-icons/solar": "^1.2.3",
+    "@iconify/react": "^5.0.2",
     "@react-navigation/native": "^6.0.2",
+    "date-fns": "^4.1.0",
     "expo": "^51.0.35",
     "expo-font": "~12.0.10",
     "expo-linking": "~6.3.1",
@@ -26,6 +29,7 @@
     "expo-system-ui": "~3.0.7",
     "expo-task-manager": "~11.8.2",
     "expo-web-browser": "~13.0.3",
+    "nativewind": "^2.0.11",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-native": "0.74.5",
@@ -34,11 +38,8 @@
     "react-native-reanimated": "~3.10.1",
     "react-native-safe-area-context": "4.10.5",
     "react-native-screens": "3.31.1",
-    "@iconify-icons/solar": "^1.2.3",
-    "@iconify/react": "^5.0.2",
-    "date-fns": "^4.1.0",
-    "nativewind": "^2.0.11",
     "react-native-svg": "^15.7.1",
+    "react-native-swiper": "^1.6.0",
     "react-native-web": "~0.19.10"
   },
   "devDependencies": {

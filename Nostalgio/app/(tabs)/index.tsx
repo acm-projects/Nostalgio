@@ -18,7 +18,7 @@ import {
   useFonts,
 } from "@expo-google-fonts/unbounded";
 import CustomCallout from "@/components/CustomCallout";
-import Swipeable from "react-native-gesture-handler/Swipeable";
+import Swiper from 'react-native-swiper';
 
 //import * as TaskManager from 'expo-task-manager';
 //import * as Location from 'expo-location';
@@ -77,7 +77,16 @@ export default function TabOneScreen() {
     return `${hours}:${minutes}:${seconds}`;
   }
 
-  function recommendedSwipe() {}
+  
+  const recommendedSongs: React.FC<{
+    marker: MarkerWithMetadata;
+  }> = ({marker}) =>{
+    return (
+      <Swiper showsButtons = {true}>
+        <CustomCallout marker={marker}></CustomCallout>
+      </Swiper>
+    )
+  }  
 
   const StartTripTimer = () => {
     return (
