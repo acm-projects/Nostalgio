@@ -106,6 +106,7 @@ export default function TripPage() {
                 trackId: string;
                 name: string;
                 artistNames: string;
+                albumImages: any;
               },
               trackIndex: Key | null | undefined
             ) => (
@@ -121,7 +122,7 @@ export default function TripPage() {
                     <Image
                       style={styles.image}
                       source={{
-                        uri: `https://picsum.photos/1000?random=${trackIndex}`,
+                        uri: track.albumImages.large.url,
                       }}
                     />
                   </View>
