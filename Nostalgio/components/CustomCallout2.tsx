@@ -1,42 +1,46 @@
-import React from "react";
+import React, {useState, useRef} from "react";
 import { View, StyleSheet, Dimensions, Image, Text, Pressable } from "react-native";
 import { Callout } from "react-native-maps";
-import { MarkerWithMetadata } from '@/data/recommended';
-import status from '../app/(tabs)/index';
-import MapView,{MapViewProps} from "react-native-maps";
-import Swiper from 'react-native-swiper';
-import TextTicker from 'react-native-text-ticker';
-
+import { MarkerWithMetadata } from '../app/(tabs)/index';
 import {MovingText} from "@/components/MovingText";
-
+import Carousel, { Pagination } from 'react-native-snap-carousel';
 
 const screenWidth = Dimensions.get("window").width;
-const screenHeight = Dimensions.get("window").height;
+const [activeDotIndex, setActiveDotIndex] = useState(0);
+const carous = useRef();
 
+const markers = [
+  {
+    title: "End of Beginning",
+    //imageUrl: '../../assets/images/dallas.png',
+    imageUrl:
+      "https://upload.wikimedia.org/wikipedia/en/thumb/7/7a/Djo_-_End_of_Beginning_single_cover.png/220px-Djo_-_End_of_Beginning_single_cover.png",
+    description: "Djo",
+  },
+  {
+    title: "Chicago Freestyle (feat. Giveon)",
+    description: "Drake, Giveon, Future, Playboi Carti",
+    imageUrl:
+      "https://i.scdn.co/image/ab67616d0000b273bba7cfaf7c59ff0898acba1f",
+  },
+];
 
-
-
-const CustomCallout: React.FC<{
-  marker: MarkerWithMetadata;
-  index: number;
-}> = ({ marker }) => {
+const itemRender = ({item, index} : {item: any, index: any}) => {
   return (
-    <Callout tooltip={true}>
-      <View>
-        <View style={styles.container}>
+          <View style={styles.container}>
             <Image
                 source={{
-                  uri: marker.imageUrl,
+                  uri: item.imageUrl,
                   //uri: '../../assets/images/dallas.png'
                 }}
                 resizeMode="cover"
                 style={styles.image}
             ></Image>
-            <View>  
+          <View>  
               <View style={styles.titleContainer}>
                 <MovingText 
                     style={styles.title} 
-                    text={marker.title ?? ''}
+                    text={item.title ?? ''}
                     animationThreshold={25}
                 />
                 <Text style={{
@@ -44,7 +48,7 @@ const CustomCallout: React.FC<{
                     color: 'white', 
                     }}
                     numberOfLines={1}>
-                    {marker.description}
+                    {item.description}
                 </Text>
               
               <Pressable>
@@ -54,6 +58,15 @@ const CustomCallout: React.FC<{
               </Pressable>
               </View>
             </View>
+          </View>
+  )
+};
+
+const CustomCallout2 =  () => {
+  return (
+    <Callout tooltip={true}>
+      <View>
+        <View style={styles.container}>
             <View>
               <Text style={{
                       fontFamily: "Unbounded_400Regular", 
@@ -64,6 +77,21 @@ const CustomCallout: React.FC<{
                     > Recommended</Text>
             </View>
             <View>
+            < Carousel 
+                  //ref={carous}
+                  data={markers}
+                  renderItem={itemRender}
+                  sliderWidth={Dimensions.get('window').width}
+                  itemWidth={Dimensions.get('window').width}
+                  onSnapToItem={index => setActiveDotIndex(index)}
+                ></Carousel>
+                <View>
+                  <Pagination 
+                    //carouselRef={carous}
+                    activeDotIndex={activeDotIndex} 
+                    dotsLength={2}
+                  ></Pagination>
+                </View>
             </View>
         </View>
       </View>
@@ -136,5 +164,5 @@ const styles = StyleSheet.create({
 
 });
 
-export default CustomCallout;
+export default CustomCallout2;
 
