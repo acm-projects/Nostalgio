@@ -6,13 +6,15 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   ImageBackground,
+  Platform,
 } from "react-native";
 import { useRouter } from "expo-router";
 
 import EditScreenInfo from "@/components/EditScreenInfo";
 import { Text, View } from "@/components/Themed";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useLayoutEffect } from "react";
+import { useNavigation } from "@react-navigation/native";
 import Svg, { Path, SvgProps } from "react-native-svg";
 
 import { format } from "date-fns";
@@ -47,13 +49,13 @@ function formatDate(dateString: string) {
 function renderTrip(
   trip: any,
   index: number,
-  handleClick: (id: string) => void
+  handleClick: (id: string, city: string, date: string) => void
 ) {
   return (
     <TouchableOpacity
       key={index}
       style={[styles.item, { transform: [{ scale: 0.85 }] }]}
-      onPress={() => handleClick(trip.id)}
+      onPress={() => handleClick(trip.id, trip.city, `${formatDate(trip.startDate)} - ${formatDate(trip.endDate)}`)}
     >
       <View style={styles.boxlhs}>
         <Image style={styles.image} source={{ uri: trip.art }} />
@@ -70,9 +72,16 @@ function renderTrip(
 
 export default function LibraryScreen() {
   const router = useRouter();
-  function handleClick(id: string) {
-    router.push(`/trip?id=${id}`);
+  function handleClick(id: string, city: string, date: string) {
+    router.push(`/trip?id=${id}&city=${city}&date=${date}`);
   }
+
+  const navigation = useNavigation();
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerShown: false,
+    });
+  });
 
   const [tripsData, setTripsData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -125,7 +134,9 @@ export default function LibraryScreen() {
         resizeMode="cover"
         style={{ flex: 1 }}
       >
-        <ActivityIndicator size="large" color="#FFFFFF" style={{ top: 25 }} />
+        <SafeAreaView style={{ flex: 1 }}>
+          <ActivityIndicator size="large" color="#FFFFFF" style={{ top: 25 }} />
+        </SafeAreaView>
       </ImageBackground>
     );
   }
@@ -144,7 +155,13 @@ export default function LibraryScreen() {
           {tripsData.ongoing && (
             <TouchableOpacity
               style={styles.ongoing}
-              onPress={() => handleClick(tripsData.ongoing.id)}
+              onPress={() =>
+                handleClick(
+                  tripsData.ongoing.id,
+                  tripsData.ongoing.city,
+                  `${formatDate(tripsData.ongoing.startDate)} - Present`
+                )
+              }
             >
               <View style={styles.boxlhs}>
                 <Image
@@ -175,7 +192,13 @@ export default function LibraryScreen() {
                 >
                   <TouchableOpacity
                     style={styles.item}
-                    onPress={() => handleClick(trip.id)}
+                    onPress={() =>
+                      handleClick(
+                        trip.id,
+                        trip.city,
+                        `${formatDate(trip.startDate)} - ${formatDate(trip.endDate)}`
+                      )
+                    }
                   >
                     <View style={styles.boxlhs}>
                       <Image style={styles.image} source={{ uri: trip.art }} />
@@ -184,8 +207,7 @@ export default function LibraryScreen() {
                       <Text style={styles.title}>{city}</Text>
                       <Text style={styles.subtitle}>{trip.name}</Text>
                       <Text style={styles.subtitle}>
-                        {formatDate(trip.startDate)} -{" "}
-                        {formatDate(trip.endDate)}
+                        {formatDate(trip.startDate)} - {formatDate(trip.endDate)}
                       </Text>
                     </View>
                   </TouchableOpacity>
@@ -200,7 +222,7 @@ export default function LibraryScreen() {
                   {/* City Section */}
                   <TouchableOpacity
                     style={styles.item}
-                    onPress={() => handleClick(city)}
+                    onPress={() => handleClick(city, city, city)}
                   >
                     <View style={styles.boxlhs}>
                       <Image
@@ -265,11 +287,13 @@ const styles = StyleSheet.create({
     fontSize: 26,
     fontWeight: "bold",
     color: "white",
+    fontFamily: "Unbounded_600SemiBold",
   },
   subtitle: {
     fontSize: 14,
     fontWeight: "bold",
     color: "white",
+    fontFamily: "Unbounded_400Regular",
   },
   image: {
     height: 100,

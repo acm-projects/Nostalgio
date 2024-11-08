@@ -8,6 +8,14 @@
       ]
     }
   },
+  "plugins": [
+    [
+      "expo-font",
+      {
+        "fonts": ["node_modules/@expo-google-fonts/unbounded/Unbounded_600SemiBold.ttf"]
+      }
+    ]
+  ],
   "include": [
     "**/*.ts",
     "**/*.tsx",
