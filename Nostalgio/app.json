@@ -20,10 +20,7 @@
           "fetch",
           "remote-notification",
           "geofencing"
-        ],
-        "NSLocationWhenInUseUsageDescription": "Nostalgio requires location.",
-        "NSLocationAlwaysAndWhenInUseUsageDescription" : "Nostalgio requires location.",
-        "NSLocationAlwaysUsageDescription" : "Nostalgio requires location"
+        ]
       }
     },
     "android": {
@@ -43,9 +40,7 @@
       [
         "expo-location",
         {
-          "locationAlwaysAndWhenInUsePermission": "Allow $(Nostalgio) to use your location.",
-          "locationAlwaysPermission" : "Allow $(Nostalgio) to use your location.",
-          "locationWhenInUsePermission" : "Allow $(Nostalgio) to use your location.",
+          "locationAlwaysPermission": "Allow Nostalgio to use your location.",
           "isIosBackgroundLocationEnabled": true,
           "isAndroidBackgroundLocationEnabled": true
         }
