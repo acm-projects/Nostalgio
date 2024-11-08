@@ -1,67 +1,81 @@
-import React from "react";
-import { View, StyleSheet, Dimensions, Image, Text, Pressable } from "react-native";
+import React, { useState } from "react";
+import { View, StyleSheet, Dimensions, Image, Text, Pressable, TouchableOpacity } from "react-native";
 import { Callout } from "react-native-maps";
-import { MarkerWithMetadata } from '../app/(tabs)/index';
-import Swipeable from 'react-native-gesture-handler/Swipeable';
+import { MarkerWithMetadata } from '@/data/recommended';
+import {MovingText} from "@/components/MovingText";
+
 
 const screenWidth = Dimensions.get("window").width;
-const screenHeight = Dimensions.get("window").height;
+
 
 const CustomCallout: React.FC<{
   marker: MarkerWithMetadata;
+  index: number;
 }> = ({ marker }) => {
+  const [status, setStatus] = useState(false);
+
+  const AddTrip = () => {
+    return (
+      <>
+        <View style={styles.button}>
+          <Text style={styles.addButton}>Add to Trip</Text>
+        </View>
+      </>
+    );
+  };
+
+  const Added = () => {
+    return (
+      <>
+        <View style={styles.addedButton}>
+          <Text style={styles.addButton}>Added</Text>
+        </View>
+      </>
+    );
+  };
   return (
-    <Callout tooltip>
+    <Callout tooltip={true}>
       <View>
         <View style={styles.container}>
-          <Image
-            source={{
-              uri: marker.imageUrl,
-              //uri: '../../assets/images/dallas.png'
-            }}
-            resizeMode="cover"
-            style={styles.image}
-          ></Image>
-          <View style={{ paddingHorizontal: 16, paddingVertical: 8, flex: 1 }}>
-            <Text style={{
-                fontFamily: "Unbounded_400Regular", 
-                marginRight: 20, 
-                fontSize: 16, 
-                color: 'white',}}
-                > Recommended</Text>
-            <Text
-              style={{
-                fontWeight: "bold",
-                fontFamily: "Unbounded_400Regular",
-                fontSize: 16,
-                color: 'white',
-                paddingVertical: 2,
-                marginRight: 20,
-                marginTop: 14,
-                left: 30,
-              }}
-            >
-              {marker.title}
-            </Text>
-
-            <Text style={{
-                fontFamily: 'Unbounded_400Regular', 
-                color: 'white', 
-                left: 30,
-                paddingVertical: 1,
-                }}>
-                {marker.description}</Text>
-            <Pressable>
-                <View style={styles.button}>
+            <Image
+                source={{
+                  uri: marker.imageUrl,
+                  //uri: '../../assets/images/dallas.png'
+                }}
+                resizeMode="cover"
+                style={styles.image}
+            ></Image>
+            <View>  
+              <View style={styles.titleContainer}>
+                <MovingText 
+                    style={styles.title} 
+                    text={marker.title ?? ''}
+                    animationThreshold={25}
+                />
                 <Text style={{
-                    fontFamily: 'Unbounded_400Regular',
-                    fontSize: 15,
-                    fontWeight: 'bold',
-                    color: 'white'
-                }}>Add to Trip</Text>
-                </View>
-            </Pressable>
-          </View>
+                    fontFamily: 'Unbounded_400Regular', 
+                    color: 'white', 
+                    }}
+                    numberOfLines={1}>
+                    {marker.description}
+                </Text>
+              
+              <TouchableOpacity activeOpacity={0.9} onPress={() => {setStatus(!status)}}>
+                    {status ? <Added /> : <AddTrip />}  
+              </TouchableOpacity>
+              </View>
+            </View>
+            <View>
+              <Text style={{
+                      fontFamily: "Unbounded_400Regular", 
+                      fontSize: 16, 
+                      right: '150%',
+                      marginTop: 8,
+                      color: 'white',}}
+                    > Recommended</Text>
+            </View>
+            <View>
+            </View>
         </View>
       </View>
     </Callout>
@@ -77,25 +91,14 @@ const styles = StyleSheet.create({
     height: 160,
     flexDirection: "row",
     borderRadius: 30,
-    //overflow: "hidden",
-    top: (screenHeight * 0.5) / 2
+    overflow: "hidden",
+    top: '100%',
+    left: 20,
   },
-  triangle: {
-    left: (screenWidth * 0.8) / 2 - 10,
-    width: 0,
-    height: 0,
-    backgroundColor: "transparent",
-    borderStyle: "solid",
-    borderTopWidth: 20,
-    borderRightWidth: 10,
-    borderBottomWidth: 0,
-    borderLeftWidth: 10,
-    borderTopColor: "black",
-    borderRightColor: "transparent",
-    borderBottomColor: "transparent",
-    borderLeftColor: "transparent",
+  wrapper:{
+    color: "white"
   },
-
+  
   button:{
     position: 'absolute',
     alignItems: 'center',
@@ -105,7 +108,15 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     backgroundColor: '#4361ee',
     left: '12%',
-    marginTop: 16,
+    marginTop: 15,
+    marginBottom: 15,
+    shadowColor: '#292929',
+    shadowOpacity: 25,
+    shadowOffset:{
+      width: 0,
+      height: 1
+    },
+    shadowRadius: 1
   },
 
   image:{
@@ -116,7 +127,51 @@ const styles = StyleSheet.create({
     height: 97,
     marginTop: 40,
     left: 30
-  }
+  },
+
+  addButton:{
+    fontFamily: 'Unbounded_400Regular',
+    fontSize: 15,
+    fontWeight: 'bold',
+    color: 'white',
+  },
+  addedButton:{
+    position: 'absolute',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 137,
+    height: 32,
+    borderRadius: 20,
+    backgroundColor: '#4c4c4c',
+    left: '12%',
+    marginTop: 15,
+    marginBottom: 15,
+    shadowColor: '#292929',
+    shadowOpacity: 25,
+    shadowOffset:{
+      width: 0,
+      height: 1
+    },
+    shadowRadius: 1
+
+  },
+
+  title:{
+    fontWeight: "bold",
+    fontFamily: "Unbounded_400Regular",
+    fontSize: 16,
+    color: 'white',
+    paddingVertical: 2,
+  },
+
+  titleContainer:{
+    flex: 1,
+    overflow: 'hidden',
+    marginLeft: 45,
+    width: 200,
+    marginTop: 41,
+  },
+
 });
 
 export default CustomCallout;
