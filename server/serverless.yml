@@ -286,6 +286,14 @@ functions:
           path: badges/{userId}
           method: get
           cors: true
+  
+  getBadge:
+    handler: src/badges/handlers/getBadge.getBadgeHandler
+    events:
+      - http:
+          path: badges/{userId}/{city}
+          method: get
+          cors: true
 
   deleteBadge:
     handler: src/badges/handlers/deleteBadge.deleteBadgeHandler
@@ -504,6 +512,19 @@ functions:
     events:
       - http:
           path: reverseGeocode
+          method: get
+          request:
+            parameters:
+              querystrings:
+                latitude: true
+                longitude: true
+          cors: true
+  
+  reverseGeocodeCountry:
+    handler: src/locations/handlers/reverseGeocodeCountry.reverseGeocodeCountryHandler
+    events:
+      - http:
+          path: reverseGeocodeCountry
           method: get
           request:
             parameters:
