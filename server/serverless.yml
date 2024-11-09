@@ -23,6 +23,7 @@ provider:
     AUTH_SESSION_TABLE: AuthSessionData
     LISTENING_HISTORY_TABLE: ListeningHistoryTable
     MUSIC_SUGGESTIONS_TABLE: MusicSuggestionsTable
+    FOLLOWERS_TABLE: FollowersTable
     S3_BUCKET_NAME: ${self:custom.s3BucketName}
   
   apiGateway:
@@ -31,8 +32,8 @@ provider:
       - 'image/png'
       - 'image/gif'
       - 'image/heic'
-      - 'image/webp'  # You can add more formats if needed
-      - 'application/octet-stream'  # General binary stream
+      - 'image/webp'
+      - 'application/octet-stream'
   
   iamRoleStatements:
     - Effect: Allow
@@ -80,12 +81,14 @@ provider:
         - !GetAtt MusicSuggestionsTable.StreamArn
         - !GetAtt Badges.Arn
         - !GetAtt Badges.StreamArn
+        - !GetAtt FollowersTable.Arn
         - arn:aws:dynamodb:${self:provider.region}:*:table/Badges/index/userId-lastVisitedDate-index
         - arn:aws:dynamodb:${self:provider.region}:*:table/Users/index/SpotifyUserIdIndex
         - arn:aws:dynamodb:${self:provider.region}:*:table/Memories/index/CityUserIndex
         - arn:aws:dynamodb:${self:provider.region}:*:table/Memories/index/UserMemoryIndex
         - arn:aws:dynamodb:${self:provider.region}:*:table/ListeningHistoryTable/index/TrackIdIndex
         - arn:aws:dynamodb:${self:provider.region}:*:table/ListeningHistoryTable/index/UserIdIndex
+        - arn:aws:dynamodb:${self:provider.region}:*:table/FollowersTable/index/FollowerIdIndex
 
     - Effect: Allow
       Action:
@@ -177,6 +180,30 @@ functions:
       - http:
           path: users/{userId}
           method: delete
+          cors: true
+
+  uploadProfileImage:
+    handler: src/users/handlers/uploadProfileImage.uploadProfileImageHandler
+    events:
+      - http:
+          path: users/{userId}/profile-image
+          method: post
+          request:
+            parameters:
+              paths:
+                userId: true
+          cors: true
+
+  getAvailableUsersToFollow:
+    handler: src/followers/handlers/getAvailableUsersToFollow.getAvailableUsersToFollowHandler
+    events:
+      - http:
+          path: users/{userId}/available-to-follow
+          method: get
+          request:
+            parameters:
+              paths:
+                userId: true  # Required path parameter
           cors: true
 
   # Memory Handlers
@@ -299,6 +326,57 @@ functions:
                 lon: true   # Required path parameter
               querystrings:
                 radius: false  # Optional, handled in the handler code if omitted
+  
+  # Followers Handlers
+  followUser:
+    handler: src/followers/handlers/followUser.followUserHandler
+    events:
+      - http:
+          path: follow/{userId}/{followerId}
+          method: post
+          request:
+            parameters:
+              paths:
+                userId: true
+                followerId: true
+          cors: true
+
+  unfollowUser:
+    handler: src/followers/handlers/unfollowUser.unfollowUserHandler
+    events:
+      - http:
+          path: unfollow/{userId}/{followerId}
+          method: delete
+          request:
+            parameters:
+              paths:
+                userId: true
+                followerId: true
+          cors: true
+
+  getFollowers:
+    handler: src/followers/handlers/getFollowers.getFollowersHandler
+    events:
+      - http:
+          path: followers/{userId}
+          method: get
+          request:
+            parameters:
+              paths:
+                userId: true
+          cors: true
+
+  getFollowing:
+    handler: src/followers/handlers/getFollowing.getFollowingHandler
+    events:
+      - http:
+          path: following/{followerId}
+          method: get
+          request:
+            parameters:
+              paths:
+                followerId: true
+          cors: true
 
   # Music Suggestion Handler
   suggestSongsByLocation:
@@ -417,6 +495,14 @@ functions:
     events:
       - http:
           path: playlists/{userId}/memories/{memoryId}/image  # Changed from /{memoryId} to /memories/{memoryId}
+          method: put
+          cors: true
+
+  updateSpotifyPlaylistDetails:
+    handler: src/spotify/playlists/handlers/updateSpotifyPlaylistDetails.updateSpotifyPlaylistDetailsHandler
+    events:
+      - http:
+          path: spotify/playlist/{userId}/update/{playlistId}
           method: put
           cors: true
 
@@ -568,37 +654,6 @@ resources:
         StreamSpecification:
           StreamViewType: NEW_AND_OLD_IMAGES
 
-
-    Badges:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        TableName: Badges
-        AttributeDefinitions:
-          - AttributeName: userId
-            AttributeType: S
-          - AttributeName: city
-            AttributeType: S
-          - AttributeName: lastVisitedDate
-            AttributeType: S
-        KeySchema:
-          - AttributeName: userId
-            KeyType: HASH
-          - AttributeName: city
-            KeyType: RANGE
-        GlobalSecondaryIndexes:
-          - IndexName: userId-lastVisitedDate-index  # GSI for querying by recent trips for userId
-            KeySchema:
-              - AttributeName: userId
-                KeyType: HASH
-              - AttributeName: lastVisitedDate
-                KeyType: RANGE
-            Projection:
-              ProjectionType: ALL
-        BillingMode: PAY_PER_REQUEST
-        StreamSpecification:
-          StreamViewType: NEW_AND_OLD_IMAGES
-
-
     ListeningHistoryTable:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -637,6 +692,60 @@ resources:
         BillingMode: PAY_PER_REQUEST
         StreamSpecification:
           StreamViewType: NEW_AND_OLD_IMAGES  # Enable streams for listening history
+    
+    FollowersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: FollowersTable
+        AttributeDefinitions:
+          - AttributeName: userId
+            AttributeType: S
+          - AttributeName: followerId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: userId
+            KeyType: HASH
+          - AttributeName: followerId
+            KeyType: RANGE
+        GlobalSecondaryIndexes:
+          - IndexName: FollowerIdIndex
+            KeySchema:
+              - AttributeName: followerId
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+        BillingMode: PAY_PER_REQUEST
+        StreamSpecification:
+          StreamViewType: NEW_AND_OLD_IMAGES
+
+    Badges:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Badges
+        AttributeDefinitions:
+          - AttributeName: userId
+            AttributeType: S
+          - AttributeName: city
+            AttributeType: S
+          - AttributeName: lastVisitedDate
+            AttributeType: S
+        KeySchema:
+          - AttributeName: userId
+            KeyType: HASH
+          - AttributeName: city
+            KeyType: RANGE
+        GlobalSecondaryIndexes:
+          - IndexName: userId-lastVisitedDate-index  # GSI for querying by recent trips for userId
+            KeySchema:
+              - AttributeName: userId
+                KeyType: HASH
+              - AttributeName: lastVisitedDate
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+        BillingMode: PAY_PER_REQUEST
+        StreamSpecification:
+          StreamViewType: NEW_AND_OLD_IMAGES
 
     MusicSuggestionsTable:
       Type: AWS::DynamoDB::Table

@@ -2,8 +2,7 @@ import {
   CognitoIdentityProviderClient, 
   AdminGetUserCommand, 
   AdminUpdateUserAttributesCommand, 
-  AdminCreateUserCommand, 
-  ListUsersCommand 
+  AdminCreateUserCommand 
 } from '@aws-sdk/client-cognito-identity-provider';
 
 const cognitoClient = new CognitoIdentityProviderClient({ region: process.env.AWS_REGION });
@@ -12,25 +11,31 @@ const cognitoClient = new CognitoIdentityProviderClient({ region: process.env.AW
  * Create a user in Cognito and retrieve the `sub` (Cognito UserId).
  * 
  * @param {string} email - User's email retrieved from Spotify.
- * @param {Object} userAttributes - Additional attributes like SpotifyUserId, refreshToken.
+ * @param {Object} userAttributes - Additional attributes like SpotifyUserId, refreshToken, displayName, and profile image.
  * @returns {string} - The Cognito `sub` (UserId).
  */
 export const createUserInCognito = async (email, userAttributes) => {
+  // Define user attributes for Cognito; add Spotify image URL only if provided
   const createParams = {
     UserPoolId: process.env.COGNITO_USER_POOL_ID,
     Username: email,
     UserAttributes: [
       { Name: 'email', Value: email },
       { Name: 'custom:spotify_user_id', Value: userAttributes.spotifyUserId },
-      { Name: 'custom:spotify_r_token', Value: userAttributes.refreshToken }  // Refresh token included
+      { Name: 'custom:spotify_r_token', Value: userAttributes.refreshToken },
+      { Name: 'custom:display_name', Value: userAttributes.displayName },
     ],
   };
 
-  try {
-    const result = await cognitoClient.send(new AdminCreateUserCommand(createParams));
+  // Conditionally add Spotify profile image if available
+  if (userAttributes.spotifyImage) {
+    createParams.UserAttributes.push({ Name: 'custom:spotify_image', Value: userAttributes.spotifyImage });
+  }
 
-    // The `sub` is part of the Username field in the response
-    const cognitoSub = result.User?.Username;  // This is the Cognito `sub`
+  try {
+    // Attempt to create the user in Cognito
+    const result = await cognitoClient.send(new AdminCreateUserCommand(createParams));
+    const cognitoSub = result.User?.Username;  // Get the Cognito user ID (sub)
 
     console.log(`User created in Cognito with sub: ${cognitoSub}`);
     return cognitoSub;
@@ -53,8 +58,10 @@ export const getUserFromCognito = async (email) => {
   };
 
   try {
+    // Fetch user data from Cognito
     const result = await cognitoClient.send(new AdminGetUserCommand(params));
-    return result;  // Return the Cognito user data
+    console.log(`Retrieved user with email: ${email}`);
+    return result;
   } catch (error) {
     if (error.name === 'UserNotFoundException') {
       console.log(`User not found in Cognito with email: ${email}`);
@@ -70,45 +77,46 @@ export const getUserFromCognito = async (email) => {
  * This function updates an existing user with the provided attributes.
  * 
  * @param {string} userId - The Cognito `sub` (UserId).
- * @param {Object} attributes - The attributes to update (e.g., spotifyUserId, refreshToken, country, product).
+ * @param {Object} attributes - The attributes to update (e.g., spotifyUserId, refreshToken, country, product, displayName, spotifyImage).
  */
 export const updateCognitoUser = async (userId, attributes) => {
-  // Prepare the user attributes for updating in Cognito
   const userAttributes = [];
 
-  // Add Spotify user ID to the attributes if provided
+  // Conditionally add each attribute to the update list if provided
   if (attributes.spotifyUserId) {
     userAttributes.push({ Name: 'custom:spotify_user_id', Value: attributes.spotifyUserId });
   }
-
-  // Add Spotify refresh token if provided
   if (attributes.refreshToken) {
     userAttributes.push({ Name: 'custom:spotify_r_token', Value: attributes.refreshToken });
   }
-
-  // Add country and product if provided
   if (attributes.country) {
     userAttributes.push({ Name: 'custom:spotify_country', Value: attributes.country });
   }
   if (attributes.product) {
     userAttributes.push({ Name: 'custom:spotify_product', Value: attributes.product });
   }
-
-  // If no attributes were provided, log and exit early (no update needed)
-  if (userAttributes.length === 0) {
-    console.log('No updates to apply');
-    return;  // Exit the function if there are no updates
+  if (attributes.displayName) {
+    userAttributes.push({ Name: 'custom:display_name', Value: attributes.displayName });
+  }
+  if (attributes.spotifyImage) {
+    userAttributes.push({ Name: 'custom:spotify_image', Value: attributes.spotifyImage });
   }
 
-  // Define the parameters for updating the Cognito user
+  // If no attributes are provided, log and exit early
+  if (userAttributes.length === 0) {
+    console.log(`No attributes provided to update for userId: ${userId}`);
+    return;
+  }
+
+  // Define parameters for the update operation
   const updateParams = {
     UserPoolId: process.env.COGNITO_USER_POOL_ID,
-    Username: userId,  // Use the Cognito sub (userId) to identify the user
-    UserAttributes: userAttributes,  // Pass the attributes that need updating
+    Username: userId,
+    UserAttributes: userAttributes,
   };
 
   try {
-    // Try to update the user in Cognito with the provided attributes
+    // Execute the update
     await cognitoClient.send(new AdminUpdateUserAttributesCommand(updateParams));
     console.log(`Updated user ${userId} with attributes:`, userAttributes);
   } catch (error) {

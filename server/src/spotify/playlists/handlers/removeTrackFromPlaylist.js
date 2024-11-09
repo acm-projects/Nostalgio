@@ -8,10 +8,12 @@ import { validateSpotifyToken } from '../../../auth/spotify/spotifyTokenManager.
  * @returns {Object} - HTTP response indicating success or failure.
  */
 export const removeTrackFromPlaylistHandler = async (event) => {
+  let userId, playlistId, trackUri;
+
   try {
     // Step 1: Extract userId, playlistId, and trackUri from the request
-    const { userId, playlistId } = event.pathParameters;
-    const { trackUri } = JSON.parse(event.body);
+    ({ userId, playlistId } = event.pathParameters);
+    ({ trackUri } = JSON.parse(event.body));
 
     // Validate required parameters
     if (!userId || !playlistId || !trackUri) {
