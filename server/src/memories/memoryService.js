@@ -43,21 +43,33 @@ export const storeMemoryInDynamoDB = async (memoryData) => {
  * Retrieve a memory from DynamoDB by memoryId.
  * 
  * @param {string} memoryId - The unique memory ID (Spotify playlist ID).
- * @returns {Object|null} - The memory data retrieved from DynamoDB or null if not found.
+ * @returns {Object|null} - The memory data retrieved from DynamoDB, including userId, or null if not found.
  */
 export const getMemoryFromDynamoDB = async (memoryId) => {
+  if (!memoryId) {
+    console.warn('memoryId is required to retrieve memory.');
+    throw new Error('memoryId is required.');
+  }
+
   const params = {
     TableName: process.env.MEMORIES_TABLE,
     Key: { memoryId },
   };
 
   try {
+    // Attempt to retrieve the memory item from DynamoDB by memoryId
     const result = await dynamoDb.send(new GetCommand(params));
+    
     if (result.Item) {
-      console.log(`Memory retrieved for memoryId: ${memoryId}`);
-      return result.Item;
+      if (!result.Item.userId) {
+        console.warn(`Memory retrieved but missing userId for memoryId: ${memoryId}`);
+        return null; // Return null if userId is missing, as it's essential
+      }
+
+      console.log(`Memory retrieved successfully for memoryId: ${memoryId}`);
+      return result.Item; // Return the entire item structure without separating userId
     } else {
-      console.log(`Memory not found for memoryId: ${memoryId}`);
+      console.log(`Memory not found in DynamoDB for memoryId: ${memoryId}`);
       return null;
     }
   } catch (error) {
@@ -79,11 +91,17 @@ export const updateMemoryInDynamoDB = async (memoryId, updates) => {
 
   const updateExpressions = [];
   const expressionAttributeValues = {};
+  const expressionAttributeNames = {}; // New object for attribute names to handle reserved keywords
 
   // Construct update expressions dynamically from the provided updates
   Object.entries(updates).forEach(([key, value]) => {
-    updateExpressions.push(`${key} = :${key}`);
-    expressionAttributeValues[`:${key}`] = value;
+    const attributeKey = `#${key}`; // Define a placeholder for the attribute name
+    const valueKey = `:${key}`;
+
+    // Add the attribute name mapping if it's a reserved keyword
+    expressionAttributeNames[attributeKey] = key;
+    updateExpressions.push(`${attributeKey} = ${valueKey}`);
+    expressionAttributeValues[valueKey] = value;
   });
 
   const params = {
@@ -91,6 +109,7 @@ export const updateMemoryInDynamoDB = async (memoryId, updates) => {
     Key: { memoryId },
     UpdateExpression: `SET ${updateExpressions.join(', ')}`,
     ExpressionAttributeValues: expressionAttributeValues,
+    ExpressionAttributeNames: expressionAttributeNames, // Include attribute names to handle reserved keywords
     ReturnValues: 'UPDATED_NEW',
   };
 

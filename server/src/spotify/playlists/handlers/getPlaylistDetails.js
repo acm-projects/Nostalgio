@@ -8,9 +8,11 @@ import { validateSpotifyToken } from '../../../auth/spotify/spotifyTokenManager.
  * @returns {Object} - HTTP response with formatted playlist details or an error message.
  */
 export const getPlaylistDetailsHandler = async (event) => {
+  let userId, playlistId;
+
   try {
     // Step 1: Extract userId and playlistId from the request
-    const { userId, playlistId } = event.pathParameters;
+    ({ userId, playlistId } = event.pathParameters);
 
     if (!userId || !playlistId) {
       console.warn('Missing userId or playlistId in the request');
@@ -41,13 +43,14 @@ export const getPlaylistDetailsHandler = async (event) => {
       }
     );
 
-    const { name, description, owner, images, tracks } = response.data;
+    const { name, description, owner, images, tracks, external_urls } = response.data;
 
     // Step 4: Format the playlist data into a user-friendly structure
     const formattedPlaylist = {
       playlistId,
       name,
       description,
+      link: external_urls.spotify, // Spotify link for the playlist
       owner: {
         id: owner.id,
         name: owner.display_name,
@@ -68,6 +71,11 @@ export const getPlaylistDetailsHandler = async (event) => {
         previewUrl: item.track.preview_url,
         externalUrl: item.track.external_urls.spotify,
         addedAt: item.added_at,
+        albumImages: item.track.album.images.length > 0 ? {
+          small: item.track.album.images[2] || null,
+          medium: item.track.album.images[1] || null,
+          large: item.track.album.images[0] || null,
+        } : null,
       })),
     };
 

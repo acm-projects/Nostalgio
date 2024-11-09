@@ -1,6 +1,6 @@
-import { getCodeVerifier, deleteCodeVerifier } from '../session/authSessionManager.js';  // Updated reference for code verifier
+import { getCodeVerifier, deleteCodeVerifier } from '../session/authSessionManager.js';  // Code verifier management
 import { exchangeSpotifyToken } from '../spotify/spotifyTokenManager.js';  // Token exchange for Spotify
-import { createUserInCognito, getUserFromCognito, updateCognitoUser } from '../cognito/cognitoUserHandler.js';  // Updated imports for Cognito
+import { createUserInCognito, getUserFromCognito, updateCognitoUser } from '../cognito/cognitoUserHandler.js';  // Cognito user management
 import { storeUserInDynamoDB, getUserFromDynamoDB, updateUserInDynamoDB } from '../../users/userService.js';  // DynamoDB user services
 import axios from 'axios';
 
@@ -27,66 +27,84 @@ export const spotifyCallbackHandler = async (event) => {
   }
 
   try {
-    // Exchange Spotify authorization code for access and refresh tokens
+    // Step 1: Exchange Spotify authorization code for access and refresh tokens
     const { access_token, refresh_token, expires_in } = await exchangeSpotifyToken(code, codeVerifier);
     console.log('Spotify token exchange successful');
 
-    // Log the access token before making the profile request
-    console.log('Access token:', access_token);
-
-    // Get the Spotify user's profile using the access token
+    // Step 2: Retrieve Spotify profile using the access token
     const spotifyUserProfile = await axios.get('https://api.spotify.com/v1/me', {
       headers: { Authorization: `Bearer ${access_token}` },
     });
 
     console.log('Spotify profile retrieved:', spotifyUserProfile.data);
 
-    const { id: spotifyUserId, email: spotifyEmail, country, product } = spotifyUserProfile.data;
-    console.log(`Spotify profile retrieved for user: ${spotifyUserId}, email: ${spotifyEmail}`);
+    // Extract essential data from Spotify profile
+    const { id: spotifyUserId, email: spotifyEmail, country, product, display_name, images } = spotifyUserProfile.data;
+    const spotifyProfileImageUrl = images.length > 0 ? images[0].url : null;
+    console.log(`Retrieved profile for user: ${spotifyUserId}, email: ${spotifyEmail}, display name: ${display_name}, profile image URL: ${spotifyProfileImageUrl}`);
 
-    // Step 1: Check if the user already exists in Cognito using their email
+    // Step 3: Check if user exists in Cognito by email
     const cognitoUser = await getUserFromCognito(spotifyEmail);
 
     if (cognitoUser) {
-      console.log(`Cognito user found: ${spotifyEmail}`);
+      console.log(`Existing Cognito user found: ${spotifyEmail}`);
 
-      // Step 2: Update the existing user in DynamoDB and Cognito with the new tokens
+      // Step 4: Check if user exists in DynamoDB by Spotify ID
       const existingUser = await getUserFromDynamoDB(spotifyUserId, 'SpotifyUserId');
       
       if (existingUser) {
         console.log(`User already exists in DynamoDB: ${spotifyUserId}`);
 
-        // Update existing user tokens in DynamoDB
+        // Update user tokens and attributes in DynamoDB
         await updateUserInDynamoDB(existingUser.UserId, {
           AccessToken: access_token,
-          RefreshToken: refresh_token,  // If a new refresh token was provided
+          RefreshToken: refresh_token,
           TokenExpiresAt: Math.floor(Date.now() / 1000) + expires_in,
+          SpotifyProfileImageUrl: spotifyProfileImageUrl,  // Update Spotify profile image URL in DynamoDB
         });
 
-        // Optionally update tokens in Cognito if needed
-        if (refresh_token) {
-            await updateCognitoUser(existingUser.UserId, { 'custom:spotify_r_token': refresh_token });
+        // Optionally update Cognito with refresh token and profile image if available
+        const cognitoAttributes = {};
+        if (refresh_token) cognitoAttributes['custom:spotify_r_token'] = refresh_token;
+        if (spotifyProfileImageUrl) cognitoAttributes['custom:spotify_image'] = spotifyProfileImageUrl;
+        if (Object.keys(cognitoAttributes).length) {
+          await updateCognitoUser(existingUser.UserId, cognitoAttributes);
         }
 
-        // Redirect to the appropriate page (for returning users)
+        // Return essential user information to the frontend
         return {
-          statusCode: 302,
-          headers: { Location: '/dashboard' },  // Redirect returning users to the dashboard
+          statusCode: 200,
+          body: JSON.stringify({
+            message: 'Returning user authenticated successfully',
+            user: {
+              UserId: existingUser.UserId,
+              SpotifyUserId: spotifyUserId,
+              Email: spotifyEmail,
+              DisplayName: display_name,
+              Country: country,
+              Product: product,
+              SpotifyProfileImageUrl: spotifyProfileImageUrl,
+            },
+          }),
         };
       }
 
     } else {
-      // Step 3: If the user doesn't exist, create them in Cognito and DynamoDB
-      const cognitoSub = await createUserInCognito(spotifyEmail, {
+      // Step 5: If the user doesn't exist, create them in Cognito and DynamoDB
+      const cognitoAttributes = {
         'custom:spotify_user_id': spotifyUserId,
         'custom:spotify_r_token': refresh_token,
         'custom:spotify_country': country,
-        'custom:spotify_product': product
-      });
+        'custom:spotify_product': product,
+        'custom:display_name': display_name,
+      };
+      if (spotifyProfileImageUrl) cognitoAttributes['custom:spotify_image'] = spotifyProfileImageUrl;
+
+      const cognitoSub = await createUserInCognito(spotifyEmail, cognitoAttributes);
 
       console.log(`New user created in Cognito with sub: ${cognitoSub}`);
 
-      // Store the new user in DynamoDB
+      // Store new user in DynamoDB
       await storeUserInDynamoDB({
         UserId: cognitoSub,
         SpotifyUserId: spotifyUserId,
@@ -96,14 +114,27 @@ export const spotifyCallbackHandler = async (event) => {
         RefreshToken: refresh_token,
         AccessToken: access_token,
         TokenExpiresAt: Math.floor(Date.now() / 1000) + expires_in,
+        DisplayName: display_name,
+        SpotifyProfileImageUrl: spotifyProfileImageUrl,
       });
 
       console.log(`New user stored in DynamoDB with sub: ${cognitoSub}`);
 
-      // Redirect new users to the welcome page
+      // Return essential user information to the frontend for a new user
       return {
-        statusCode: 302,
-        headers: { Location: '/welcome' },  // Adjust this to the correct route for your mobile app onboarding
+        statusCode: 200,
+        body: JSON.stringify({
+          message: 'New user authenticated and created successfully',
+          user: {
+            UserId: cognitoSub,
+            SpotifyUserId: spotifyUserId,
+            Email: spotifyEmail,
+            DisplayName: display_name,
+            Country: country,
+            Product: product,
+            SpotifyProfileImageUrl: spotifyProfileImageUrl,
+          },
+        }),
       };
     }
   } catch (error) {
