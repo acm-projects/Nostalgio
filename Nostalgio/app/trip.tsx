@@ -199,7 +199,7 @@ export function SolarAddSquareBold(props: SvgProps) {
   );
 }
 
-export function UploadImage(id: any) {
+export function UploadImage(id: any, fetchTrips: any) {
   console.log(`User is updating image of ${id}`);
 
   const pickImageAndUpload = async () => {
@@ -213,33 +213,41 @@ export function UploadImage(id: any) {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       quality: 1,
-    })
+    });
 
     if (!result.canceled) {
       const fileUri = result.assets[0].uri;
       const fileName = fileUri.split("/").pop();
+      let fileType = fileUri.split(".").pop();
+      if (fileType == "jpg") {
+        fileType = "jpeg";
+      }
       console.log(fileUri);
+      console.log(`image/${fileType}`);
       console.log(fileName);
 
       //Convert image URI to Base64 format
-      const imgb64 = await FileSystem.readAsStringAsync(fileUri, {
-        encoding: "base64",
-      });
+      //const imgb64 = await FileSystem.readAsStringAsync(fileUri, {
+      //  encoding: "base64",
+      //});
+      const response = await fetch(fileUri);
+      const blob = await response.blob();
 
       //Hard code in an image to test
       //const imgb64 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAflBMVEUAAP4AA/wBAfgAAPWVnMycodYAAPEAAO4AA/qhqN6us+gCAfacotW2vvC2vfGhqN8AAOEAAOiXmNOXmtD9/NXs6P3a4vrQ1/nPz/nHx/vCyPuttOWpr+eepNu6u/S8vPGxvPazs/jf4dqxq/iPjdOQm9Krrumhp+aXm8nMy92fIZYTAAADC0lEQVR4nO3dC1MaMRSG4ewJnEQj4rK9r3grVvv//2DPglZoUUZbSr+T7xm5jcyGl2xgHC6Gd+8/fPz0+cup6fv+fDo9MtPpfHxixo+60eh+9CbdeD5+3nKQ+WrQl50f79b3Q8bp5MHF5eTq+iZ8PWvPztKSqi6P7MQO8V/RqKtRX5Z2+/U6bZvaRThPOUqQxoQQ8iMZjpo/NGwwhBevMgwleZfhirJTHkZ82rKGmEq6DX0afiG/D7wxwqr6lfLWbT1T8PfZvGmJo/AtWXZY3t/Loy3eOsT2re3Xxvh2C+Is3CVRzbFIEfspKw93bdnw2ikUKTvlrSNtNWxvddg82X7WUrSxs7ELd9pofPM0/cey2tptrHCqdkkOskftWZOty9bhkebhgebQN2cPrI+F4FiIr55Ce7YILMRUT+HcfeEJC2GtFTp/tjiJ3gvHLITFQnwsxMdCfCzEx0J8LMTHQnwsxFdVYXZf6H8OWQiKhfhYiG/t9UPnheMYnBeOivfCe/+F/vdSFsJ6Kly+0/TQN2cP1gqFhZhYiI+F+FiIj4X4WIiPhfhYiI+F+FiIj4X4WIiPhfiqKuTrFqCqmkPnhR0LYa0VOn+kGbufQ//va2MhLhbiYyE+FuJjIT4W4mMhPhbiq6qQn3QGxUJ8XIf4WIiPhfhYiI+F+FiIj4X4WIivokL33zF0p97/xp8m73Po/z9asRAXC/GxEB8L8bEQHwvxsRAfC/GxEB8L8bEQHwvxsRAfC/GxEB8L8VVWWDwXHidxPocsxLVRyHUIiYX4uA7xVVbIvRQSC/FxHeKrrJB7KSQW4uM6xMdCfFyH+Cor5F4KiYX4uA7x1VPYu//GgX74PL7rdXjq/hsHKihU93up+0eaYS9tXBdOUq6h0PU6rGQO/RdyL4W0OYf50DdnD/LPQpVG7Wnfm9yKqFjhhVquXRZ3crC1J7NwmbQ0kg99j++BNLmIdmHSptiUcug7/O8r2pQUrfAqFQkep3D4KsEocRauW9Wo0aOiSXQRbha3t7OuG/nTWdZs8f0HqZ1HriulY9YAAAAASUVORK5CYII=";
-      
-      console.log(`data:image/png;base64,${imgb64}`);
+
+      //console.log(`data:image/png;base64,${imgb64}`);
+      console.log(blob);
       try {
         const uploadResponse = await fetch(
           `https://6p6xrc3hu4.execute-api.us-east-1.amazonaws.com/dev/memories/${userID}/${id}/image`,
           {
             method: "PUT",
             headers: {
-              "Content-Type": "image/jpeg",
+              "Content-Type": `image/${fileType}`,
               "X-Original-File-Name": `${fileName}`,
             },
-            body: `data:image/png;base64,${imgb64}`,
+            body: blob,
           }
         );
 
@@ -248,6 +256,7 @@ export function UploadImage(id: any) {
         }
 
         alert("Image uploaded successfully!");
+        await fetchTrips();
       } catch (error) {
         console.error("Error updating image:", error);
         alert("Please try again.");
@@ -258,44 +267,45 @@ export function UploadImage(id: any) {
   pickImageAndUpload();
 }
 
-export function EditTitle(id: any) {
+export function EditTitle(id: any, fetchTrips: any) {
   console.log(`User is updating title of ${id}`);
-    Alert.prompt(
-      "Album Title",
-      "Enter your new album title below",
-      [
-        { text: "Cancel", style: "destructive", onPress: () => {} },
-        {
-          text: "Submit",
-          onPress: (newTitle) => {
-            console.log(newTitle);
-            const UploadTitle = async () => {
-              try {
-                const uploadResponse = await fetch(
-                  `https://6p6xrc3hu4.execute-api.us-east-1.amazonaws.com/dev/memories/${userID}/{${id}`,
-                  {
-                    method: "PUT",
-                    body: `{ "name": "${newTitle}" }`,
-                  }
-                );
-
-                if (!uploadResponse.ok) {
-                  throw new Error("Failed to upload title update");
+  Alert.prompt(
+    "Album Title",
+    "Enter your new album title below",
+    [
+      { text: "Cancel", style: "destructive", onPress: () => {} },
+      {
+        text: "Submit",
+        onPress: (newTitle) => {
+          console.log(newTitle);
+          const UploadTitle = async () => {
+            try {
+              const uploadResponse = await fetch(
+                `https://6p6xrc3hu4.execute-api.us-east-1.amazonaws.com/dev/memories/${userID}/{${id}`,
+                {
+                  method: "PUT",
+                  body: `{ "name": "${newTitle}" }`,
                 }
+              );
 
-                alert("Titel updated successfully!");
-              } catch (error) {
-                console.error("Error updating title:", error);
-                alert("Please try again.");
+              if (!uploadResponse.ok) {
+                throw new Error("Failed to upload title update");
               }
+
+              alert("Title updated successfully!");
+              await fetchTrips();
+            } catch (error) {
+              console.error("Error updating title:", error);
+              alert("Please try again.");
             }
-            UploadTitle();
-          },
+          };
+          UploadTitle();
         },
-      ],
-      "plain-text"
-    );
-  }
+      },
+    ],
+    "plain-text"
+  );
+}
 
 
 export default function TripPage() {
@@ -323,25 +333,25 @@ export default function TripPage() {
   const [tripData, setTripData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
+  const fetchTrips = async () => {
+    try {
+      const response = await fetch(
+        `https://6p6xrc3hu4.execute-api.us-east-1.amazonaws.com/dev/playlists/${userID}/${id}`
+      );
+      const data = await response.json();
+      //console.log("Raw JSON data:", data);
+
+      setTripData(data);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching trips data:", error);
+      setLoading(false);
+    }
+  };
+
   // Fetching the data
   useEffect(() => {
-    const fetchTrips = async () => {
-      try {
-        const response = await fetch(
-          `https://6p6xrc3hu4.execute-api.us-east-1.amazonaws.com/dev/playlists/${userID}/${id}`
-        );
-        const data = await response.json();
-        //console.log("Raw JSON data:", data);
-
-        setTripData(data);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching trips data:", error);
-        setLoading(false);
-      }
-    };
-
-    fetchTrips();
+    fetchTrips(); //Fetch initialls
   }, [id]);
 
   useLayoutEffect(() => {
@@ -391,7 +401,7 @@ export default function TripPage() {
             <View style={styles.iconOverlay}>
               <TouchableOpacity
                 style={styles.iconOverlayButton}
-                onPress={() => UploadImage(id)}
+                onPress={() => UploadImage(id, fetchTrips)}
               >
                 <SolarGalleryEditBold width={32} height={32} color="white" />
               </TouchableOpacity>
@@ -418,7 +428,7 @@ export default function TripPage() {
             >
               <TouchableOpacity
                 style={{ flex: 0.5, paddingRight: 5 }}
-                onPress={() => EditTitle(id)}
+                onPress={() => EditTitle(id, fetchTrips)}
               >
                 <SolarPen2Bold width={52} height={52} color="#FFFFFF" />
               </TouchableOpacity>

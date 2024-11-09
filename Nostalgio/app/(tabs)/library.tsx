@@ -13,8 +13,8 @@ import { useRouter } from "expo-router";
 import EditScreenInfo from "@/components/EditScreenInfo";
 import { Text, View } from "@/components/Themed";
 
-import { useEffect, useState, useLayoutEffect } from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useEffect, useState, useLayoutEffect, useCallback } from "react";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import Svg, { Path, SvgProps } from "react-native-svg";
 
 import { format } from "date-fns";
@@ -87,26 +87,27 @@ export default function LibraryScreen() {
   const [loading, setLoading] = useState(true);
 
   // Fetching the data
-  useEffect(() => {
-    const fetchTrips = async () => {
-      try {
-        const response = await fetch(
-          `https://6p6xrc3hu4.execute-api.us-east-1.amazonaws.com/dev/memories/${userID}`
-        ); // Replace with endpoint URL
-        const data = await response.json();
-        //console.log('Raw JSON data:', data);
+  const fetchTrips = async () => {
+    try {
+      const response = await fetch(
+        `https://6p6xrc3hu4.execute-api.us-east-1.amazonaws.com/dev/memories/${userID}`
+      ); // Replace with endpoint URL
+      const data = await response.json();
+      //console.log('Raw JSON data:', data);
 
-        const formattedData = formatTripsByCity(data);
-        setTripsData(formattedData);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching trips data:", error);
-        setLoading(false);
-      }
-    };
+      const formattedData = formatTripsByCity(data);
+      setTripsData(formattedData);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching trips data:", error);
+      setLoading(false);
+    }
+  };
 
-    fetchTrips();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      fetchTrips();
+  }, []));
 
   // Function to group trips by city
   function formatTripsByCity(data: any) {
