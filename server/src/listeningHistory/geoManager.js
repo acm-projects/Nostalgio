@@ -23,50 +23,61 @@ const generateGeohashesInRadius = (lat, lon, precision = 5) => {
   return [centerGeohash, ...neighbors];  // Return the center and neighboring geohashes
 };
 
+
 /**
- * Store listening history with geohash, latitude, longitude, and user-specific data.
+ * Store listening history with geohash, latitude, longitude, and detailed track and user-specific data.
+ * 
+ * This function stores a record of a user's listening history, capturing the user's location, track details, artist info,
+ * album metadata, and audio features at the time of listening.
  * 
  * @param {Number} lat - Latitude of the location.
  * @param {Number} lon - Longitude of the location.
- * @param {Object} itemData - Additional data (userId, trackId, artistIds, genres, audio features, track URL, album data).
+ * @param {Object} itemData - Data related to the track, user, and additional attributes.
  */
 export const storeTrackWithLocation = async (lat, lon, itemData) => {
   const timestamp = Math.floor(Date.now() / 1000);  // Unix timestamp in seconds
-  const geoHash = geohash.encode(lat, lon, 5);  // Geohash with precision 5 (city-level)
+  const geoHash = geohash.encode(lat, lon, 5);  // Generate a geohash with precision 5 (city-level)
 
+  // Define the DynamoDB parameters for storing the listening history
   const params = {
     TableName: tableName,
     Item: {
-      geohash: geoHash,             // Partition key (geohash)
-      timestamp: timestamp,         // Sort key (current timestamp)
-      userId: itemData.userId,      // GSI for user-specific queries
-      trackId: itemData.trackId,    // GSI for track-specific queries
-      latitude: lat,                // Store latitude as a number
-      longitude: lon,               // Store longitude as a number
-      artistIds: itemData.artistIds, // Array of artist IDs, stored as a List of Strings
-      genres: itemData.genres,      // Store genres directly as an array of strings (List in DynamoDB)
-      audioFeatures: {              // Each attribute stored as a Number in a Map
+      geohash: geoHash,                // Partition key: geohash
+      timestamp: timestamp,            // Sort key: current timestamp (for sorting by time within geohash)
+      userId: itemData.userId,         // GSI for user-specific queries
+      trackId: itemData.trackId,       // Track ID to identify the song
+      latitude: lat,                   // Store latitude as a number
+      longitude: lon,                  // Store longitude as a number
+      artistIds: itemData.artistIds,   // Array of artist IDs, stored as a List of Strings
+      artistNames: itemData.artistNames, // List of artist names for display purposes
+      trackUri: itemData.trackUri,     // Spotify URI for playback reference
+      genres: itemData.genres,         // List of genres associated with the track
+      audioFeatures: {                 // Store audio features in a Map
         tempo: Number(itemData.audioFeatures.tempo),
         danceability: Number(itemData.audioFeatures.danceability),
         energy: Number(itemData.audioFeatures.energy),
         acousticness: Number(itemData.audioFeatures.acousticness),
         valence: Number(itemData.audioFeatures.valence),
       },
-      track_url: itemData.track_url, // Directly store Spotify track URL as a String
-      album: {
-        name: itemData.album.name,                // Store album name as a String
-        release_date: itemData.album.release_date, // Store release date as a String
-        images: itemData.album.images.map(image => ({ url: image.url })), // Store images as List of Maps with URLs
+      track_url: itemData.trackUrl,    // Spotify track URL for easy access
+      album: {                         // Nested album data with name, release date, and images
+        name: itemData.album.name, 
+        releaseDate: itemData.album.releaseDate,
+        images: itemData.album.images.map(image => ({
+          url: image.url,             // Each image stored as an object with URL
+          width: image.width,         // Store image width if available
+          height: image.height        // Store image height if available
+        })),
       },
     }
   };
 
   try {
-    console.log(`Storing listening history for user: ${itemData.userId}, track: ${itemData.trackId}, geohash: ${geoHash}`);
+    console.log(`[INFO] Storing listening history for user: ${itemData.userId}, track ID: ${itemData.trackId}, geohash: ${geoHash}`);
     await dynamoDb.send(new PutCommand(params));
-    console.log(`Successfully stored data for track: ${itemData.trackId}, geohash: ${geoHash}`);
+    console.log(`[INFO] Successfully stored listening history for track ID: ${itemData.trackId}, geohash: ${geoHash}`);
   } catch (error) {
-    console.error(`Error storing listening history: ${error.message}`);
+    console.error(`[ERROR] Failed to store listening history for user: ${itemData.userId}, track ID: ${itemData.trackId} - ${error.message}`);
     throw new Error('Failed to store listening history.');
   }
 };

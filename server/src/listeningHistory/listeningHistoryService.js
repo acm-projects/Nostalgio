@@ -2,18 +2,31 @@ import { queryTracksByGeohashOrRadius, storeTrackWithLocation } from './geoManag
 import { aggregatePlayCount } from '../spotify/utils/trackUtils.js';
 
 /**
- * Store a user's listening history with location data.
+ * Store a user's listening history with detailed track and location data.
  * 
- * This function captures the user's listening habits by associating a track with the user's location.
+ * This function captures the user's listening habits by associating a track with the user's location, 
+ * artist details, album information, and audio features for enhanced data richness.
  * 
- * @param {Object} listeningData - The data to store (userId, trackId, artistIds, lat, lon, genres, audioFeatures, track_url, album).
+ * @param {Object} listeningData - The data to store (userId, trackId, artistIds, artistNames, trackUri, lat, lon, genres, audioFeatures, trackUrl, album).
  * @returns {Promise} - A promise that resolves when the data is successfully stored.
  */
 export const storeListeningHistory = async (listeningData) => {
-    const { userId, trackId, artistIds, lat, lon, genres, audioFeatures, track_url, album } = listeningData;
+    const {
+        userId,
+        trackId,
+        artistIds,
+        artistNames,
+        trackUri,
+        lat,
+        lon,
+        genres,
+        audioFeatures,
+        trackUrl,
+        album
+    } = listeningData;
 
     // Input validation for required fields
-    if (!userId || !trackId || !lat || !lon || !genres || !track_url || !album) {
+    if (!userId || !trackId || !lat || !lon || !artistIds || !trackUrl || !album || !audioFeatures) {
         console.error('[ERROR] Missing required fields for storing listening history.');
         throw new Error('Incomplete data for storing listening history.');
     }
@@ -21,26 +34,35 @@ export const storeListeningHistory = async (listeningData) => {
     try {
         console.log(`[INFO] Storing listening history for user: ${userId}, track ID: ${trackId} at location: (${lat}, ${lon})`);
 
-        // Prepare itemData with necessary track and user details
+        // Prepare itemData with all necessary track, artist, and album details
         const itemData = {
             userId,
             trackId,
-            artistIds,     // Ensure artistIds is an array of artist IDs
-            genres,        // Pass genres to assist with recommendation filtering
-            audioFeatures, // Include audio features (tempo, energy, danceability, etc.)
-            track_url,     // Store Spotify track URL for easy retrieval
-            album          // Include album metadata (name, release date, images)
+            artistIds,         // Array of artist IDs for deeper user insights
+            artistNames,       // Array of artist names for display purposes
+            trackUri,          // Spotify URI for track playback reference
+            genres,            // Array of genres to assist with recommendations
+            audioFeatures,     // Object containing audio features like tempo, energy, danceability, etc.
+            trackUrl,          // Direct Spotify track URL for easy access
+            album: {           // Album metadata structure with name, release date, and images in three sizes
+                name: album.name,
+                releaseDate: album.releaseDate,
+                images: album.images // Object containing small, medium, and large image URLs
+            }
         };
 
-        // Store track information using geolocation and item data
+        console.log(`[DEBUG] Prepared itemData for storage: ${JSON.stringify(itemData)}`);
+
+        // Store track information in the database with geolocation and item data
         await storeTrackWithLocation(lat, lon, itemData);
 
         console.log(`[INFO] Successfully stored listening history for track ID: ${trackId} at (${lat}, ${lon})`);
     } catch (error) {
-        console.error(`[ERROR] Failed to store listening history: ${error.message}`);
+        console.error(`[ERROR] Failed to store listening history for user: ${userId}, track ID: ${trackId} - ${error.message}`);
         throw new Error('Error while storing listening history.');
     }
 };
+
 
 /**
  * Fetch and aggregate listening history for a specific location (with optional radius).
