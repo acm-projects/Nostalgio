@@ -6,14 +6,12 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   ImageBackground,
-  Platform,
 } from "react-native";
 import { useRouter } from "expo-router";
 
-import EditScreenInfo from "@/components/EditScreenInfo";
 import { Text, View } from "@/components/Themed";
 
-import { useEffect, useState, useLayoutEffect, useCallback } from "react";
+import { useState, useLayoutEffect, useCallback } from "react";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import Svg, { Path, SvgProps } from "react-native-svg";
 
@@ -148,6 +146,7 @@ export default function LibraryScreen() {
       resizeMode="cover"
       style={{ flex: 1 }}
     >
+      <View style={{ height: 50, backgroundColor: "rgba(0, 0, 0, 0)" }} />
       <ScrollView
         style={styles.container}
         contentContainerStyle={styles.contentContainer}
@@ -197,7 +196,9 @@ export default function LibraryScreen() {
                       handleClick(
                         trip.id,
                         trip.city,
-                        `${formatDate(trip.startDate)} - ${formatDate(trip.endDate)}`
+                        `${formatDate(trip.startDate)} - ${formatDate(
+                          trip.endDate
+                        )}`
                       )
                     }
                   >
@@ -208,7 +209,8 @@ export default function LibraryScreen() {
                       <Text style={styles.title}>{city}</Text>
                       <Text style={styles.subtitle}>{trip.name}</Text>
                       <Text style={styles.subtitle}>
-                        {formatDate(trip.startDate)} - {formatDate(trip.endDate)}
+                        {formatDate(trip.startDate)} -{" "}
+                        {formatDate(trip.endDate)}
                       </Text>
                     </View>
                   </TouchableOpacity>

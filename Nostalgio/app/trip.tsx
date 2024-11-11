@@ -10,16 +10,14 @@ import {
   ScrollView,
   TouchableOpacity,
   Linking,
-  TextInput,
-  Button,
   Alert,
+  useColorScheme,
 } from "react-native";
-import { useLayoutEffect, useEffect, useState, JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal } from "react";
+import { useLayoutEffect, useEffect, useState, Key } from "react";
 import { useNavigation } from "@react-navigation/native";
 import Svg, { G, Path, SvgProps } from "react-native-svg";
 import * as Sharing from "expo-sharing";
 import * as ImagePicker from "expo-image-picker";
-import * as FileSystem from "expo-file-system";
 
 const userID = "e4484428-30d1-7021-bd4a-74095f2f86c2"; //Remove when authentication added
 //https://6p6xrc3hu4.execute-api.us-east-1.amazonaws.com/dev/playlists/e4484428-30d1-7021-bd4a-74095f2f86c2/0dgwfxpRSIMVUvLbCp21Jt
@@ -205,7 +203,10 @@ export function UploadImage(id: any, fetchTrips: any) {
   const pickImageAndUpload = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
-      alert("Sorry, we need camera roll permissions to make this work!");
+      Alert.alert(
+        "Uh oh!",
+        "We need camera roll permissions to make this work"
+      );
       return;
     }
 
@@ -224,38 +225,34 @@ export function UploadImage(id: any, fetchTrips: any) {
       }
       console.log(fileUri);
       console.log(`image/${fileType}`);
-      console.log(fileName);
+      console.log(`${fileName}`);
 
-      //Convert image URI to Base64 format
-      //const imgb64 = await FileSystem.readAsStringAsync(fileUri, {
-      //  encoding: "base64",
-      //});
       const response = await fetch(fileUri);
       const blob = await response.blob();
 
-      //Hard code in an image to test
-      //const imgb64 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAflBMVEUAAP4AA/wBAfgAAPWVnMycodYAAPEAAO4AA/qhqN6us+gCAfacotW2vvC2vfGhqN8AAOEAAOiXmNOXmtD9/NXs6P3a4vrQ1/nPz/nHx/vCyPuttOWpr+eepNu6u/S8vPGxvPazs/jf4dqxq/iPjdOQm9Krrumhp+aXm8nMy92fIZYTAAADC0lEQVR4nO3dC1MaMRSG4ewJnEQj4rK9r3grVvv//2DPglZoUUZbSr+T7xm5jcyGl2xgHC6Gd+8/fPz0+cup6fv+fDo9MtPpfHxixo+60eh+9CbdeD5+3nKQ+WrQl50f79b3Q8bp5MHF5eTq+iZ8PWvPztKSqi6P7MQO8V/RqKtRX5Z2+/U6bZvaRThPOUqQxoQQ8iMZjpo/NGwwhBevMgwleZfhirJTHkZ82rKGmEq6DX0afiG/D7wxwqr6lfLWbT1T8PfZvGmJo/AtWXZY3t/Loy3eOsT2re3Xxvh2C+Is3CVRzbFIEfspKw93bdnw2ikUKTvlrSNtNWxvddg82X7WUrSxs7ELd9pofPM0/cey2tptrHCqdkkOskftWZOty9bhkebhgebQN2cPrI+F4FiIr55Ce7YILMRUT+HcfeEJC2GtFTp/tjiJ3gvHLITFQnwsxMdCfCzEx0J8LMTHQnwsxFdVYXZf6H8OWQiKhfhYiG/t9UPnheMYnBeOivfCe/+F/vdSFsJ6Kly+0/TQN2cP1gqFhZhYiI+F+FiIj4X4WIiPhfhYiI+F+FiIj4X4WIiPhfiqKuTrFqCqmkPnhR0LYa0VOn+kGbufQ//va2MhLhbiYyE+FuJjIT4W4mMhPhbiq6qQn3QGxUJ8XIf4WIiPhfhYiI+F+FiIj4X4WIivokL33zF0p97/xp8m73Po/z9asRAXC/GxEB8L8bEQHwvxsRAfC/GxEB8L8bEQHwvxsRAfC/GxEB8L8VVWWDwXHidxPocsxLVRyHUIiYX4uA7xVVbIvRQSC/FxHeKrrJB7KSQW4uM6xMdCfFyH+Cor5F4KiYX4uA7x1VPYu//GgX74PL7rdXjq/hsHKihU93up+0eaYS9tXBdOUq6h0PU6rGQO/RdyL4W0OYf50DdnD/LPQpVG7Wnfm9yKqFjhhVquXRZ3crC1J7NwmbQ0kg99j++BNLmIdmHSptiUcug7/O8r2pQUrfAqFQkep3D4KsEocRauW9Wo0aOiSXQRbha3t7OuG/nTWdZs8f0HqZ1HriulY9YAAAAASUVORK5CYII=";
-
-      //console.log(`data:image/png;base64,${imgb64}`);
       console.log(blob);
+
+      const header = new Headers();
+      header.append("Content-Type", `image/${fileType}`);
+      header.append("X-Original-File-Name", `${fileName}`);
+
       try {
         const uploadResponse = await fetch(
           `https://6p6xrc3hu4.execute-api.us-east-1.amazonaws.com/dev/memories/${userID}/${id}/image`,
           {
             method: "PUT",
-            headers: {
-              "Content-Type": `image/${fileType}`,
-              "X-Original-File-Name": `${fileName}`,
-            },
+            headers: header,
             body: blob,
           }
         );
+
+        console.log(uploadResponse);
 
         if (!uploadResponse.ok) {
           throw new Error("Failed to upload image update");
         }
 
-        alert("Image uploaded successfully!");
+        Alert.alert("Success!", "Image updated successfully");
         await fetchTrips();
       } catch (error) {
         console.error("Error updating image:", error);
@@ -263,25 +260,24 @@ export function UploadImage(id: any, fetchTrips: any) {
       }
     }
   };
-
   pickImageAndUpload();
 }
 
 export function EditTitle(id: any, fetchTrips: any) {
   console.log(`User is updating title of ${id}`);
   Alert.prompt(
-    "Album Title",
+    "Trip Title",
     "Enter your new album title below",
     [
       { text: "Cancel", style: "destructive", onPress: () => {} },
       {
-        text: "Submit",
+        text: "Update",
         onPress: (newTitle) => {
           console.log(newTitle);
           const UploadTitle = async () => {
             try {
               const uploadResponse = await fetch(
-                `https://6p6xrc3hu4.execute-api.us-east-1.amazonaws.com/dev/memories/${userID}/{${id}`,
+                `https://6p6xrc3hu4.execute-api.us-east-1.amazonaws.com/dev/memories/${userID}/${id}`,
                 {
                   method: "PUT",
                   body: `{ "name": "${newTitle}" }`,
@@ -292,7 +288,7 @@ export function EditTitle(id: any, fetchTrips: any) {
                 throw new Error("Failed to upload title update");
               }
 
-              alert("Title updated successfully!");
+              Alert.alert("Success!", "Title updated successfully");
               await fetchTrips();
             } catch (error) {
               console.error("Error updating title:", error);
@@ -311,12 +307,15 @@ export function EditTitle(id: any, fetchTrips: any) {
 export default function TripPage() {
   const { id, city, date } = useLocalSearchParams(); // This will extract the id, city, and date from the URL
   const navigation = useNavigation();
-
+  const colorScheme = useColorScheme();
+  
   useLayoutEffect(() => {
     navigation.setOptions({
       headerBackTitle: "Library",
       headerTintColor: "#4361EE",
-      headerTitleStyle: { color: "#000000" },
+      headerTitleStyle: {
+        color: colorScheme === "dark" ? "#FFFFFF" : "#000000",
+      },
       headerRight: () => (
         <TouchableOpacity onPress={onShare} style={{ marginRight: 5 }}>
           <SolarShareScreenOutline width={24} height={24} color="#4361EE" />
@@ -331,6 +330,7 @@ export default function TripPage() {
   });
 
   const [tripData, setTripData] = useState<any>(null);
+  const [tripTitle, setTripTitle] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   const fetchTrips = async () => {
@@ -342,6 +342,15 @@ export default function TripPage() {
       //console.log("Raw JSON data:", data);
 
       setTripData(data);
+
+      const response2 = await fetch(
+        `https://6p6xrc3hu4.execute-api.us-east-1.amazonaws.com/dev/memories/${userID}/${id}`
+      );
+      const data2 = await response2.json();
+      //console.log("Raw JSON data:", data2);
+
+      setTripTitle(data2.name);
+
       setLoading(false);
     } catch (error) {
       console.error("Error fetching trips data:", error);
@@ -352,15 +361,12 @@ export default function TripPage() {
   // Fetching the data
   useEffect(() => {
     fetchTrips(); //Fetch initialls
-  }, [id]);
-
-  useLayoutEffect(() => {
-    if (tripData && id) {
+    if (tripTitle && id) {
       navigation.setOptions({
-        title: `${tripData.name}`,
+        title: `${tripTitle}`,
       });
     }
-  }, [tripData, navigation]);
+  }, [id, tripTitle, navigation]);
 
   const onShare = async () => {
     try {
@@ -407,7 +413,7 @@ export default function TripPage() {
               </TouchableOpacity>
             </View>
           </View>
-          <Text style={styles.title}>{tripData.name}</Text>
+          <Text style={styles.title}>{tripTitle}</Text>
           <View style={styles.info}>
             <View style={[styles.boxmhs, { flex: 0.8 }]}>
               <Text style={styles.artistTitle}>{city}</Text>
@@ -481,6 +487,7 @@ export default function TripPage() {
             )
           )}
         </SafeAreaView>
+        <View style={{ height: 50, backgroundColor: "rgba(0, 0, 0, 0)" }} />
       </ScrollView>
     </ImageBackground>
   );
@@ -543,8 +550,6 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     borderColor: "white",
     borderWidth: 1,
-    shadowColor: "black",
-    shadowOpacity: 10,
     padding: 100,
   },
   iconOverlay: {
