@@ -1,8 +1,8 @@
 import EditScreenInfo from "@/components/EditScreenInfo";
 import { Text, View } from "@/components/Themed";
 import { Image, Button, Modal, ImageBackground, FlatList, ViewToken, ViewStyle, TouchableWithoutFeedback } from "react-native";
-
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import { useNavigation } from "expo-router";
+import React, { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import MapView, { Callout, MapMarkerProps, Marker, MapViewProps} from "react-native-maps";
 import {
   Pressable,
@@ -13,8 +13,6 @@ import {
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import CustomCallout from "@/components/CustomCallout";
 import Ionicons from '@expo/vector-icons/Ionicons';
-import Swiper from 'react-native-swiper';
-import DatePicker from 'react-native-modern-datepicker';
 //import Pagination from "@/components/Pagination";
 import {markers, MarkerWithMetadata} from '@/data/recommended';
 import { playlists, PlaylistMarker } from "@/data/playlistMarkers";
@@ -24,7 +22,12 @@ import * as Location from 'expo-location';
 import { LocationObject, LocationObjectCoords } from "expo-location";
 import PlaylistTile from "@/components/PlaylistTile";
 import Carousel, {Pagination} from "react-native-snap-carousel";
-
+import axios from "axios";
+import CalendarPicker from "react-native-calendar-picker";
+import { Link, useRouter } from "expo-router";
+import { songs } from "@/data/songs";
+import BottomSheet from "@gorhom/bottom-sheet";
+import Calendar from "@/app/mapModal";
 
 export const defaultLo: Location.LocationObject = 
   {
@@ -40,13 +43,12 @@ export const defaultLo: Location.LocationObject =
     timestamp: 0
   }
 
+
 const screenWidth = Dimensions.get("window").width;
+const userId = "e4484428-30d1-7021-bd4a-74095f2f86c2"
 
 export default function TabOneScreen() {
-
-  const [status, setStatus] = useState(false);
-
- 
+  
   //location
   const LOCATION_TASK_NAME = 'background-location-task';
   const [errorMsg, setErrorMsg] = useState<any | null>(null);
@@ -87,37 +89,10 @@ export default function TabOneScreen() {
 
 }
 
-/*function requestCurrentLocationPermission(){
-    useEffect(() => {
-      (async () => {
-        try{
-          const{granted} = await Location.requestForegroundPermissionsAsync();
-          if (granted){
-            const lastKnownPosition = await Location.getLastKnownPositionAsync();
-            if(!lastKnownPosition) {
-              return;
-            }
-            const {latitude, longitude} = lastKnownPosition.coords;
-            setLocation({latitude, longitude});
-          }
-          else{
-            return;
-          }
-        } catch(error){
-          console.log(error)
-        }
-
-      })();
-    }, []);
-
-    return location;
-    
-
-}*/
 
 //console.log("Lo" + location);
 
- /* function requestPermissions(){
+ /*function requestPermissions(){
 
     useEffect(() => {
       (async () => {
@@ -128,18 +103,32 @@ export default function TabOneScreen() {
             await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
               accuracy: Location.Accuracy.Balanced,
             });
-            let userLocation = await Location.getCurrentPositionAsync({});
-            setLocation(userLocation);
-            //setLocation(userLocation);
-            /*setCoordinates({
-              ...coordinates,
-              "latitude": location.coords.latitude,
-              "longitude": location.coords.longitude
-            });
+            let location = await Location.getCurrentPositionAsync(); 
+            if(location === undefined){
+              setLocation(location)
+            }else{
+              setLocation(location);
+            }   
+          }
+          else{
+            setErrorMsg('Permission to access location was denied');
+            return;
           }
         }
+        else{
+          setErrorMsg('Permission to access location was denied');
+          return;
+        }
       })();
-    }, [coordinates.lat]);
+    }, []);
+
+    let text = 'Waiting..';
+    if (errorMsg) {
+      text = errorMsg;
+    } else if (location) {
+      text = JSON.stringify(location);
+    }
+
     return(
       <View style={styles.startTrip}></View>
     );
@@ -165,14 +154,99 @@ export default function TabOneScreen() {
     }
   });*/
   
+  //get current listening endpoints
+  const [userListening, setUserListening] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  
+
+  useEffect(() => {
+    const currentPlayingTrack = async () => {
+      try {
+        const response = await fetch(
+          `https://6p6xrc3hu4.execute-api.us-east-1.amazonaws.com/dev/users/${userId}/spotify/currently-playing`
+        );
+        const data = await response.json();
+        //console.log("Raw JSON data:", data);
+        setUserListening(data);
+
+        console.log(data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Not currently listening to a song:", error);
+        setLoading(false);
+      }
+    };
+    currentPlayingTrack();
+  }, []);
+
+  function UpdateLocation() {
+    console.log(`Uploading location`);
+    console.log(`{ "lat": ${location.coords.latitude}, "lon": ${location.coords.longitude}, "userId": ${userId}, ${userListening}}`)
+    const updateListeningLocation = async () => {
+      try {
+          const uploadResponse = await fetch(
+            `https://6p6xrc3hu4.execute-api.us-east-1.amazonaws.com/dev/listening-history/store`,
+            {
+              method: "POST",
+              body: `{ "lat": ${location.coords.latitude}, "lon": ${location.coords.longitude}, "userId": ${userId}, ${userListening}}`,
+            }
+          );
+          if (!uploadResponse.ok) {
+            throw new Error("Failed to upload location update");
+          }
+        } catch (error) {
+          //console.error("Error updating location:", error);
+          //alert("Please try again.");
+        }
+      };
+      updateListeningLocation();
+  }
+
+  const PeriodicFunctionComponent = () => {
+    const [count, setCount] = useState(0);
+    useEffect(() => {
+      const intervalId = setInterval(() => {
+        // Your periodic function logic here
+        setCount((prevCount) => prevCount + 1);
+        console.log('Function is running periodically:', count);
+        if(count > 1){
+          UpdateLocation();
+        }
+      }, 5000); // Runs every 5 seconds
+      // Clean up the interval on component unmount
+      return () => clearInterval(intervalId);
+    }, [count]); // Re-runs the effect when 'count' changes
+  };
+
+  PeriodicFunctionComponent();
+
+  async function fetchRecommendations(userId : string, lat : number, lon : number) {
+    const url = `https://6p6xrc3hu4.execute-api.us-east-1.amazonaws.com/dev/users/${userId}/suggestions/location?lat=${lat}&lon=${lon}`;
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch data: ${response.statusText}`);
+      }
+      const data = await response.json();
+      if (data.message === "Successfully generated song suggestions") {
+        return data.recommendations;
+      } else {
+        console.warn("Unexpected response message:", data.message);
+        return [];
+      }
+    } catch (error) {
+      console.error("Error fetching recommendations:", error);
+      return []; // Return an empty array on error
+    }
+  }
   
 
 
-   //stopwatch stuff
-   const [isRunning, setIsRunning] = useState(false);
-   const [elapsedTime, setElapsedTime] = useState(0);
-   const intervalRef: { current: NodeJS.Timeout | null } = useRef(null);
-   const startTimeRef = useRef(0);
+  //stopwatch stuff
+  const [isRunning, setIsRunning] = useState(false);
+  const [elapsedTime, setElapsedTime] = useState(0);
+  const intervalRef: { current: NodeJS.Timeout | null } = useRef(null);
+  const startTimeRef = useRef(0);
  
    useEffect(() => {
      if (isRunning) {
@@ -198,6 +272,7 @@ export default function TabOneScreen() {
    function reset() {
      setElapsedTime(0);
      setIsRunning(false);
+     //sendBadgeData("testID",  location.coords.longitude,  location.coords.latitude)
    }
  
    function formatTime() {
@@ -213,7 +288,7 @@ export default function TabOneScreen() {
    }
  
    //add badges
-   /*const sendBadgeData = async( userId: string, longitude: number, latitude: number) => {
+   const sendBadgeData = async( userId: string, longitude: number, latitude: number) => {
        const API_URL = "https://6p6xrc3hu4.execute-api.us-east-1.amazonaws.com/dev/badges";
        try{
          const response = await axios.post(API_URL, {
@@ -229,11 +304,12 @@ export default function TabOneScreen() {
        } catch(error){
          console.error('Error sending location data:', error);
        }
-     };*/
+     };
   
  
    //start stop button
    const StartTripTimer = () => {
+    //if schedules start write schedules: with start date
      return (
        <>
          <View style={styles.button}>
@@ -251,6 +327,7 @@ export default function TabOneScreen() {
  
    //{sendBadgeData("testID", location.coords.longitude, location.coords.latitude)}
    const EndTripTimer = () => {
+    //if shcedules date instead of formatTime write scheduled: with end date
      return (
        <>
          <View style={styles.buttonEnd}>
@@ -278,11 +355,58 @@ export default function TabOneScreen() {
       )
     })
   };
+ /* async function getMarkers() {
+    const recommendations = await musicSuggestions();
+    console.log(recommendations);
+  }
+    getMarkers()*/
 
-  const renderRecommended = () => {
+  //const [recommendation, setRecommendation] = useState<any>(null);
+
+  function mapRecommendations(recommendations : any[]) : MarkerWithMetadata[]{
+    return recommendations.map((recommendation) => {
+      const title = recommendation.track.album.name;
+      const description = recommendation.track.artistIds.join(", ");
+      const imageUrl = recommendation.track.album.images[0].url;
+
+      return{
+        title,
+        description,
+        imageUrl
+      };
+    });
+  }
+
+  //const rec = mapRecommendations(songs);
+  //console.log(rec);
+
+  
+  async function getRecs() : Promise<MarkerWithMetadata[]>{
+    const songs = await fetchRecommendations(userId, 32.7768, -96.7969);
+    //const recommendations = await songs.json();
+    return mapRecommendations(songs)
+  }
+
+  const [songRec, setSongRec] = useState<MarkerWithMetadata[]>([]);
+  useEffect(() => {
+      getRecs().then((fetchedSong) => setSongRec(fetchedSong));
+  }, []);
+
+  
+  
+  //getRecs().then((songRec) => console.log(songRec));
+  //getRecs()
+ 
+  //console.log(songRec);
+ 
+  
+  
+
+  function renderRecommended(){
+    //console.log(recommendation)
     const [openModal, setOpenModal] = useState(false);
     const [activeIndex, setActiveIndex] = useState(0);
-  
+
     const MyCarousel = ({data, index} : any) => {
       const _renderItem = ({item, index} : any) => (
           <View>
@@ -306,53 +430,53 @@ export default function TabOneScreen() {
             sliderWidth={screenWidth}
             itemWidth={screenWidth}
             layout={'default'}
-            onSnapToItem={activeIndex => setActiveIndex(activeIndex)}
+            onSnapToItem={(activeIndex) => setActiveIndex(activeIndex)}
           ></Carousel>
         )
       }
 
-    return markers.map((item, index) => {
-      const ref = useRef(0);
-      
-      return (
-          <Marker
-            key={index}
-            coordinate={{
-                latitude: location.coords.latitude,
-                longitude: location.coords.longitude
-            }}
-          >
-            <Pressable onPress={() => setOpenModal(true)}>
-              <View style={styles.circle}>
-                <View style={styles.circleInner}></View>
-              </View>
-            </Pressable>
-            
-            <Modal visible={openModal} transparent={true} onRequestClose={() => setOpenModal(false)}>
-                 <View key={index} style={styles.rectangleOverlay}>
-                    <MyCarousel data={markers} index={index}></MyCarousel>
-                    <Pagination 
-                      dotsLength={markers.length}
-                      activeDotIndex={activeIndex}
-                      dotStyle={{
-                        width: 8,
-                        height: 8,
-                        borderRadius: 8,
-                        marginHorizontal: 1,
-                        backgroundColor: "white",
-                        bottom: 345
-                      }}
-                    ></Pagination>
+      return songRec.map((item : any, index : any) => {
+        return (
+            <Marker
+              key={index}
+              coordinate={{
+                  latitude: location.coords.latitude,
+                  longitude: location.coords.longitude
+              }}
+            >
+              <Pressable onPress={() => setOpenModal(true)}>
+                <View style={styles.circle}>
+                  <View style={styles.circleInner}></View>
                 </View>
-            </Modal>
-            
-          </Marker>
+              </Pressable>
+              
+              <Modal visible={openModal} transparent={true} onRequestClose={() => setOpenModal(false)}>
+
+                  <View key={index} style={styles.rectangleOverlay}>
+                      <TouchableOpacity style={{width: 50, height: 50, backgroundColor:"white"}} onPress={() => setOpenModal(false)}></TouchableOpacity>
+                      <MyCarousel data={songRec} index={index}></MyCarousel>
+                  </View>
+              </Modal>
+            </Marker>
       );
     });
   };
-
+/*
+<Pagination 
+                        dotsLength={songRec.length}
+                        activeDotIndex={activeIndex}
+                        dotStyle={{
+                          width: 8,
+                          height: 8,
+                          borderRadius: 8,
+                          marginHorizontal: 1,
+                          backgroundColor: "white",
+                          bottom: 345
+                        }}
+                      ></Pagination>*/
 
   /* {activeDotIndex === index &&
+  
                     <CustomCallout marker={item} index={activeDotIndex}/>}
                     <Pressable onPress={() => setOpenModal(false)}>
                       <Ionicons 
@@ -372,24 +496,16 @@ export default function TabOneScreen() {
                           marginLeft='85%'
                         />
                     </Pressable>*/
- 
+function checkSchedule(){
 
-  const today = new Date();
-  //const startDate = getFormatedDate(today.setDate(today.getDate() + 1), 'YYYY/MM/DD')
+}
 
-  const [open, setOpen] = useState(false);
-  const [date, setDate] = useState('2023/02/08');
-  
-
-  function handleOnLongPress (){
-    setOpen(!open);
-  }
-
-  function handleChange (propDate: React.SetStateAction<string>){
-    setDate(propDate)
-  }
-
-  
+function handleLongPress(){
+  router.push('/mapModal')
+}
+    
+const router = useRouter();
+const [status, setStatus] = useState(false);
 
   //actual mapview
   return (
@@ -408,39 +524,21 @@ export default function TabOneScreen() {
         //showsMyLocationButton = {true}
         //rener markers belowt his
       >
-        {renderRecommended()} 
+        {renderRecommended()}
         {renderMarkers()}
-        <Pressable
+        <TouchableOpacity
           onPress={() => {
-            setStatus(!status);
-            isRunning ? reset() : start();
-          }} onLongPress={handleOnLongPress}
+              setStatus(!status);
+              isRunning ? reset() : start();
+          }} onLongPress={handleLongPress} activeOpacity={0.9}
         >
           {status ? <EndTripTimer /> : <StartTripTimer />}
-        </Pressable>
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={open}
-        >
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <DatePicker
-                mode='calendar'
-                //minimumDate={startDate}
-                selected={date}
-                onDateChange={handleChange}
-              />
-
-            </View>
-          </View>
-
-        </Modal>
+        </TouchableOpacity>
       </MapView>
     </View>
   );
 }
-
+//onLongPress={() => router.push('/mapModal')}
 
 
 
@@ -451,6 +549,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
 
+  },
+
+  overlay:{
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'rgba(114, 9, 183, 0.3)'
   },
 
   simple:{
@@ -477,7 +581,6 @@ const styles = StyleSheet.create({
     fontFamily: "Unbounded_400Regular",
     color: 'white',
     left: 55,
-
   },
   separator: {
     marginVertical: 30,
@@ -488,7 +591,6 @@ const styles = StyleSheet.create({
   map: {
     width: "100%",
     height: "100%",
-    fontFamily: "Unbounded_400Regular",
   },
   image: {
     height: 50,
@@ -624,4 +726,8 @@ const styles = StyleSheet.create({
     width: 200,
     marginTop: 40,
   },
+ 
+  
 });
+
+

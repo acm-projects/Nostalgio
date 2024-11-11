@@ -9,7 +9,7 @@ const screenWidth = Dimensions.get("window").width;
 
 
 const CustomCallout: React.FC<{
-  marker: MarkerWithMetadata;
+  marker: any;
   index: number;
 }> = ({ marker }) => {
   const [status, setStatus] = useState(false);
