@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Linking, Alert, ImageBackground, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
-import { useFonts } from 'expo-font';
+import { View, Text, StyleSheet, Linking, Alert, ImageBackground, TouchableOpacity, Image, ActivityIndicator, LinkingStatic } from 'react-native';
+import axios, {Axios} from 'axios'
 
-const Login: React.FC = () => {
+const Login: React.FC = ( navigator:any, userID:any  ) => {
   const [loading, setLoading] = useState(false);
+  const [profileImageUrl, setProfileImageUrl] = useState(null);
+  const defaultImageUrl = 'https://picsum.photos/seed/picsum/200/300'; 
 
   const handleSpotifyLogin = async () => {
     setLoading(true);
@@ -11,7 +13,6 @@ const Login: React.FC = () => {
     try {
       const apiUrl = `https://6p6xrc3hu4.execute-api.us-east-1.amazonaws.com/dev/auth/login`;
       await Linking.openURL(apiUrl);
-      
       
       const response = await fetch(apiUrl, {
         method: 'GET',
@@ -29,6 +30,32 @@ const Login: React.FC = () => {
     }
   };
 
+  const fetchProfileImage = async () => {
+    if (userID) {
+      navigator.navigate('Badges'); // Adjust this to your Spotify login screen name
+      return;
+    }
+
+    try {
+      const response = await axios.get(` https://6p6xrc3hu4.execute-api.us-east-1.amazonaws.com/dev/users/{userId}`);
+      const { CustomProfileImageUrl, SpotifyProfileImageUrl } = response.data;
+
+      // Set the profile image with priority: CustomProfileImageUrl > SpotifyProfileImageUrl > defaultImageUrl
+      setProfileImageUrl(CustomProfileImageUrl || SpotifyProfileImageUrl || defaultImageUrl);
+      
+    } catch (error) {
+      console.error('Error fetching profile image:', error);
+      Alert.alert("Error", "Failed to load profile image. Please try again.");
+      setProfileImageUrl(null); // Fallback to default image if there's an error
+    }
+  };
+
+  useEffect(() => {
+    fetchProfileImage();
+  }, [userID]);
+
+
+ 
 
   return (
     <View style={styles.container}>
@@ -47,6 +74,7 @@ const Login: React.FC = () => {
         <View style={{ padding: 20}}>
           <TouchableOpacity
             onPress={handleSpotifyLogin}
+
             style={styles.spotifyButton}
             disabled={loading}
           >
@@ -68,6 +96,7 @@ const Login: React.FC = () => {
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
