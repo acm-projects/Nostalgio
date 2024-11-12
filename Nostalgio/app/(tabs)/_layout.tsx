@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Children } from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Link, Tabs } from "expo-router";
 import { Pressable } from "react-native";
@@ -113,13 +113,17 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Map",
+          title: "My Map",
           tabBarIcon: ({ color, size }) => (
             <SolarMapPointBold width={size} height={size} color={color} />
           ),
           tabBarActiveTintColor: activeTintColor,
-          headerRight: () => (
-            <Link href="/modal" asChild>
+          headerStyle:{backgroundColor: '#3A0CA3'},
+          headerTitleStyle:{fontFamily: "Unbounded_400Regular"},
+          headerStatusBarHeight:40,
+          headerRight: () => 
+            (
+            <Link href="/mapModal" asChild>
               <Pressable>
                 {({ pressed }) => (
                   <MaterialCommunityIcons
