@@ -5,14 +5,13 @@ import {
   ThemeProvider,
 } from "@react-navigation/native";
 
-import { Unbounded_400Regular, useFonts } from "@expo-google-fonts/unbounded";
+import { Unbounded_400Regular, Unbounded_500Medium, Unbounded_600SemiBold, useFonts } from "@expo-google-fonts/unbounded";
 
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
 
-import * as Font from "expo-font";
 
 import { useColorScheme } from "@/components/useColorScheme";
 
@@ -32,6 +31,8 @@ SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   const [loaded, error] = useFonts({
     Unbounded_400Regular,
+    Unbounded_500Medium,
+    Unbounded_600SemiBold
   });
 
   useEffect(() => {

@@ -9,10 +9,10 @@ import {
 } from "react-native";
 import { useRouter } from "expo-router";
 
-import EditScreenInfo from "@/components/EditScreenInfo";
 import { Text, View } from "@/components/Themed";
 
-import { useEffect, useState } from "react";
+import { useState, useLayoutEffect, useCallback } from "react";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import Svg, { Path, SvgProps } from "react-native-svg";
 
 import { format } from "date-fns";
@@ -47,13 +47,13 @@ function formatDate(dateString: string) {
 function renderTrip(
   trip: any,
   index: number,
-  handleClick: (id: string) => void
+  handleClick: (id: string, city: string, date: string) => void
 ) {
   return (
     <TouchableOpacity
       key={index}
       style={[styles.item, { transform: [{ scale: 0.85 }] }]}
-      onPress={() => handleClick(trip.id)}
+      onPress={() => handleClick(trip.id, trip.city, `${formatDate(trip.startDate)} - ${formatDate(trip.endDate)}`)}
     >
       <View style={styles.boxlhs}>
         <Image style={styles.image} source={{ uri: trip.art }} />
@@ -70,34 +70,42 @@ function renderTrip(
 
 export default function LibraryScreen() {
   const router = useRouter();
-  function handleClick(id: string) {
-    router.push(`/trip?id=${id}`);
+  function handleClick(id: string, city: string, date: string) {
+    router.push(`/trip?id=${id}&city=${city}&date=${date}`);
   }
+
+  const navigation = useNavigation();
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerShown: false,
+    });
+  });
 
   const [tripsData, setTripsData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   // Fetching the data
-  useEffect(() => {
-    const fetchTrips = async () => {
-      try {
-        const response = await fetch(
-          `https://6p6xrc3hu4.execute-api.us-east-1.amazonaws.com/dev/memories/${userID}`
-        ); // Replace with endpoint URL
-        const data = await response.json();
-        //console.log('Raw JSON data:', data);
+  const fetchTrips = async () => {
+    try {
+      const response = await fetch(
+        `https://6p6xrc3hu4.execute-api.us-east-1.amazonaws.com/dev/memories/${userID}`
+      ); // Replace with endpoint URL
+      const data = await response.json();
+      //console.log('Raw JSON data:', data);
 
-        const formattedData = formatTripsByCity(data);
-        setTripsData(formattedData);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching trips data:", error);
-        setLoading(false);
-      }
-    };
+      const formattedData = formatTripsByCity(data);
+      setTripsData(formattedData);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching trips data:", error);
+      setLoading(false);
+    }
+  };
 
-    fetchTrips();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      fetchTrips();
+  }, []));
 
   // Function to group trips by city
   function formatTripsByCity(data: any) {
@@ -125,7 +133,9 @@ export default function LibraryScreen() {
         resizeMode="cover"
         style={{ flex: 1 }}
       >
-        <ActivityIndicator size="large" color="#FFFFFF" style={{ top: 25 }} />
+        <SafeAreaView style={{ flex: 1 }}>
+          <ActivityIndicator size="large" color="#FFFFFF" style={{ top: 25 }} />
+        </SafeAreaView>
       </ImageBackground>
     );
   }
@@ -136,6 +146,7 @@ export default function LibraryScreen() {
       resizeMode="cover"
       style={{ flex: 1 }}
     >
+      <View style={{ height: 50, backgroundColor: "rgba(0, 0, 0, 0)" }} />
       <ScrollView
         style={styles.container}
         contentContainerStyle={styles.contentContainer}
@@ -144,7 +155,13 @@ export default function LibraryScreen() {
           {tripsData.ongoing && (
             <TouchableOpacity
               style={styles.ongoing}
-              onPress={() => handleClick(tripsData.ongoing.id)}
+              onPress={() =>
+                handleClick(
+                  tripsData.ongoing.id,
+                  tripsData.ongoing.city,
+                  `${formatDate(tripsData.ongoing.startDate)} - Present`
+                )
+              }
             >
               <View style={styles.boxlhs}>
                 <Image
@@ -175,7 +192,15 @@ export default function LibraryScreen() {
                 >
                   <TouchableOpacity
                     style={styles.item}
-                    onPress={() => handleClick(trip.id)}
+                    onPress={() =>
+                      handleClick(
+                        trip.id,
+                        trip.city,
+                        `${formatDate(trip.startDate)} - ${formatDate(
+                          trip.endDate
+                        )}`
+                      )
+                    }
                   >
                     <View style={styles.boxlhs}>
                       <Image style={styles.image} source={{ uri: trip.art }} />
@@ -200,7 +225,7 @@ export default function LibraryScreen() {
                   {/* City Section */}
                   <TouchableOpacity
                     style={styles.item}
-                    onPress={() => handleClick(city)}
+                    onPress={() => handleClick(city, city, city)}
                   >
                     <View style={styles.boxlhs}>
                       <Image
@@ -265,11 +290,13 @@ const styles = StyleSheet.create({
     fontSize: 26,
     fontWeight: "bold",
     color: "white",
+    fontFamily: "Unbounded_600SemiBold",
   },
   subtitle: {
     fontSize: 14,
     fontWeight: "bold",
     color: "white",
+    fontFamily: "Unbounded_400Regular",
   },
   image: {
     height: 100,
