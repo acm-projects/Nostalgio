@@ -29,6 +29,7 @@ import { songs } from "@/data/songs";
 import BottomSheet from "@gorhom/bottom-sheet";
 import Calendar from "@/app/mapModal";
 
+
 export const defaultLo: Location.LocationObject = 
   {
     coords: {
@@ -42,6 +43,7 @@ export const defaultLo: Location.LocationObject =
     },
     timestamp: 0
   }
+
 
 
 const screenWidth = Dimensions.get("window").width;
@@ -158,7 +160,7 @@ export default function TabOneScreen() {
   const [userListening, setUserListening] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   
-
+/*
   useEffect(() => {
     const currentPlayingTrack = async () => {
       try {
@@ -218,7 +220,7 @@ export default function TabOneScreen() {
     }, [count]); // Re-runs the effect when 'count' changes
   };
 
-  PeriodicFunctionComponent();
+  PeriodicFunctionComponent();*/
 
   async function fetchRecommendations(userId : string, lat : number, lon : number) {
     const url = `https://6p6xrc3hu4.execute-api.us-east-1.amazonaws.com/dev/users/${userId}/suggestions/location?lat=${lat}&lon=${lon}`;
@@ -306,7 +308,7 @@ export default function TabOneScreen() {
        }
      };
   
- 
+
    //start stop button
    const StartTripTimer = () => {
     //if schedules start write schedules: with start date
@@ -324,12 +326,12 @@ export default function TabOneScreen() {
        </>
      );
    };
- 
    //{sendBadgeData("testID", location.coords.longitude, location.coords.latitude)}
    const EndTripTimer = () => {
     //if shcedules date instead of formatTime write scheduled: with end date
      return (
        <>
+   
          <View style={styles.buttonEnd}>
            <Text style={styles.startTrip}>
              End Trip  <Text style={styles.timer}>{formatTime()}</Text>
@@ -341,6 +343,7 @@ export default function TabOneScreen() {
                  style={{ right: 55}}
                />
          </View>
+  
        </>
      );
    };
@@ -388,9 +391,13 @@ export default function TabOneScreen() {
   }
 
   const [songRec, setSongRec] = useState<MarkerWithMetadata[]>([]);
-  useEffect(() => {
+  const fetchSong = () => {
+    getRecs().then((fetchedSong) => setSongRec(fetchedSong));
+  }
+  
+  /*useEffect(() => {
       getRecs().then((fetchedSong) => setSongRec(fetchedSong));
-  }, []);
+  }, []);*/
 
   
   
@@ -444,14 +451,13 @@ export default function TabOneScreen() {
                   longitude: location.coords.longitude
               }}
             >
-              <Pressable onPress={() => setOpenModal(true)}>
+              <Pressable onPress={() => {setOpenModal(true); fetchSong}}>
                 <View style={styles.circle}>
                   <View style={styles.circleInner}></View>
                 </View>
               </Pressable>
               
               <Modal visible={openModal} transparent={true} onRequestClose={() => setOpenModal(false)}>
-
                   <View key={index} style={styles.rectangleOverlay}>
                       <TouchableOpacity style={{width: 50, height: 50, backgroundColor:"white"}} onPress={() => setOpenModal(false)}></TouchableOpacity>
                       <MyCarousel data={songRec} index={index}></MyCarousel>
@@ -526,6 +532,7 @@ const [status, setStatus] = useState(false);
       >
         {renderRecommended()}
         {renderMarkers()}
+
         <TouchableOpacity
           onPress={() => {
               setStatus(!status);
