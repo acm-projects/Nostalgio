@@ -9,11 +9,12 @@ import { Unbounded_400Regular, Unbounded_500Medium, Unbounded_600SemiBold, Unbou
 
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "react-native-reanimated";
 
 
 import { useColorScheme } from "@/components/useColorScheme";
+import TabOneScreen from "./(tabs)/index";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -28,7 +29,9 @@ export const unstable_settings = {
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
+
 export default function RootLayout() {
+  
   const [loaded, error] = useFonts({
     Unbounded_400Regular,
     Unbounded_500Medium,

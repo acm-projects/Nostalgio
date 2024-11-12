@@ -1,4 +1,4 @@
-import { useState, useLayoutEffect } from "react";
+import { useState, useLayoutEffect, useContext } from "react";
 import CalendarPicker from "react-native-calendar-picker";
 import {View, Text, TouchableOpacity, StyleSheet, ImageBackground, Dimensions, useColorScheme} from 'react-native';
 import React from 'react';
@@ -6,13 +6,15 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Tabs, useNavigation } from "expo-router";
 import { useClientOnlyValue } from "@/components/useClientOnlyValue";
 import { Unbounded_500Medium } from "@expo-google-fonts/unbounded";
+import {DateContext} from "@/components/DateContext";
+import { RouteProp, useRoute } from "@react-navigation/native";
 
 
 
-export default function Calendar(){
+
+export default function Calendar() {
   const navigation = useNavigation();
   const colorScheme = useColorScheme();
-  
   useLayoutEffect(() => {
     navigation.setOptions({
       headerBackTitle: "Map",
@@ -25,11 +27,18 @@ export default function Calendar(){
     });
   });
 
+  const minDate = new Date();
   const [selectedStartDate, setSelectedStartDate]=useState('DD/MM/YYYY');
   const [selectedEndDate, setSelectedEndDate]=useState('DD/MM/YYYY'); 
-  const [startFinal, setstartFinal] = useState("");
-  const [endFinal, setendFinal] = useState("");
-  const minDate = new Date();
+  const [startFinal, setStartFinal] = useState("");
+  const [endFinal, setEndFinal] = useState("");
+
+  const onSchedule = () => {
+    setStartFinal(selectedStartDate);
+    setEndFinal(selectedEndDate);
+    navigation.goBack();
+  }
+
   const onDateChange=(date: any, type: any) => {
       const newDate=JSON.stringify(date);
       const newDate1=newDate.substring(1,newDate.length - 1);
@@ -50,6 +59,8 @@ export default function Calendar(){
         setSelectedEndDate('MM/DD/YYYY');
       }
     }
+  
+
     return (
       <ImageBackground
         source={require("@/assets/images/gradient.png")}
@@ -60,7 +71,7 @@ export default function Calendar(){
         <View
           style={{
             backgroundColor: "#3A0CA3",
-            height: 365,
+            height: 380,
             width: 380,
             left: 17,
             paddingTop: 15,
@@ -92,10 +103,7 @@ export default function Calendar(){
           ></CalendarPicker>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => {
-              setstartFinal(selectedStartDate);
-              setendFinal(selectedEndDate);
-            }}
+            onPress={onSchedule}
           >
             <Text
               style={{
@@ -112,7 +120,11 @@ export default function Calendar(){
       </ImageBackground>
     );
 
-}
+};
+
+
+
+
 
 //<Text style={styles.date}>{"Start Date: " + selectedStartDate}</Text>
 //<Text style={styles.endDate}>{"End Date: " + selectedEndDate}</Text>
@@ -132,7 +144,7 @@ const styles = StyleSheet.create({
       fontSize: 48,
       textAlign: "center",
       paddingHorizontal: 15,
-      marginTop: 60
+      marginTop: 120
     },
     date:{
       fontFamily: "Unbounded_400Regular",
@@ -151,11 +163,11 @@ const styles = StyleSheet.create({
     button:{
       width:170,
       height: 40, 
-      backgroundColor: "#4361EE",
+      backgroundColor: "#4361ee",
       justifyContent: 'center',
       alignSelf: "center",
       borderRadius: 30,
-      marginTop: 7
+      marginTop: 20
     }
 
 })
