@@ -20,7 +20,7 @@ import * as Sharing from "expo-sharing";
 import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
 
-const userID = "e4484428-30d1-7021-bd4a-74095f2f86c2"; //Remove when authentication added
+const userID = "0428c428-a051-7098-6a7e-3b6cfa6d9417"; //Remove when authentication added
 //https://6p6xrc3hu4.execute-api.us-east-1.amazonaws.com/dev/playlists/e4484428-30d1-7021-bd4a-74095f2f86c2/0dgwfxpRSIMVUvLbCp21Jt
 
 // Tab Icons at https://icon-sets.iconify.design/solar/
@@ -235,12 +235,12 @@ export function UploadImage(id: any, fetchTrips: any) {
 
       try {
         const uploadResponse = await fetch(
-          `https://6p6xrc3hu4.execute-api.us-east-1.amazonaws.com/dev/memories/${userID}/${id}/image`,
+          `https://5ogc232v73.execute-api.us-east-1.amazonaws.com/dev/memories/${userID}/${id}/image`,
           {
             method: "PUT",
             headers: {
               "Content-Type": `image/${fileType}`,
-              "X-Original-File-Name": `${fileName}`
+              "X-Original-File-Name": `${fileName}`,
             },
             body: blob,
           }
@@ -362,7 +362,7 @@ export default function TripPage() {
   const fetchTrips = async () => {
     try {
       const response = await fetch(
-        `https://6p6xrc3hu4.execute-api.us-east-1.amazonaws.com/dev/playlists/${userID}/${id}`
+        `https://5ogc232v73.execute-api.us-east-1.amazonaws.com/dev/playlists/${userID}/${id}`
       );
       const data = await response.json();
       //console.log("Raw JSON data:", data);

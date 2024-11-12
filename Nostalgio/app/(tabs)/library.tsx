@@ -17,7 +17,7 @@ import Svg, { Path, SvgProps } from "react-native-svg";
 
 import { format } from "date-fns";
 
-const userID = "e4484428-30d1-7021-bd4a-74095f2f86c2"; //Remove when authentication added
+const userID = "0428c428-a051-7098-6a7e-3b6cfa6d9417"; //Remove when authentication added
 
 export function SolarArrowDownBold(props: SvgProps) {
   return (
@@ -88,7 +88,7 @@ export default function LibraryScreen() {
   const fetchTrips = async () => {
     try {
       const response = await fetch(
-        `https://6p6xrc3hu4.execute-api.us-east-1.amazonaws.com/dev/memories/${userID}`
+        `https://5ogc232v73.execute-api.us-east-1.amazonaws.com/dev/memories/${userID}`
       ); // Replace with endpoint URL
       const data = await response.json();
       //console.log('Raw JSON data:', data);
