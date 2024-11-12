@@ -18,6 +18,7 @@ import { useNavigation } from "@react-navigation/native";
 import Svg, { G, Path, SvgProps } from "react-native-svg";
 import * as Sharing from "expo-sharing";
 import * as ImagePicker from "expo-image-picker";
+import axios from "axios";
 
 const userID = "e4484428-30d1-7021-bd4a-74095f2f86c2"; //Remove when authentication added
 //https://6p6xrc3hu4.execute-api.us-east-1.amazonaws.com/dev/playlists/e4484428-30d1-7021-bd4a-74095f2f86c2/0dgwfxpRSIMVUvLbCp21Jt
@@ -223,16 +224,16 @@ export function UploadImage(id: any, fetchTrips: any) {
       if (fileType == "jpg") {
         fileType = "jpeg";
       }
-      console.log(fileUri);
-      console.log(`image/${fileType}`);
-      console.log(`${fileName}`);
+      //console.log(fileUri);
+      //console.log(`image/${fileType}`);
+      //console.log(`${fileName}`);
 
       const response = await fetch(fileUri);
       const blob = await response.blob();
 
-      console.log(blob);
+      //console.log(blob);
 
-      const header = new Headers();
+      /*const header = new Headers();
       header.append("Content-Type", `image/${fileType}`);
       header.append("X-Original-File-Name", `${fileName}`);
 
@@ -255,6 +256,32 @@ export function UploadImage(id: any, fetchTrips: any) {
         Alert.alert("Success!", "Image updated successfully");
         await fetchTrips();
       } catch (error) {
+        console.error("Error updating image:", error);
+        alert("Please try again.");
+      }*/
+
+      try {
+        const url = `https://6p6xrc3hu4.execute-api.us-east-1.amazonaws.com/dev/memories/${userID}/${id}/image`;
+        const headers = {
+          "Content-Type": `image/${fileType}`,
+          "X-Original-File-Name": `${fileName}`,
+        };
+
+        const response = await axios.put(url, blob, {
+          headers: {
+            "contentType": `image/${fileType}`,
+            "originalFileName": fileName,
+          },
+        });
+        
+        if (response.status === 200) {
+          console.log("Upload successful", response.data);
+        } else {
+          console.log("Upload failed", response.status, response.statusText);
+        }
+        await fetchTrips();
+      } catch (error) {
+        console.log(response);
         console.error("Error updating image:", error);
         alert("Please try again.");
       }

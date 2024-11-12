@@ -19,6 +19,7 @@
     "@iconify-icons/solar": "^1.2.3",
     "@iconify/react": "^5.0.2",
     "@react-navigation/native": "^6.0.2",
+    "axios": "^1.7.7",
     "base-64": "^1.0.0",
     "date-fns": "^4.1.0",
     "eas-cli": "^13.1.1",
