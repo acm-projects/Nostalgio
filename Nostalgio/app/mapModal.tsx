@@ -1,15 +1,30 @@
-import { useState } from "react";
+import { useState, useLayoutEffect } from "react";
 import CalendarPicker from "react-native-calendar-picker";
-import {View, Text, TouchableOpacity, StyleSheet, ImageBackground, Dimensions} from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet, ImageBackground, Dimensions, useColorScheme} from 'react-native';
 import React from 'react';
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Tabs } from "expo-router";
+import { Tabs, useNavigation } from "expo-router";
 import { useClientOnlyValue } from "@/components/useClientOnlyValue";
 import { Unbounded_500Medium } from "@expo-google-fonts/unbounded";
 
 
 
 export default function Calendar(){
+  const navigation = useNavigation();
+  const colorScheme = useColorScheme();
+  
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerBackTitle: "Map",
+      headerTintColor: "#FFFFFF",
+      headerTitleStyle: {
+        color: colorScheme === "dark" ? "#FFFFFF" : "#000000",
+      },
+      headerTransparent: true,
+      title: "",
+    });
+  });
+
   const [selectedStartDate, setSelectedStartDate]=useState('DD/MM/YYYY');
   const [selectedEndDate, setSelectedEndDate]=useState('DD/MM/YYYY'); 
   const [startFinal, setstartFinal] = useState("");
@@ -35,44 +50,67 @@ export default function Calendar(){
         setSelectedEndDate('MM/DD/YYYY');
       }
     }
-    return(
+    return (
       <ImageBackground
-      source={require("@/assets/images/gradient.png")}
-      resizeMode="cover"
-      style={{ flex: 1 }}
-    >
-      <Text style={styles.text}>Schedule your trip</Text>
-          <View style={{backgroundColor:'#3A0CA3', height: 365, width: 380, left: 17, paddingTop: 15, borderRadius: 40}}>
-            <CalendarPicker
-                allowRangeSelection={true}
-                allowBackwardRangeSelect={true}
-                showDayStragglers={true}
-                minDate={minDate}
-                previousTitle="Prev"
-                previousTitleStyle={{fontSize: 14, left: 5}}
-                nextTitleStyle={{fontSize: 14, right: 5}}
-                todayBackgroundColor="#4361EE"
-                selectedDayColor="white"
-                selectedDayTextColor="#3A0CA3"
-                todayTextStyle={{color:"white"}}
-                onDateChange={onDateChange}
-                textStyle={{
-                    fontFamily: "Unbounded_500Medium",
-                    color: "white",
-                }}
-                dayLabelsWrapper={{borderColor: "white"}}
-                monthTitleStyle={{paddingRight: 8, fontSize: 20}}
-                yearTitleStyle={{fontSize:19,}}
-                width={380}
-                height={380}
-                >
-            </CalendarPicker>
-            <TouchableOpacity style={styles.button} onPress={() => {setstartFinal(selectedStartDate); setendFinal(selectedEndDate)}}>
-              <Text style={{fontFamily: "Unbounded_500Medium", fontSize: 20, textAlign: 'center', color: "white"}}>Schedule</Text>
-            </TouchableOpacity>
+        source={require("@/assets/images/gradient.png")}
+        resizeMode="cover"
+        style={[StyleSheet.absoluteFillObject, { flex: 1 }]}
+      >
+        <Text style={styles.text}>Schedule your trip</Text>
+        <View
+          style={{
+            backgroundColor: "#3A0CA3",
+            height: 365,
+            width: 380,
+            left: 17,
+            paddingTop: 15,
+            borderRadius: 40,
+          }}
+        >
+          <CalendarPicker
+            allowRangeSelection={true}
+            allowBackwardRangeSelect={true}
+            showDayStragglers={true}
+            minDate={minDate}
+            previousTitle="Prev"
+            previousTitleStyle={{ fontSize: 14, left: 5 }}
+            nextTitleStyle={{ fontSize: 14, right: 5 }}
+            todayBackgroundColor="#4361EE"
+            selectedDayColor="white"
+            selectedDayTextColor="#3A0CA3"
+            todayTextStyle={{ color: "white" }}
+            onDateChange={onDateChange}
+            textStyle={{
+              fontFamily: "Unbounded_500Medium",
+              color: "white",
+            }}
+            dayLabelsWrapper={{ borderColor: "white" }}
+            monthTitleStyle={{ paddingRight: 8, fontSize: 20 }}
+            yearTitleStyle={{ fontSize: 19 }}
+            width={380}
+            height={380}
+          ></CalendarPicker>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => {
+              setstartFinal(selectedStartDate);
+              setendFinal(selectedEndDate);
+            }}
+          >
+            <Text
+              style={{
+                fontFamily: "Unbounded_500Medium",
+                fontSize: 20,
+                textAlign: "center",
+                color: "white",
+              }}
+            >
+              Schedule
+            </Text>
+          </TouchableOpacity>
         </View>
       </ImageBackground>
-    )
+    );
 
 }
 
