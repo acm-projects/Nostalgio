@@ -224,25 +224,24 @@ export function UploadImage(id: any, fetchTrips: any) {
       if (fileType == "jpg") {
         fileType = "jpeg";
       }
-      //console.log(fileUri);
-      //console.log(`image/${fileType}`);
-      //console.log(`${fileName}`);
+      console.log(fileUri);
+      console.log(`image/${fileType}`);
+      console.log(`${fileName}`);
 
       const response = await fetch(fileUri);
       const blob = await response.blob();
 
-      //console.log(blob);
-
-      /*const header = new Headers();
-      header.append("Content-Type", `image/${fileType}`);
-      header.append("X-Original-File-Name", `${fileName}`);
+      console.log(blob);
 
       try {
         const uploadResponse = await fetch(
           `https://6p6xrc3hu4.execute-api.us-east-1.amazonaws.com/dev/memories/${userID}/${id}/image`,
           {
             method: "PUT",
-            headers: header,
+            headers: {
+              "Content-Type": `image/${fileType}`,
+              "X-Original-File-Name": `${fileName}`
+            },
             body: blob,
           }
         );
@@ -258,9 +257,9 @@ export function UploadImage(id: any, fetchTrips: any) {
       } catch (error) {
         console.error("Error updating image:", error);
         alert("Please try again.");
-      }*/
+      }
 
-      try {
+      /*try {
         const url = `https://6p6xrc3hu4.execute-api.us-east-1.amazonaws.com/dev/memories/${userID}/${id}/image`;
         const headers = {
           "Content-Type": `image/${fileType}`,
@@ -269,8 +268,8 @@ export function UploadImage(id: any, fetchTrips: any) {
 
         const response = await axios.put(url, blob, {
           headers: {
-            "contentType": `image/${fileType}`,
-            "originalFileName": fileName,
+            "Content-Type": `image/${fileType}`,
+            "X-Original-File-Name": `${fileName}`
           },
         });
         
@@ -284,7 +283,7 @@ export function UploadImage(id: any, fetchTrips: any) {
         console.log(response);
         console.error("Error updating image:", error);
         alert("Please try again.");
-      }
+      }*/
     }
   };
   pickImageAndUpload();
