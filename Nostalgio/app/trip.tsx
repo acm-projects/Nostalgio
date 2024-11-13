@@ -370,7 +370,7 @@ export default function TripPage() {
       setTripData(data);
 
       const response2 = await fetch(
-        `https://6p6xrc3hu4.execute-api.us-east-1.amazonaws.com/dev/memories/${userID}/${id}`
+        `https://5ogc232v73.execute-api.us-east-1.amazonaws.com/dev/memories/${userID}/${id}`
       );
       const data2 = await response2.json();
       //console.log("Raw JSON data:", data2);
