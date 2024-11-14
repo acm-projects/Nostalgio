@@ -95,6 +95,9 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? "dark"].tint,
+        tabBarStyle: {
+          backgroundColor: colorScheme === "dark" ? "#000000" : "#FFFFFF",
+        },
         // Disable the static render of the header on web
         // to prevent a hydration error in React Navigation v6.
         headerShown: useClientOnlyValue(false, true),
@@ -108,6 +111,7 @@ export default function TabLayout() {
             <SolarUserBold width={size} height={size} color={color} />
           ),
           tabBarActiveTintColor: activeTintColor,
+          headerShown: false,
         }}
       />
       <Tabs.Screen
@@ -118,18 +122,20 @@ export default function TabLayout() {
             <SolarMapPointBold width={size} height={size} color={color} />
           ),
           tabBarActiveTintColor: activeTintColor,
-          headerStyle:{backgroundColor: '#3A0CA3'},
-          headerTitleStyle:{fontFamily: "Unbounded_400Regular"},
-          headerStatusBarHeight:40,
-          headerRight: () => 
-            (
+          headerStyle: { backgroundColor: "#3A0CA3" },
+          headerTitleStyle: {
+            fontFamily: "Unbounded_400Regular",
+            color: "#FFF",
+          },
+          headerStatusBarHeight: 40,
+          headerRight: () => (
             <Link href="/mapModal" asChild>
               <Pressable>
                 {({ pressed }) => (
                   <MaterialCommunityIcons
                     name="chevron-down"
                     size={25}
-                    color={Colors[colorScheme ?? "dark"].text}
+                    color="#FFF"
                     style={{ marginRight: 10, opacity: pressed ? 0.5 : 1 }}
                   />
                 )}
@@ -150,6 +156,7 @@ export default function TabLayout() {
             <SolarLibraryBold width={size} height={size} color={color} />
           ),
           tabBarActiveTintColor: activeTintColor,
+          headerShown: false,
         }}
       />
     </Tabs>

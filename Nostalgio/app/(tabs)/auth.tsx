@@ -1,23 +1,19 @@
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import {
   StyleSheet,
   ImageBackground,
   Text,
   View,
-  ActivityIndicator,
   SafeAreaView,
   Image,
-  ScrollView,
   TouchableOpacity,
-  Alert,
-  useColorScheme,
 } from "react-native";
 import { useLayoutEffect, useEffect, useState, Key } from "react";
-import { useNavigation } from "@react-navigation/native";
-import Svg, { G, Path, SvgProps } from "react-native-svg";
-import * as WebBrowser from "expo-web-browser";
-import * as Linking from "expo-linking";
+import Svg, { Path, SvgProps } from "react-native-svg";
 
+import * as WebBrowser from "expo-web-browser";
+import { Linking } from "react-native";
+import { Alert } from "react-native";
 
 /*
 const [userID, setUserID] = useState<any>(null);
@@ -41,85 +37,52 @@ export function SpotifyIcon(props: SvgProps) {
   );
 }
 
-export default function AuthScreen() {
-  /*
-  const router = useRouter();
-  function handleClick(id: string, city: string, date: string) {
-    router.push(`/trip?id=${id}&city=${city}&date=${date}`);
-  }
-    */
-  const navigation = useNavigation();
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: false,
-    });
-  });
-
+// Handle Spotify login and open the web browser
   const handleSpotifyLogin = async () => {
-    console.log("Button clicked");  
-
-    // Spotify auth URL
+    console.log("Opening Spotify login");
     const authUrl =
       "https://5ogc232v73.execute-api.us-east-1.amazonaws.com/dev/auth/login";
-
-    // Custom redirect URI using your app’s scheme
-    const redirectUri = Linking.createURL(
-      "/dev/callback"
-    );
-
-    https: try {
-      console.log("Opening");
-      const result = await WebBrowser.openAuthSessionAsync(
-        authUrl,
-        redirectUri
-      );
-      console.log("Opened");
-      console.log("Result:", result);
-
-      if (result.type === "success" && result.url) {
-        // Parse the URL to get the auth response
-        const { queryParams } = Linking.parse(result.url);
-
-        // Handle your token or any response parameters
-        console.log("Spotify Auth Response:", queryParams);
-        // Use queryParams to store your token or navigate as needed
-      }
-    } catch (error) {
-      console.error("Error during Spotify Auth:", error);
-    }
+    Linking.openURL(authUrl);
   };
 
-  return (
-    <ImageBackground
-      source={require("@/assets/images/background.png")}
-      resizeMode="cover"
-      style={{ flex: 1 }}
-    >
-      <SafeAreaView style={[styles.container, { flex: 1 }]}>
-        <Image
-          source={require("@/assets/images/logo2.png")}
-          style={styles.logo}
-        />
-        <TouchableOpacity style={styles.button} onPress={handleSpotifyLogin}>
-          <View style={styles.boxlhs}>
-            <SpotifyIcon width={64} height={64} color="#FFFFFF" />
-          </View>
-          <View style={styles.boxrhs}>
-            <Text style={styles.text}>Login with Spotify</Text>
-          </View>
-        </TouchableOpacity>
-      </SafeAreaView>
-    </ImageBackground>
-  );
-}
+  export default function AuthScreen() {
+    const navigation = useNavigation();
+
+    useLayoutEffect(() => {
+      navigation.setOptions({ headerShown: false });
+    }, [navigation]);
+
+    return (
+      <ImageBackground
+        source={require("@/assets/images/background.png")}
+        resizeMode="cover"
+        style={{ flex: 1 }}
+      >
+        <SafeAreaView style={[styles.container, { flex: 1 }]}>
+          <Image
+            source={require("@/assets/images/logo2.png")}
+            style={styles.logo}
+          />
+          <TouchableOpacity style={styles.button} onPress={handleSpotifyLogin}>
+            <View style={styles.boxlhs}>
+              <SpotifyIcon width={64} height={64} color="#FFFFFF" />
+            </View>
+            <View style={styles.boxrhs}>
+              <Text style={styles.text}>Login with Spotify</Text>
+            </View>
+          </TouchableOpacity>
+        </SafeAreaView>
+      </ImageBackground>
+    );
+  }
 
 const styles = StyleSheet.create({
   logo: {
     position: "absolute",
     top: 150,
-    height: 100,
+    height: 75,
     width: "auto",
-    aspectRatio: 3,
+    aspectRatio: 4.2,
   },
   boxlhs: {
     backgroundColor: "transparent",

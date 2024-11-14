@@ -63,7 +63,7 @@ export default function Calendar() {
 
     return (
       <ImageBackground
-        source={require("@/assets/images/gradient.png")}
+        source={require("@/assets/images/background.png")}
         resizeMode="cover"
         style={[StyleSheet.absoluteFillObject, { flex: 1 }]}
       >
@@ -72,8 +72,8 @@ export default function Calendar() {
           style={{
             backgroundColor: "#3A0CA3",
             height: 380,
-            width: 380,
-            left: 17,
+            width: 370,
+            left: 12,
             paddingTop: 15,
             borderRadius: 40,
           }}

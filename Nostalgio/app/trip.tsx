@@ -1,4 +1,4 @@
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useNavigation } from "expo-router";
 import {
   StyleSheet,
   ImageBackground,
@@ -14,7 +14,6 @@ import {
   useColorScheme,
 } from "react-native";
 import { useLayoutEffect, useEffect, useState, Key } from "react";
-import { useNavigation } from "@react-navigation/native";
 import Svg, { G, Path, SvgProps } from "react-native-svg";
 import * as Sharing from "expo-sharing";
 import * as ImagePicker from "expo-image-picker";

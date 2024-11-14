@@ -21,7 +21,7 @@ async function fetchBadges(userId: string) {
       throw new Error('Request failed with status ' + response.status);
     }
     const badgeData = await response.json();
-    console.log('***** RESPONSE JSON*******', badgeData);
+    //console.log('***** RESPONSE JSON*******', badgeData);
     return badgeData;
   } catch (error) {
     console.error('Error:', error);
@@ -56,26 +56,24 @@ export default class Badges extends Component {
   render() {
     return (
       <ImageBackground
-        source={require('../../assets/images/background.png')}
+        source={require("../../assets/images/background.png")}
         style={{ flex: 1 }}
       >
         <View style={styles.container}>
-              <View style={styles.tinylogo1}>
-          <View style={styles.pic}>
-        <Image   
-          style={styles.tinylogo}
-          source= {{ 
-              uri: 'https://picsum.photos/seed/picsum/200/300',
-          }}
-        />
-        
-        </View>
+          <View style={styles.tinylogo1}>
+            <View style={styles.pic}>
+              <Image
+                style={styles.tinylogo}
+                source={{
+                  uri: "https://picsum.photos/seed/picsum/200/300",
+                }}
+              />
+            </View>
 
-          <Text  style={styles.text6}>Sanjita Medishetty</Text>
-          <Text  style={styles.text7}>San Fransico, California</Text>
-        
-    </View>
-        <Text style={styles.text123}>Badges</Text>
+            <Text style={styles.text6}>Sanjita Medishetty</Text>
+            <Text style={styles.text7}>San Fransico, California</Text>
+          </View>
+          <Text style={styles.text123}>Badges</Text>
           <FlatList
             data={this.state.data}
             keyExtractor={(item, index) => index.toString()}
@@ -85,18 +83,21 @@ export default class Badges extends Component {
                   <Image
                     style={styles.tinylogo9}
                     source={{
-                      uri: 'https://www.extraspace.com/blog/wp-content/uploads/2018/11/living-in-dallas-tx-670x450.jpg',
+                      uri: "https://www.extraspace.com/blog/wp-content/uploads/2018/11/living-in-dallas-tx-670x450.jpg",
                     }}
                   />
                   <Text style={styles.text90}>{item.city}</Text>
                   <View style={styles.stat}>
-                    <Text style={styles.first}>{item.city}</Text>
+                    <Text style={styles.first}>{item.city},</Text>
                     <Text style={styles.first}>{item.country}</Text>
                     <Text style={styles.first}>
-                      Trips: <Text style={styles.first}>{item.visitCount}</Text>
+                      {item.visitCount}{" "}
+                      {item.visitCount !== 1 ? "trips" : "trip"}
                     </Text>
                     <Text style={styles.last}>Last Visited</Text>
-                    <Text style={styles.lastText}>{formatDate(item.lastVisitedDate)}</Text>
+                    <Text style={styles.lastText}>
+                      {formatDate(item.lastVisitedDate)}
+                    </Text>
                   </View>
                 </View>
               </ScrollView>
@@ -208,7 +209,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 10,
     flexDirection: 'column',
-    marginLeft: 55,/////////////////////
+    marginLeft: 55,
   },
   tinylogo9: {
     width: 120,

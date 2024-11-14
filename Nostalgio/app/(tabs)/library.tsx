@@ -74,13 +74,6 @@ export default function LibraryScreen() {
     router.push(`/trip?id=${id}&city=${city}&date=${date}`);
   }
 
-  const navigation = useNavigation();
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: false,
-    });
-  });
-
   const [tripsData, setTripsData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
