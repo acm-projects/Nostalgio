@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { ActivityIndicator } from "react-native";
 
-
+const userID = "0428c428-a051-7098-6a7e-3b6cfa6d9417"; //Remove when authentication added
  
 async function fetchBadges(userId: string) {
   try {
@@ -36,20 +36,46 @@ function formatDate(dateString: string) {
   return format(new Date(year, month, day), "MM.dd.yyyy");
 }
 
+async function getCityImage(cityName: string){
+  try {
+    const apiUrl = `https://api.unsplash.com/search/photos?client_id=sc77PzhtrkJ2wdHzAomI13AIuy4jaS3dbDpKUPmpnE4&query=${cityName}&collections=917009&page=1&per_page=1`;
+    const response = await fetch(apiUrl);
+    const data = await response.json();
+    if (data.results[0]) {
+      console.log(cityName);
+      console.log(data.results[0].urls.regular);
+      return data.results[0].urls.regular;
+    } else {
+      console.log(cityName);
+      console.log("Default")
+      return "https://www.extraspace.com/blog/wp-content/uploads/2018/11/living-in-dallas-tx-670x450.jpg";
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    return "https://www.extraspace.com/blog/wp-content/uploads/2018/11/living-in-dallas-tx-670x450.jpg";
+  }
+}
+
 export default class Badges extends Component {
   constructor(props: any) {
     super(props);
     this.state = {
-      data: []
+      data: [],
     };
   }
 
   async componentDidMount() {
     try {
-      const data = await fetchBadges("0428c428-a051-7098-6a7e-3b6cfa6d9417"); // Replace 'Shivansh' with the appropriate userId as needed
-      this.setState({ data });
+      const data = await fetchBadges(userID);
+      const badgesWithImages = await Promise.all(
+        data.map(async (badge: { city: string }) => {
+          const imageUrl = await getCityImage(badge.city);
+          return { ...badge, imageUrl }; // Add imageUrl property
+        })
+      );
+      this.setState({ data: badgesWithImages });
     } catch (error) {
-      console.error('Error in componentDidMount:', error);
+      console.error("Error in componentDidMount:", error);
     }
   }
 
@@ -82,9 +108,7 @@ export default class Badges extends Component {
                 <View style={styles.row}>
                   <Image
                     style={styles.tinylogo9}
-                    source={{
-                      uri: "https://www.extraspace.com/blog/wp-content/uploads/2018/11/living-in-dallas-tx-670x450.jpg",
-                    }}
+                    source={{ uri: item.imageUrl }}
                   />
                   <Text style={styles.text90}>{item.city}</Text>
                   <View style={styles.stat}>
