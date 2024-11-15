@@ -1,6 +1,12 @@
 import { MapMarkerProps} from "react-native-maps";
 
 export type PlaylistMarker = {
+    city: string;
+    image: string;
+  };
+
+
+/*export type PlaylistMarker = {
     coordinate: MapMarkerProps["coordinate"]
     image: string;
     tripNum?: string;
@@ -29,13 +35,6 @@ export const playlists: PlaylistMarker[] = [
         },
         image: "https://upload.wikimedia.org/wikipedia/commons/8/84/Ski_Famille_-_Family_Ski_Holidays.jpg",
         tripNum: "10"
-    },
-    {
-        coordinate: {
-            latitude: 37.329174,
-            longitude: -122.043130
-        },
-        image: "https://cdn.britannica.com/13/77413-050-95217C0B/Golden-Gate-Bridge-San-Francisco.jpg",
-        tripNum: "1"
     }
-  ];
+  ];*/
+  
