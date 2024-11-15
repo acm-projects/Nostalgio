@@ -218,7 +218,6 @@ export default function LibraryScreen() {
                   {/* City Section */}
                   <TouchableOpacity
                     style={styles.item}
-                    onPress={() => handleClick(city, city, city)}
                   >
                     <View style={styles.boxlhs}>
                       <Image

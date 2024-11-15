@@ -89,21 +89,21 @@ export default function Profile() {
       source={require("../../assets/images/background.png")}
       style={{ flex: 1 }}
     >
-      <View style={styles.container}>
-        <View style={styles.tinylogo1}>
-          <View style={styles.pic}>
-            <Image
-              style={styles.tinylogo}
-              source={{ uri: userData.SpotifyProfileImageUrl }}
-            />
+      {loading ? (
+        <ActivityIndicator size="large" color="#AE5FE1" />
+      ) : (
+        <View style={styles.container}>
+          <View style={styles.tinylogo1}>
+            <View style={styles.pic}>
+              <Image
+                style={styles.tinylogo}
+                source={{ uri: userData.SpotifyProfileImageUrl }}
+              />
+            </View>
+            <Text style={styles.text6}>{userData.DisplayName}</Text>
+            <Text style={styles.text7}>Dallas, United States</Text>
           </View>
-          <Text style={styles.text6}>{userData.DisplayName}</Text>
-          <Text style={styles.text7}>Dallas, United States</Text>
-        </View>
-        <Text style={styles.text123}>Badges</Text>
-        {loading ? (
-          <ActivityIndicator size="large" color="#AE5FE1" />
-        ) : (
+          <Text style={styles.text123}>Badges</Text>
           <FlatList
             data={badges}
             keyExtractor={(item, index) => index.toString()}
@@ -131,8 +131,8 @@ export default function Profile() {
               </ScrollView>
             )}
           />
-        )}
-      </View>
+        </View>
+      )}
     </ImageBackground>
   );
 }

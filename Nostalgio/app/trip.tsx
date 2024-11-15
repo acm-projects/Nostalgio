@@ -198,7 +198,7 @@ export function SolarAddSquareBold(props: SvgProps) {
 }
 
 export function UploadImage(id: any, fetchTrips: any) {
-  console.log(`User is updating image of ${id}`);
+  //console.log(`User is updating image of ${id}`);
 
   const pickImageAndUpload = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -223,14 +223,14 @@ export function UploadImage(id: any, fetchTrips: any) {
       if (fileType == "jpg") {
         fileType = "jpeg";
       }
-      console.log(fileUri);
-      console.log(`image/${fileType}`);
-      console.log(`${fileName}`);
+      //console.log(fileUri);
+      //console.log(`image/${fileType}`);
+      //console.log(`${fileName}`);
 
       const response = await fetch(fileUri);
       const blob = await response.blob();
 
-      console.log(blob);
+      //console.log(blob);
 
       try {
         const uploadResponse = await fetch(
@@ -245,7 +245,7 @@ export function UploadImage(id: any, fetchTrips: any) {
           }
         );
 
-        console.log(uploadResponse);
+        //console.log(uploadResponse);
 
         if (!uploadResponse.ok) {
           throw new Error("Failed to upload image update");
@@ -257,39 +257,13 @@ export function UploadImage(id: any, fetchTrips: any) {
         console.error("Error updating image:", error);
         alert("Please try again.");
       }
-
-      /*try {
-        const url = `https://6p6xrc3hu4.execute-api.us-east-1.amazonaws.com/dev/memories/${userID}/${id}/image`;
-        const headers = {
-          "Content-Type": `image/${fileType}`,
-          "X-Original-File-Name": `${fileName}`,
-        };
-
-        const response = await axios.put(url, blob, {
-          headers: {
-            "Content-Type": `image/${fileType}`,
-            "X-Original-File-Name": `${fileName}`
-          },
-        });
-        
-        if (response.status === 200) {
-          console.log("Upload successful", response.data);
-        } else {
-          console.log("Upload failed", response.status, response.statusText);
-        }
-        await fetchTrips();
-      } catch (error) {
-        console.log(response);
-        console.error("Error updating image:", error);
-        alert("Please try again.");
-      }*/
     }
   };
   pickImageAndUpload();
 }
 
 export function EditTitle(id: any, fetchTrips: any) {
-  console.log(`User is updating title of ${id}`);
+  //console.log(`User is updating title of ${id}`);
   Alert.prompt(
     "Trip Title",
     "Enter your new album title below",
@@ -298,7 +272,7 @@ export function EditTitle(id: any, fetchTrips: any) {
       {
         text: "Update",
         onPress: (newTitle) => {
-          console.log(newTitle);
+          //console.log(newTitle);
           const UploadTitle = async () => {
             try {
               const uploadResponse = await fetch(
