@@ -312,6 +312,9 @@ export default function TripPage() {
     navigation.setOptions({
       headerBackTitle: "Library",
       headerTintColor: "#4361EE",
+      headerStyle: {
+        backgroundColor: colorScheme === "dark" ? "#000000" : "#FFFFFF",
+      },
       headerTitleStyle: {
         color: colorScheme === "dark" ? "#FFFFFF" : "#000000",
       },
