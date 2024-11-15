@@ -3,7 +3,8 @@
         "preview": {
             "ios": {
                 "simulator": true
-            }
+            },
+            "autoIncrement": true
         },
         "production": {}
     }
