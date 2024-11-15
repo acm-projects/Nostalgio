@@ -296,6 +296,7 @@ const styles = StyleSheet.create({
     aspectRatio: 1,
     borderRadius: 16,
     borderColor: "white",
+    borderWidth: 1,
   },
   ongoing: {
     backgroundColor: "#3A0CA3",

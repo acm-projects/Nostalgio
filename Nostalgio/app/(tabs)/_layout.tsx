@@ -125,6 +125,7 @@ export default function TabLayout() {
           headerStyle: { backgroundColor: "#3A0CA3" },
           headerTitleStyle: {
             fontFamily: "Unbounded_400Regular",
+            marginTop: 10,
             color: "#FFF",
           },
           headerStatusBarHeight: 40,
