@@ -471,7 +471,7 @@ export default function TabOneScreen() {
                         name="close" 
                         size={24} 
                         color="white" 
-                        top={378}
+                        top={360}
                         left={40}
                         />
             </Pressable>
@@ -507,7 +507,6 @@ export default function TabOneScreen() {
               
               <Modal visible={openModal} transparent={true} onRequestClose={() => setOpenModal(false)}>
                   <View key={index} style={styles.rectangleOverlay}>
-                      <TouchableOpacity style={{width: 50, height: 50, backgroundColor:"white"}} onPress={() => setOpenModal(false)}></TouchableOpacity>
                       <MyCarousel data={markers} index={index}></MyCarousel>
                   </View>
               </Modal>
