@@ -37,7 +37,7 @@ export default function Calendar() {
     setStartFinal(selectedStartDate);
     setEndFinal(selectedEndDate);
     navigation.goBack();
-  }
+  } 
 
   const onDateChange=(date: any, type: any) => {
       const newDate=JSON.stringify(date);

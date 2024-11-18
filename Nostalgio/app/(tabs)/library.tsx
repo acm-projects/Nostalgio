@@ -12,7 +12,7 @@ import { useRouter } from "expo-router";
 import { Text, View } from "@/components/Themed";
 
 import { useState, useLayoutEffect, useCallback } from "react";
-import { useNavigation, useFocusEffect } from "@react-navigation/native";
+//import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import Svg, { Path, SvgProps } from "react-native-svg";
 
 import { format } from "date-fns";
@@ -78,7 +78,7 @@ export default function LibraryScreen() {
   const [loading, setLoading] = useState(true);
 
   // Fetching the data
-  const fetchTrips = async () => {
+  /*const fetchTrips = async () => {
     try {
       const response = await fetch(
         `https://5ogc232v73.execute-api.us-east-1.amazonaws.com/dev/memories/${userID}`
@@ -98,7 +98,7 @@ export default function LibraryScreen() {
   useFocusEffect(
     useCallback(() => {
       fetchTrips();
-  }, []));
+  }, []));*/
 
   // Function to group trips by city
   function formatTripsByCity(data: any) {

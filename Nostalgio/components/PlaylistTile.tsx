@@ -1,29 +1,23 @@
 import React from "react";
-import { View, StyleSheet, Dimensions, Image, Text, Pressable } from "react-native";
-import { Callout, Marker } from "react-native-maps";
-import { PlaylistMarker } from '@/data/playlistMarkers';
-
-import {MovingText} from "@/components/MovingText";
-
-
-const screenWidth = Dimensions.get("window").width;
-const screenHeight = Dimensions.get("window").height;
-
-
+import { View, StyleSheet, Image, Text} from "react-native";
+import { Marker } from "react-native-maps";
+import { PlaylistMarker } from '@/data/playlistMarker';
 
 
 const PlaylistTile: React.FC<{
   marker: PlaylistMarker;
   index: number;
-}> = ({ marker }) => {
+  trips: number;
+}> = ({ marker, trips }) => {
   return (
-    <Marker coordinate={marker.coordinate}>
-    {marker.tripNum &&
-    <View style={styles.number}>
-      <Text style={styles.numberText}>
-        {marker.tripNum}
-      </Text>
-    </View>}
+    <Marker coordinate={{latitude: marker.latitude, 
+      longitude: marker.longitude}}>
+    {trips > 1 &&
+      (<View style={styles.number}>
+        <Text style={styles.numberText}>
+          {trips}
+        </Text>
+      </View>)}
     <Image
       source={{uri: marker.image}} 
       style={styles.image}
@@ -31,25 +25,7 @@ const PlaylistTile: React.FC<{
   </Marker>
   );
 };
-/*<Marker coordinate={{ latitude: 41.877495, longitude: -87.656607 }}>
-          <View style={styles.number}>
-            <Text
-              style={{
-                color: "white",
-                fontWeight: "bold",
-                fontFamily: "Unbounded_400Regular",
-                fontSize: 11,
-                left: 3,
-              }}
-            >
-              3
-            </Text>
-          </View>
-          <Image
-            source={require("../../assets/images/chicago.png")} //idk how to fix
-            style={styles.image}
-          />
-        </Marker>*/
+
 
 const styles = StyleSheet.create({
     image: {
@@ -72,12 +48,12 @@ const styles = StyleSheet.create({
       numberText:{
         color: "white",
         fontWeight: "bold",
-        fontFamily: "Unbounded_400Regular",
+        fontFamily: "Unbounded_600SemiBold",
         fontSize: 11,
         justifyContent: 'center',
+        textAlign:'center',
         alignItems: 'center',
         padding: 1,
-        left: 1
       }
   
 });

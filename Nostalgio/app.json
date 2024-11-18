@@ -22,7 +22,8 @@
           "geofencing"
         ]
       },
-      "bundleIdentifier": "com.saic06.Nostalgio"
+      "bundleIdentifier": "com.saic06.Nostalgio",
+      "newArchEnabled": true
     },
     "android": {
       "adaptiveIcon": {

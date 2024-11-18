@@ -15,7 +15,7 @@ import CustomCallout from "@/components/CustomCallout";
 import Ionicons from '@expo/vector-icons/Ionicons';
 //import Pagination from "@/components/Pagination";
 import {markers, MarkerWithMetadata} from '@/data/recommended';
-import { PlaylistMarker, playlists } from "@/data/playlistMarkers";
+import { PlaylistMarker } from "@/data/playlistMarker";
 
 import * as TaskManager from 'expo-task-manager';
 import * as Location from 'expo-location';
@@ -241,49 +241,9 @@ export default function TabOneScreen() {
       console.error("Error fetching recommendations:", error);
       return []; // Return an empty array on error
     }
-  }
+  }*/
 
-  async function fetchMemories(userId : string) {
-    const url = `https://5ogc232v73.execute-api.us-east-1.amazonaws.com/dev/memories/${userId}`
-    try {
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      });
-      if (!response.ok) {
-        throw new Error(`Failed to fetch memories: ${response.statusText}`);
-      }
-      const data = await response.json();
-      //console.log('***** RESPONSE JSON*******', data);
-      return data;
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  }
-
-
-  function memoriesMarker(playlists : any[]) : PlaylistMarker[]{
-    return playlists.map((playlist) => {
-      const city = playlist[1].city;
-      const image = playlist[1].art;
-
-      return{
-        city,
-        image
-      };
-    });
-  };
-
-  async function getMems(){
-    const mems = await fetchMemories(userId);
-    return memoriesMarker(mems);
-  }
-
-  let mem = getMems();
-  console.log(mem)
-  //getMems().then((mems) => console.log("Mems" + mems));*/
+  
 
   //add badges
   const sendBadgeData = async( userId: string, longitude: number, latitude: number) => {
@@ -389,12 +349,88 @@ export default function TabOneScreen() {
      );
    };
 
+   /*async function fetchMemories(userId : string) {
+    const url = `https://5ogc232v73.execute-api.us-east-1.amazonaws.com/dev/memories/${userId}`
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+      if (!response.ok) {
+        throw new Error(`Failed to fetch memories: ${response.statusText}`);
+      }
+      const data = await response.json();
+      //console.log('***** RESPONSE JSON*******', data);
+      return data;
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }*/
+  
+  async function fetchMemories(userId : string) {
+    const url = `https://5ogc232v73.execute-api.us-east-1.amazonaws.com/dev/memories/${userId}`
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch memories: ${response.statusText}`);
+      }
+      const data = await response.json();
+      //console.log(data)
+      return data.trips;
+    } catch (error) {
+      console.error('Error fetching memories:', error);
+      return [];
+    }
+  }
+
+  
+  const [playlist, setPlaylist] = useState<any>(null);
+  function memoriesMarker(playlists : any[]) : PlaylistMarker[]{
+    return playlists.map((playlist) => {
+      const latitude = playlist.latitude;
+      const longitude = playlist.longitude;
+      const image = playlist.art;
+      const city = playlist.city;
+
+      return{
+        latitude,
+        longitude,
+        image,
+        city
+      };
+    });
+  };
+
+  const [tripNum, setTripNum] = useState<{ [city: string]: number }>({});
+  async function getMems(){
+    const mems = await fetchMemories(userId);
+
+    const cityCount = mems.reduce((acc: { [city: string]: number }, item: any) => {
+      acc[item.city] = (acc[item.city] || 0) + 1;
+      return acc;
+    }, {});
+  
+    setTripNum(cityCount);
+
+    return memoriesMarker(mems);
+    //console.log(memoriesMarker(mems));
+  }
+
+  const [playlists, setPlaylists] = useState<PlaylistMarker[]>([]);
+  const fetchPlaylists = () => {
+    getMems().then((fetchedPlaylist) => setPlaylists(fetchedPlaylist));
+  }
+
 
   const renderMarkers = () => {
+    fetchPlaylists();
     return playlists.map((item, index) => {
+      const cityCount = tripNum[item.city] || 0;
       return(
         <View key={index}>
-          <PlaylistTile marker={item} index={index}></PlaylistTile>
+          <PlaylistTile marker={item} index={index} trips={cityCount}></PlaylistTile>
         </View>
       )
     })
@@ -689,6 +725,7 @@ const styles = StyleSheet.create({
     height: 22,
     borderRadius: 22 / 2,
     backgroundColor: "white",
+    zIndex: 5
   },
   circleInner: {
     left: 2.5,
