@@ -218,14 +218,14 @@ export function UploadImage(id: any, fetchTrips: any) {
 
     if (!result.canceled) {
       const fileUri = result.assets[0].uri;
-      const fileName = fileUri.split("/").pop();
+      const fileName = fileUri.split("/").pop()?.toLowerCase();
       let fileType = fileUri.split(".").pop();
       if (fileType == "jpg") {
         fileType = "jpeg";
       }
-      //console.log(fileUri);
-      //console.log(`image/${fileType}`);
-      //console.log(`${fileName}`);
+      console.log(fileUri);
+      console.log(`image/${fileType}`);
+      console.log(`${fileName}`);
 
       const response = await fetch(fileUri);
       const blob = await response.blob();
@@ -276,7 +276,7 @@ export function EditTitle(id: any, fetchTrips: any) {
           const UploadTitle = async () => {
             try {
               const uploadResponse = await fetch(
-                `https://6p6xrc3hu4.execute-api.us-east-1.amazonaws.com/dev/memories/${userID}/${id}`,
+                `https://5ogc232v73.execute-api.us-east-1.amazonaws.com/dev/memories/${userID}/${id}`,
                 {
                   method: "PUT",
                   body: `{ "name": "${newTitle}" }`,

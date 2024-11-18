@@ -36,6 +36,6 @@ export const playlists: PlaylistMarker[] = [
             longitude: -122.043130
         },
         image: "https://cdn.britannica.com/13/77413-050-95217C0B/Golden-Gate-Bridge-San-Francisco.jpg",
-        tripNum: "1"
+        //tripNum: "1"
     }
   ];

@@ -1,11 +1,14 @@
 {
-    "build": {
-        "preview": {
-            "ios": {
-                "simulator": true
-            },
-            "autoIncrement": true
-        },
-        "production": {}
-    }
+  "build": {
+    "preview": {
+      "ios": {
+        "simulator": true
+      },
+      "autoIncrement": true
+    },
+    "production": {}
+  },
+  "cli": {
+    "appVersionSource": "remote"
+  }
 }

@@ -272,6 +272,6 @@ const styles = StyleSheet.create({
   statText: {
     color: "white",
     fontSize: 12,
-    fontFamily: "Unbounded_200ExtraLight",
+    fontFamily: "Unbounded_400Regular",
   },
 });
