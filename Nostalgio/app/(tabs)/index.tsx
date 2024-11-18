@@ -15,7 +15,7 @@ import CustomCallout from "@/components/CustomCallout";
 import Ionicons from '@expo/vector-icons/Ionicons';
 //import Pagination from "@/components/Pagination";
 import {markers, MarkerWithMetadata} from '@/data/recommended';
-import { PlaylistMarker, playlists } from "@/data/playlistMarkers";
+import { PlaylistMarker } from "@/data/playlistMarker";
 
 import * as TaskManager from 'expo-task-manager';
 import * as Location from 'expo-location';
@@ -241,49 +241,8 @@ export default function TabOneScreen() {
       console.error("Error fetching recommendations:", error);
       return []; // Return an empty array on error
     }
-  }
+  }*/
 
-  async function fetchMemories(userId : string) {
-    const url = `https://5ogc232v73.execute-api.us-east-1.amazonaws.com/dev/memories/${userId}`
-    try {
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      });
-      if (!response.ok) {
-        throw new Error(`Failed to fetch memories: ${response.statusText}`);
-      }
-      const data = await response.json();
-      //console.log('***** RESPONSE JSON*******', data);
-      return data;
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  }
-
-
-  function memoriesMarker(playlists : any[]) : PlaylistMarker[]{
-    return playlists.map((playlist) => {
-      const city = playlist[1].city;
-      const image = playlist[1].art;
-
-      return{
-        city,
-        image
-      };
-    });
-  };
-
-  async function getMems(){
-    const mems = await fetchMemories(userId);
-    return memoriesMarker(mems);
-  }
-
-  let mem = getMems();
-  console.log(mem)
-  //getMems().then((mems) => console.log("Mems" + mems));*/
 
   //add badges
   const sendBadgeData = async( userId: string, longitude: number, latitude: number) => {
@@ -389,8 +348,51 @@ export default function TabOneScreen() {
      );
    };
 
+   async function fetchMemories(userId : string) {
+    const url = `https://5ogc232v73.execute-api.us-east-1.amazonaws.com/dev/memories/${userId}`
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+      if (!response.ok) {
+        throw new Error(`Failed to fetch memories: ${response.statusText}`);
+      }
+      const data = await response.json();
+      //console.log('***** RESPONSE JSON*******', data);
+      return data;
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
 
-  const renderMarkers = () => {
+
+  function memoriesMarker(playlists : any[]) : PlaylistMarker[]{
+    return playlists.map((playlist) => {
+      const city = playlist[1].city;
+      const image = playlist[1].art;
+
+      return{
+        city,
+        image
+      };
+    });
+  };
+
+  async function getMems(){
+    const mems = await fetchMemories(userId);
+    return memoriesMarker(mems);
+  }
+
+  //let mem = getMems();
+  //console.log(mem)
+  //const [memories, setMemories] = useState<PlaylistMarker[]>([]);
+  //setMemories
+  getMems().then((mems) => console.log("Mems" + mems));
+
+  /*const renderMarkers = () => {
     return playlists.map((item, index) => {
       return(
         <View key={index}>
@@ -398,8 +400,9 @@ export default function TabOneScreen() {
         </View>
       )
     })
-  };
- /* async function getMarkers() {
+  };*/
+  
+  /*async function getMarkers() {
     const recommendations = await musicSuggestions();
     console.log(recommendations);
   }
@@ -553,7 +556,7 @@ const [status, setStatus] = useState(false);
         //showsMyLocationButton = {true}
         //rener markers belowt his
       >
-        {renderMarkers()}
+   
         {renderRecommended()}
       
 

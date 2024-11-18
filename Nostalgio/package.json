@@ -56,7 +56,8 @@
     "react-native-svg": "15.2.0",
     "react-native-swiper": "^1.6.0",
     "react-native-tab-view": "^3.5.2",
-    "react-native-web": "~0.19.13"
+    "react-native-web": "~0.19.13",
+    "expo-crypto": "~13.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
