@@ -32,7 +32,6 @@ export const unstable_settings = {
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
-
 export default function RootLayout() {
   
   const [loaded, error] = useFonts({
@@ -63,8 +62,12 @@ function RootLayoutNav() {
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <NavigationContainer>
-        <Stack>
+        <Stack initialRouteName="auth">
+          {/* Define the /auth screen */}
+          <Stack.Screen name="auth" options={{ headerShown: false }} />
+          {/* Tabs page */}
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          {/* Modal page */}
           <Stack.Screen name="modal" options={{ presentation: "modal" }} />
         </Stack>
       </NavigationContainer>

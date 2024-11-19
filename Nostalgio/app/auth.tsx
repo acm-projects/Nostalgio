@@ -1,4 +1,9 @@
-import { router, useLocalSearchParams, useNavigation } from "expo-router";
+import {
+  router,
+  useLocalSearchParams,
+  useNavigation,
+  usePathname,
+} from "expo-router";
 import {
   StyleSheet,
   ImageBackground,
@@ -42,10 +47,27 @@ export function SpotifyIcon(props: SvgProps) {
     console.log("Opening Spotify login");
     const authUrl =
       "https://5ogc232v73.execute-api.us-east-1.amazonaws.com/dev/auth/login";
-    Linking.openURL(authUrl);
+      const response = await WebBrowser.openAuthSessionAsync(authUrl);
+      console.log(response);
+      if(response.type == "success"){
+          console.log(response.url);
+          Linking.openURL(response.url);
+      } else {
+        Linking.openURL("com.saic06.Nostalgio://");
+      }
   };
 
   export default function AuthScreen() {
+    const { userId } = useLocalSearchParams(); // This will extract the id, city, and date from the URL
+    console.log(userId);
+    if (userId) {
+      console.log(userId);
+      //Save to cookies or file
+
+      //Send user to map
+      Linking.openURL("com.saic06.Nostalgio://");
+    }
+    
     const navigation = useNavigation();
 
     useLayoutEffect(() => {
