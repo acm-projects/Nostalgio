@@ -1,3 +1,6 @@
+import { LogBox } from "react-native";
+LogBox.ignoreAllLogs();
+
 import {
   router,
   useLocalSearchParams,
