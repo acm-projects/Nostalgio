@@ -1,7 +1,7 @@
 import React from "react";
 import { View, StyleSheet, Dimensions, Image, Text, Pressable } from "react-native";
 import { Callout, Marker } from "react-native-maps";
-import { PlaylistMarker } from '@/data/playlistMarkers';
+import { PlaylistMarker } from '@/data/playlistMarker';
 
 import {MovingText} from "@/components/MovingText";
 
@@ -72,12 +72,12 @@ const styles = StyleSheet.create({
       numberText:{
         color: "white",
         fontWeight: "bold",
-        fontFamily: "Unbounded_400Regular",
+        fontFamily: "Unbounded_600SemiBold",
         fontSize: 11,
         justifyContent: 'center',
         alignItems: 'center',
         padding: 1,
-        left: 1
+        textAlign: 'center'
       }
   
 });

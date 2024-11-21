@@ -15,7 +15,7 @@ import CustomCallout from "@/components/CustomCallout";
 import Ionicons from '@expo/vector-icons/Ionicons';
 //import Pagination from "@/components/Pagination";
 import {markers, MarkerWithMetadata} from '@/data/recommended';
-import { PlaylistMarker } from "@/data/playlistMarker";
+import { playlists } from "@/data/playlistMarker";
 
 import * as TaskManager from 'expo-task-manager';
 import * as Location from 'expo-location';
@@ -348,7 +348,7 @@ export default function TabOneScreen() {
      );
    };
 
-   async function fetchMemories(userId : string) {
+   /*async function fetchMemories(userId : string) {
     const url = `https://5ogc232v73.execute-api.us-east-1.amazonaws.com/dev/memories/${userId}`
     try {
       const response = await fetch(url, {
@@ -384,15 +384,15 @@ export default function TabOneScreen() {
   async function getMems(){
     const mems = await fetchMemories(userId);
     return memoriesMarker(mems);
-  }
+  }*/
 
   //let mem = getMems();
   //console.log(mem)
   //const [memories, setMemories] = useState<PlaylistMarker[]>([]);
   //setMemories
-  getMems().then((mems) => console.log("Mems" + mems));
+  //getMems().then((mems) => console.log("Mems" + mems));
 
-  /*const renderMarkers = () => {
+  const renderMarkers = () => {
     return playlists.map((item, index) => {
       return(
         <View key={index}>
@@ -400,7 +400,7 @@ export default function TabOneScreen() {
         </View>
       )
     })
-  };*/
+  };
   
   /*async function getMarkers() {
     const recommendations = await musicSuggestions();
@@ -452,11 +452,11 @@ export default function TabOneScreen() {
  
   
   
-
+const [activeIndex, setActiveIndex] = useState(0);
   function renderRecommended(){
     //console.log(recommendation)
     const [openModal, setOpenModal] = useState(false);
-    const [activeIndex, setActiveIndex] = useState(0);
+    
 
     /*const [songRec, setSongRec] = useState<MarkerWithMetadata[]>([]);
     const fetchSong = async () => {
@@ -474,7 +474,7 @@ export default function TabOneScreen() {
                         name="close" 
                         size={24} 
                         color="white" 
-                        top={360}
+                        top={367}
                         left={40}
                         />
             </Pressable>
@@ -495,26 +495,42 @@ export default function TabOneScreen() {
 
       return markers.map((item : any, index : any) => {
         return (
-            <Marker
-              key={index}
-              coordinate={{
-                  latitude: location.coords.latitude,
-                  longitude: location.coords.longitude
-              }}
+          <Marker
+            key={index}
+            coordinate={{
+              latitude: location.coords.latitude,
+              longitude: location.coords.longitude,
+            }}
+          >
+            <Pressable onPress={() => setOpenModal(true)}>
+              <View style={styles.circle}>
+                <View style={styles.circleInner}></View>
+              </View>
+            </Pressable>
+
+            <Modal
+              visible={openModal}
+              transparent={true}
+              onRequestClose={() => setOpenModal(false)}
             >
-              <Pressable onPress={() => setOpenModal(true)}>
-                <View style={styles.circle}>
-                  <View style={styles.circleInner}></View>
-                </View>
-              </Pressable>
-              
-              <Modal visible={openModal} transparent={true} onRequestClose={() => setOpenModal(false)}>
-                  <View key={index} style={styles.rectangleOverlay}>
-                      <MyCarousel data={markers} index={index}></MyCarousel>
-                  </View>
-              </Modal>
-            </Marker>
-      );
+              <View key={index} style={styles.rectangleOverlay}>
+                <MyCarousel data={markers} index={index}></MyCarousel>
+                <Pagination
+                  dotsLength={markers.length}
+                  activeDotIndex={activeIndex}
+                  dotStyle={{
+                    width: 8,
+                    height: 8,
+                    borderRadius: 8,
+                    marginHorizontal: 0.5,
+                    backgroundColor: "white",
+                    bottom: 330,
+                  }}
+                ></Pagination>
+              </View>
+            </Modal>
+          </Marker>
+        );
     });
   };
 /*
@@ -555,7 +571,7 @@ const [status, setStatus] = useState(false);
         //showsMyLocationButton = {true}
         //rener markers belowt his
       >
-   
+        {renderMarkers()}
         {renderRecommended()}
       
 

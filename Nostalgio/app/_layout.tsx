@@ -62,7 +62,7 @@ function RootLayoutNav() {
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <NavigationContainer>
-        <Stack initialRouteName="auth">
+        <Stack initialRouteName="(tabs)">
           {/* Define the /auth screen */}
           <Stack.Screen name="auth" options={{ headerShown: false }} />
           {/* Tabs page */}

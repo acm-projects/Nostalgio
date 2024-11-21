@@ -18,7 +18,7 @@ const CustomCallout: React.FC<{
     return (
       <>
         <View style={styles.button}>
-          <Text style={styles.addButton}>Add to Trip</Text>
+          <Text style={styles.addButton}>Open Spotify</Text>
         </View>
       </>
     );
@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     width: 97,
     height: 97,
-    marginTop: 40,
+    marginTop: 38,
     left: 30
   },
 
@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     alignItems: 'center',
     justifyContent: 'center',
-    width: 137,
+    width: 150,
     height: 32,
     borderRadius: 20,
     backgroundColor: '#4c4c4c',

@@ -47,17 +47,18 @@ export function SpotifyIcon(props: SvgProps) {
 
 // Handle Spotify login and open the web browser
   const handleSpotifyLogin = async () => {
+    // com.saic06.Nostalgio://auth
     console.log("Opening Spotify login");
     const authUrl =
       "https://5ogc232v73.execute-api.us-east-1.amazonaws.com/dev/auth/login";
-      const response = await WebBrowser.openAuthSessionAsync(authUrl);
-      console.log(response);
-      if(response.type == "success"){
-          console.log(response.url);
-          Linking.openURL(response.url);
-      } else {
-        Linking.openURL("com.saic06.Nostalgio://");
-      }
+    const response = await WebBrowser.openAuthSessionAsync(authUrl);
+    console.log(response);
+    if (response.type == "success") {
+      console.log(response.url);
+      Linking.openURL(response.url);
+    } else {
+      Linking.openURL("com.saic06.Nostalgio://");
+    }
   };
 
   export default function AuthScreen() {
